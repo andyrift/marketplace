@@ -48,10 +48,17 @@ AppleSause
 ## UI / API
 
 ## Технологии разработки
-Язык программирования
-- HTML
-- CSS
+Языки программирования
+- Python3.10
 - JavaScript
+
+Библиотеки и фреймворки
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Alembic
+- psycopg2
+- React
 
 СУБД
 - postgreSQL
