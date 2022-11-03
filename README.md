@@ -12,7 +12,7 @@ AppleSause
 Любые товары или услуги, которые разместят пользователи
 
 ## Данные
-![model](https://user-images.githubusercontent.com/73282986/199476953-7df0af07-23e4-4146-887d-19f45a31b48b.png)
+![model](https://user-images.githubusercontent.com/73282986/199699493-750096d3-78e5-434a-afbe-d704d9f2b3a5.png)
 - users - Пользователи
 - roles - Роли пользователей
 - ratings - Рейтинги (оценки) которые пользователи оставляют на страницах других пользователей (Объяснения: rating)
