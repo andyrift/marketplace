@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.0.0-beta" use-changelog="false" last-position="0,0" last-zoom="0.65" max-obj-count="16"
+	 default-schema="public" default-owner="postgres"
+	 layers="All,Finished"
+	 active-layers="0,1"
+	 layer-name-colors="#000000,#000000"
+	 layer-rect-colors="#ffffff,#0ddf2d"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="apple_sause" layers="0" rect-visible="true" fill-color="#ffffff">
+	<role name="postgres"/>
+</schema>
+
+<table name="users" layers="0,1" collapse-mode="2" max-obj-count="10" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="240" y="420"/>
+	<column name="user_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="display_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="username">
+		<type name="text" length="0"/>
+	</column>
+	<column name="password_hash">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email">
+		<type name="text" length="0"/>
+	</column>
+	<column name="avatar_link">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address">
+		<type name="text" length="0"/>
+	</column>
+	<column name="deleted">
+		<type name="bit" length="0"/>
+	</column>
+	<constraint name="users_pk" type="pk-constr" table="apple_sause.users">
+		<columns names="user_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="username_uq" type="uq-constr" table="apple_sause.users">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="role_id" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="role_fk" index="0"/>
+	</customidxs>
+</table>
+
+<table name="posts" layers="0,1" collapse-mode="2" max-obj-count="13" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="800" y="400"/>
+	<column name="post_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="photo_links">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address">
+		<type name="text" length="0"/>
+	</column>
+	<column name="publication_timestamp">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="favorite_count">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="view_count">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="closed">
+		<type name="bit" length="0"/>
+	</column>
+	<column name="deleted">
+		<type name="bit" length="0"/>
+	</column>
+	<constraint name="posts_pk" type="pk-constr" table="apple_sause.posts">
+		<columns names="post_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="category_id" index="1"/>
+		<object name="user_id" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="category_fk" index="1"/>
+		<object name="user_fk" index="0"/>
+	</customidxs>
+</table>
+
+<table name="messages" layers="0,1" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="440" y="1120"/>
+	<column name="message_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="send_timestamp">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="message_body">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="messages_pk" type="pk-constr" table="apple_sause.messages">
+		<columns names="message_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="dialogue_id" index="0"/>
+		<object name="reciever_id" index="2"/>
+		<object name="sender_id" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="dialogue_fk" index="0"/>
+		<object name="reciever_fk" index="2"/>
+		<object name="sender_fk" index="1"/>
+	</customidxs>
+</table>
+
+<table name="categories" layers="0,1" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="820" y="100"/>
+	<column name="category_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="category_name">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="categories_pk" type="pk-constr" table="apple_sause.categories">
+		<columns names="category_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="post_owner" type="rel1n" layers="0"
+	 src-col-pattern="user_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="user_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.posts"
+	 src-required="true" dst-required="false">
+	<label ref-type="src-label">
+		<position x="74.3" y="-5.8"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="68.5795" y="-41.2602"/>
+	</label>
+</relationship>
+
+<relationship name="message_sender" type="rel1n" layers="0"
+	 src-col-pattern="sender_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="sender_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.messages"
+	 src-required="true" dst-required="false">
+	<label ref-type="src-label">
+		<position x="-6.75" y="14.2"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="-6.2" y="-15.6"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-24.0772" y="154.047"/>
+	</label>
+</relationship>
+
+<relationship name="message_reciever" type="rel1n" layers="0"
+	 src-col-pattern="reciever_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="reciever_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.messages"
+	 src-required="true" dst-required="false">
+	<label ref-type="src-label">
+		<position x="-5.7" y="34.2"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="-6.2" y="4.4"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="117.008" y="134.047"/>
+	</label>
+</relationship>
+
+<table name="ratings" layers="0,1" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="220" y="60"/>
+	<column name="rating">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="five_star_rating_ck" type="ck-constr" table="apple_sause.ratings">
+			<expression> <![CDATA[rating >= 0 and rating <= 5]]> </expression>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="reciever_id" index="1"/>
+		<object name="sender_id" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="ratings_pk" index="2"/>
+		<object name="reciever_fk" index="1"/>
+		<object name="sender_fk" index="0"/>
+	</customidxs>
+</table>
+
+<relationship name="rating_reciever" type="rel1n" layers="0"
+	 src-col-pattern="reciever_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="reciever_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.ratings"
+	 src-required="true" dst-required="false">
+	<label ref-type="src-label">
+		<position x="-37.4" y="-125.4"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="-6.2" y="-15.2"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="37.1001" y="2.04701"/>
+	</label>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<relationship name="rating_sender" type="rel1n" layers="0"
+	 src-col-pattern="sender_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="sender_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.ratings"
+	 src-required="true" dst-required="false">
+	<label ref-type="src-label">
+		<position x="22.6" y="-125.4"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="-6.2" y="4.4"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-43.3077" y="-57.953"/>
+	</label>
+	<constraint name="ratings_pk" type="pk-constr" alias="ratings_pk" protected="true" table="apple_sause.ratings">
+		</constraint>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<relationship name="post_category" type="rel1n" layers="0"
+	 src-col-pattern="category_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="category_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.categories"
+	 dst-table="apple_sause.posts"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="48.7335" y="-7.75299"/>
+	</label>
+</relationship>
+
+<table name="roles" layers="0,1" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="220" y="940"/>
+	<column name="role_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="role_name">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="roles_pk" type="pk-constr" table="apple_sause.roles">
+		<columns names="role_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="user_role" type="rel1n" layers="0"
+	 src-col-pattern="role_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="role_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.roles"
+	 dst-table="apple_sause.users"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-41.2617" y="3.04701"/>
+	</label>
+</relationship>
+
+<table name="dialogues" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="800" y="1140"/>
+	<column name="dialogue_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="dialogues_pk" type="pk-constr" table="apple_sause.dialogues">
+		<columns names="dialogue_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="customer_user_id" index="2"/>
+		<object name="post_id" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="customer_user_fk" index="1"/>
+		<object name="post_fk" index="0"/>
+	</customidxs>
+</table>
+
+<relationship name="dialogue" type="rel1n" layers="0"
+	 src-col-pattern="dialogue_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="dialogue_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.dialogues"
+	 dst-table="apple_sause.messages"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-15.4205" y="2.67713"/>
+	</label>
+</relationship>
+
+<relationship name="dialogue_post" type="rel1n" layers="0"
+	 src-col-pattern="post_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="post_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.posts"
+	 dst-table="apple_sause.dialogues"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="70.1842" y="-15.553"/>
+	</label>
+</relationship>
+
+<relationship name="dialogue_customer" type="rel1n" layers="0"
+	 src-col-pattern="customer_user_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="customer_user_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.dialogues"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="75.1969" y="84.047"/>
+	</label>
+</relationship>
+
+<table name="favorites" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="540" y="120"/>
+
+	<customidxs object-type="column">
+		<object name="post_id" index="1"/>
+		<object name="user_id" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="favorites_pk" index="2"/>
+		<object name="post_fk" index="1"/>
+		<object name="user_fk" index="0"/>
+	</customidxs>
+</table>
+
+<relationship name="favorite_user" type="rel1n" layers="0"
+	 src-col-pattern="user_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="user_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.favorites"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="14.8174" y="-8.35299"/>
+	</label>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<relationship name="favorite_post" type="rel1n" layers="0"
+	 src-col-pattern="post_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="post_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.posts"
+	 dst-table="apple_sause.favorites"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-13.8556" y="1.64701"/>
+	</label>
+	<constraint name="favorites_pk" type="pk-constr" alias="favorites_pk" protected="true" table="apple_sause.favorites">
+		</constraint>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<table name="blacklist" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="apple_sause"/>
+	<role name="postgres"/>
+	<position x="640" y="740"/>
+
+	<customidxs object-type="column">
+		<object name="blacklisted_user_id" index="1"/>
+		<object name="blacklisting_user_id" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="blacklist_pk" index="2"/>
+		<object name="blacklistde_user_fk" index="1"/>
+		<object name="blacklisting_user_fk" index="0"/>
+	</customidxs>
+</table>
+
+<relationship name="blacklisting_user" type="rel1n" layers="0"
+	 src-col-pattern="blacklisting_user_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="blacklisting_user_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.blacklist"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-50.4624" y="73.0782"/>
+	</label>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<relationship name="blacklisted_user" type="rel1n" layers="0"
+	 src-col-pattern="blacklisted_user_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="blacklistde_user_fk"
+	 custom-color="#000000"
+	 src-table="apple_sause.users"
+	 dst-table="apple_sause.blacklist"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="70.2157" y="90.3804"/>
+	</label>
+	<constraint name="blacklist_pk" type="pk-constr" alias="blacklist_pk" protected="true" table="apple_sause.blacklist">
+		</constraint>
+	<special-pk-cols indexes="0"/>
+</relationship>
+
+<constraint name="unique_dialogue" type="uq-constr" table="apple_sause.dialogues">
+	<columns names="customer_user_id,post_id" ref-type="src-columns"/>
+</constraint>
+
+</dbmodel>
