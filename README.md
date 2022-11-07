@@ -91,16 +91,10 @@
 *Вероятно будет изменено*
 
 Языки программирования
-- Python3.10
-- JavaScript
+- Python
 
 Библиотеки и фреймворки
-- FastAPI
-- Pydantic
-- SQLAlchemy
-- Alembic
-- psycopg2
-- React
+- Django
 
 СУБД
 - postgreSQL + pgmodeler
