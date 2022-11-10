@@ -1,0 +1,7 @@
+{% extends "store/base.html" %}
+{% block content %}
+	<h3>Profile Page</h3>
+		{% for role in roles %}
+			<div class="text"> {{ role.1 }} has id {{ role.0 }} </div>
+		{% endfor %}
+{% endblock content %}
