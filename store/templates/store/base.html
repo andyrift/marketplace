@@ -9,7 +9,8 @@
 		<title>AppleSause</title>
 	{% endif %}
 	<link rel="stylesheet" href="{% static 'store/styles/styles.css' %}">
-	{% block css %}{% endblock %}
+	{% block css %}
+	{% endblock %}
 </head>
 <body>
 	<div id="topbar">
@@ -19,13 +20,21 @@
 			<a class="topbar-div-right" href="/messages">Messages</a>
 		</div>
 	</div>
-	<div class="content">
-		<a href="/">
-		<img id="logo" src="{% static 'store/img/logo.png' %}" alt="AppleSause"/>
-		</a>
+	<div class="control">
+		<a href="/"><img id="logo" src="{% static 'store/img/logo.png' %}" alt="AppleSause"/></a>
+		<div class="search">
+			<button id="createbutton">Create</button>
+			<div id="searchbar">
+				<input type="text" placeholder="Search for anything..">
+				<button id="searchbutton">Search</button>
+			</div>
+			<button id="categoriesbutton">Categories</button>
+		</div>
 	</div>
+
 	<div class="content" style="height: 5000px;">
-		{% block content %}{% endblock %}
+		{% block content %}
+		{% endblock %}
 	</div>
 	<script src="{% static 'store/javascript/topbar.js' %}"></script>
 </body>
