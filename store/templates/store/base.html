@@ -16,6 +16,7 @@
 	<div id="topbar">
 		<div class="topbar-content">
 			<a class="topbar-div-left" href="/help">Help</a>
+			<a class="topbar-div-left" href="/">Home</a>
 			<a class="topbar-div-right" href="/profile">Profile</a>
 			<a class="topbar-div-right" href="/messages">Messages</a>
 		</div>
@@ -32,9 +33,12 @@
 		</div>
 	</div>
 
-	<div class="content" style="height: 5000px;">
+	<div class="content">
 		{% block content %}
 		{% endblock %}
+	</div>
+	<div class="footer">
+		AppleSause. Email: ahramigamedev@gmail.com
 	</div>
 	<script src="{% static 'store/javascript/topbar.js' %}"></script>
 </body>

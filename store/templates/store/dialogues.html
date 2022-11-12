@@ -1,9 +1,31 @@
 {% extends "store/base.html" %}
 {% block content %}
-	<h3>Messages</h3>
-	<div>Dialogue 1</div>
-	<div>Dialogue 2</div>
-	<div>Dialogue 3</div>
-	<div>Dialogue 4</div>
-	<div>Dialogue 5</div>
+	<div class="main"> 
+		<div class="profile">
+			<div id="profilepicture"></div>
+			<div id="rating"></div>
+			<div style="clear:both;"></div>
+			<h1 id="name">Andrew Khramtsov<h1>
+		</div>
+		<h3>Your dialogues</h3>
+		<div class="dialogues">
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+			<div class="dialogue"></div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<a href="/favorites"><h3>Favorites</h3></a>
+		<div class="sidebarposts">
+			<div class="sidebarpost"></div>
+			<div class="sidebarpost"></div>
+		</div>
+		<a href="favorites"><button>All Favorites</button></a>
+	</div>
 {% endblock content %}

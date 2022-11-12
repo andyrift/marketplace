@@ -28,3 +28,5 @@ def help(request):
 	return render(request, 'store/help.html')
 def dialogues(request):
 	return render(request, 'store/dialogues.html')
+def favorites(request):
+	return render(request, 'store/favorites.html')

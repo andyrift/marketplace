@@ -1,13 +1,37 @@
 {% extends "store/base.html" %}
 {% load static %}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'store/styles/home.css' %}">
-{% endblock css %}
-
 {% block content %}
-	<h3>Home Page</h3>
-		{% for role in roles %}
-			<div class="text"> {{ role.1 }} has id {{ role.0 }} </div>
-		{% endfor %}
+	
+	<div class="main"> 
+		<h3>Random posts for you</h3>
+		<div class="posts">
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+			<div class="post"></div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<a href="/favorites"><h3>Favorites</h3></a>
+		<div class="sidebarposts">
+			<div class="sidebarpost"></div>
+			<div class="sidebarpost"></div>
+		</div>
+		<a href="favorites"><button>All Favorites</button></a>
+	</div>
 {% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
