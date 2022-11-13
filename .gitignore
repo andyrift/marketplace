@@ -5,6 +5,6 @@ db.sqlite3
 *.env
 .vscode
 node_modules/
-models/
+Models/
 Learning Node/
 Django/
