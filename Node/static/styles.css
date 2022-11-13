@@ -1,0 +1,270 @@
+@charset "UTF-8";
+html, body, div, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #FAFAFA
+}
+
+h3 {
+  color: #333333;
+}
+
+a:link, a:visited, a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+#topbar {
+  overflow: hidden;
+  width: 100%;
+  margin: auto;
+  height: 40px;
+  background-color: #EEEEEE;
+}
+
+#topbar a:link, a:visited, a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+#topbar a:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.topbar-content {
+  overflow: hidden;
+  max-width: 960px;
+  margin: auto;
+  font-size: 16px;
+  line-height: 40px;
+  color: #363636;
+}
+
+.topbar-div-left {
+  float: left;
+  margin-right: 0.7em;
+}
+
+.topbar-div-right {
+  float: right;
+  margin-left: 0.7em;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .control {
+  padding-top: 60px;
+}
+
+img#logo {
+  width: 8%;
+  height: auto;
+  float: left;
+}
+
+div#searchbar, button {
+  height: 32px;
+  line-height: 28px;
+  border: 2px solid #F7931E;
+  border-radius: 16px;
+  box-sizing: border-box;
+  margin-left: 2%;
+  margin-top: 11px;
+  font-size: inherit;
+
+}
+
+div#searchbar {
+  overflow:  visible;
+  width: 60%;
+  padding-left: 12px;
+  color: #888888;
+  float: right;
+}
+
+button {
+  width: 100%;
+  color: #FFFFFF;
+  text-align: center;
+  background-color: #F7931E;
+  cursor: pointer;
+}
+
+.search button {
+  width: 12%;
+  float: right;
+}
+
+button{
+  text-decoration: none;
+}
+
+button:hover {
+  background-color: #F7931EDD;
+}
+
+button#searchbutton {
+  width: 20%;
+  margin: -2px -2px 0px 0px;
+  border-radius: 0px 16px 16px 0px;
+}
+
+.search input[type=text] {
+  float: left;
+  padding: 0px;
+  border: none;
+  width: 80%;
+  font-size: inherit;
+  line-height: 28px;
+  border-width:0px;
+  border:none;
+  box-shadow: none;
+  outline: none;
+}
+
+.control {
+  overflow: hidden;
+  max-width: 960px;
+  margin: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #FAFAFA;
+}
+
+.content, .footer {
+  overflow: hidden;
+  max-width: 960px;
+  margin: auto;
+  background-color: #FAFAFA;
+}
+
+.footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid lightgrey;
+  color: #888888;
+}
+
+.sidefooter {
+  margin-top: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid lightgrey;
+  color: #888888;
+}
+
+.main, .sidebar {
+  margin: auto;
+  float: left;
+  box-sizing: border-box;
+}
+
+.main {
+  width: 75%;
+}
+
+.sidebar {
+  width: 25%;
+  padding-left: 10px;
+}
+
+.sidebar button {
+  float: left;
+  width: 95%;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.posts {
+  overflow: hidden;
+  width: 100%;
+  margin: auto;
+  padding-top: 10px;
+}
+
+.sidebarposts {
+  overflow: hidden;
+  width: 100%;
+  margin: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.post {
+  float: left;
+  width: 230px;
+  height: 300px;
+  margin: auto;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px solid lightgrey;
+  border-radius: 16px;
+}
+
+.sidebarpost {
+  float: left;
+  width: 95%;
+  height: 150px;
+  margin: auto;
+  margin-bottom: 5px;
+  border: 1px solid lightgrey;
+  border-radius: 16px;
+}
+
+.profile {
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+
+#profilepicture {
+  float: left;
+  height:150px; 
+  width: 150px; 
+  background-color: lightgrey;
+  border-radius: 16px;
+}
+
+#rating {
+  float: left;
+  height:100px; 
+  width: 300px;
+  margin-top: 50px;
+  margin-left: 20px; 
+  background-color: lightgrey;
+  border-radius: 16px;
+}
+
+#name {
+  margin-top: 20px;
+}
+
+.dialogues {
+  width: 100%;
+  margin: auto;
+  padding-top: 10px;
+}
+
+.dialogue {
+  height: 100px;
+  margin: auto;
+  margin-bottom: 5px;
+  border: 1px solid lightgrey;
+  border-radius: 16px;
+}
