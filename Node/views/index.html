@@ -1,16 +1,9 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	{% if title %}
-		<title>AppleSause - {{ title }}</title>
-	{% else %}
-		<title>AppleSause</title>
-	{% endif %}
-	<link rel="stylesheet" href="{% static 'store/styles/styles.css' %}">
-	{% block css %}
-	{% endblock %}
+	<title>AppleSause</title>
+	<link rel="stylesheet" href="#">
 </head>
 <body>
 	<div id="topbar">
@@ -22,7 +15,7 @@
 		</div>
 	</div>
 	<div class="control">
-		<a href="/"><img id="logo" src="{% static 'store/img/logo.png' %}" alt="AppleSause"/></a>
+		<a href="/"><img id="logo" src="#" alt="AppleSause"/></a>
 		<div class="search">
 			<button id="createbutton">Create</button>
 			<div id="searchbar">
@@ -34,8 +27,6 @@
 	</div>
 
 	<div class="content">
-		{% block content %}
-		{% endblock %}
 	</div>
 	<div class="footer">
 		AppleSause. Email: ahramigamedev@gmail.com

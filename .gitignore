@@ -4,3 +4,7 @@ db.sqlite3
 /env
 *.env
 .vscode
+node_modules/
+models/
+Learning Node/
+Django/
