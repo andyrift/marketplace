@@ -15,16 +15,14 @@ app.set('view engine', 'ejs');
 
 const { Pool } = require('pg');
 
-module.pool = new Pool();
-
-const postRoutes = require("./routes/posts.js")
-
-// the pool will emit an error on behalf of any idle clients
-// it contains if a backend error or network partition happens
-pool.on('error', (err, client) => {
+require.main.pool = new Pool();
+// the pool will emit an error on behalf of any idle clients it contains if a backend error or network partition happens
+require.main.pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client', err);
   process.exit(-1);
 });
+
+const postRoutes = require("./routes/postRoutes.js");
 
 // listen
 const port = 3000
@@ -64,13 +62,20 @@ app.post('/register', (req, res) => {
 
 app.get('/', (req, res) => {
 	//res.sendFile('./views/index.html', { root: __dirname });
-	res.render('index', { title: 'Home' });
-	
-	pool
-		.query('SELECT * FROM roles')
-		.then(res => console.log('query result:', res.rows))
-		.catch(err => console.error('Error executing query', err.stack))
+	pool.connect((err, client, done) => {
+		if (err) throw err
+		client.query('SELECT * FROM posts where deleted = FALSE', [], (err, qres) => {
+			done();
+			if (err) {
+				console.error('Error executing query', err.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else {
+				res.render('index', { title: 'Home', posts: qres.rows });
+			}
+		})
+	});
 });
+
 app.get('/profile', (req, res) => {
 	res.render('profile', { title: 'Profile' });
 });
@@ -98,9 +103,6 @@ app.get('/favorites', (req, res) => {
 
 app.use('/post', postRoutes);
 
-module.NotFound = (req, res) => {
-	res.status(404).render('404', { title: 'Not Found' });
-}
 
 NotFound = module.NotFound;
 
@@ -108,7 +110,7 @@ NotFound = module.NotFound;
 app.use((req, res) => {
 	//res.sendFile('./views/404.html', { root: __dirname });
 	//res.status(404).sendFile('./views/404.html', { root: __dirname });
-	NotFound(req, res);
+	res.status(404).render('404', { title: 'Not Found' });
 })
 
 /*

@@ -433,3 +433,7 @@ div.dialoguepm {
   border: 1px solid lightgrey;
   border-radius: var(--as-radius);
 }
+
+div.post {
+  overflow: hidden;
+}

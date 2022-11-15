@@ -9,21 +9,9 @@
 		<div class="main"> 
 			<h3>Random posts for you</h3>
 			<div class="posts">
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
+				<% posts.forEach(post => {%>
+				<%- include('./partials/post.ejs', { post: post }); %>
+				<% }); %>
 			</div>
 		</div>
 		<div class="sidebar">
