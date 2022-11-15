@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('./partials/head.ejs') %>
+</head>
+<body>
+	<%- include('./partials/topbar.ejs') %>
+	<div class="content">
+
+		<h3>Create your account</h3>
+
+		<form class="forminput" id="createuser" action="/register" method="POST">
+			<div>
+				<div class="formlabels">
+					<h4>Choose your profile picture:</h4>
+					<h4>Enter your username:</h4>
+					<h4>Enter your display name:</h4>
+					<h4>Enter your E-mail:</h4>
+					<h4 id="address">Enter your address:</h4>
+					<h4>Enter your password:</h4>
+				</div>
+
+				<div class="forminputs">
+					<input type="file" accept=".png" id="picture" name="picture">
+
+					<div class="forminput">
+					<input type="text" id="username" placeholder="Username" name="username" required>
+					</div>
+
+					<div class="forminput">
+					<input type="text" id="displayname" placeholder="Display name" name="displayname">
+					</div>
+					
+					<div class="forminput">
+					<input type="email" id="email" placeholder="E-mail" name="email" required>
+					</div>
+					
+					<div class="forminput" id="address">
+					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"></textarea>
+					</div>
+					
+					<div class="forminput">
+					<input type="password" id="password" placeholder="Password" name="password" required>
+					</div>
+				</div>
+			</div>
+			<div></div>
+			<input class="forminput" type="submit" value="Submit">
+		</form>
+	</div>
+	<%- include('./partials/footer.ejs') %>
+</body>
+</html>

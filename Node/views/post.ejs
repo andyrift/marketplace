@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('./partials/head.ejs') %>
+</head>
+<body>
+	<%- include('./partials/topbar.ejs') %>
+	<div class="content">
+		<div class="main"> 
+			<%- include('./partials/profile.ejs') %>
+			<div class="postpage">
+				<h1 id="title"><%= post.title %></h1>
+				<h1 id="price">$<%= post.price %></h1>
+				<div></div>
+				<h2 id="address">Address</h2>
+				<p><%= post.address %></p>
+				<h2>Description</h2>
+				<p><%= post.description %></p>
+				<div class="postfooter">
+					<p>00.00.0000 at 00:00</p>
+					<p>Viewed: 0</p>
+					<p>Favorited: 0</p>
+				</div>
+				<button id="write">Write to owner</button>
+				<button id="addtofavorites">Add to favorites</button>
+				<a class="delete" data-doc="<%= post.post_id %>"><button class="delete">Delete</button></a>
+				<script>
+					const deleteButton = document.querySelector('a.delete');
+					deleteButton.addEventListener('click', (e) => {
+						const endpoint = `/post/${deleteButton.dataset.doc}`;
+
+						fetch(endpoint, {
+							method: 'DELETE'
+						})
+						.then((res) => res.json())
+						.then((data) => window.location.href = data.redirect)
+						.catch(err => console.log(err));
+					})
+				</script>
+			</div>
+		</div>
+		<div class="sidebar">
+			<%- include('./partials/sidebarfavorites.ejs') %>
+		</div>
+	</div>
+	<%- include('./partials/footer.ejs') %>
+</body>
+</html>

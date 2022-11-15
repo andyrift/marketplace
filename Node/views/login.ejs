@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('./partials/head.ejs') %>
+</head>
+<body>
+	<%- include('./partials/topbar.ejs') %>
+	<div class="content">
+
+		<h3>Log in</h3>
+
+		<form class="forminput" id="createuser" action="#">
+			<div>
+				<div class="formlabels">
+					<h4>Enter your username:</h4>
+					<h4>Enter your password:</h4>
+				</div>
+
+				<div class="forminputs">
+					<div class="forminput">
+					<input type="text" id="username" placeholder="Username" required>
+					</div>
+					<div class="forminput">
+					<input type="password" id="password" placeholder="Password" required>
+					</div>
+				</div>
+			</div>
+			<div></div>
+			<input class="forminput" type="submit" value="Log in">
+		</form>
+	</div>
+	<%- include('./partials/footer.ejs') %>
+</body>
+</html>
