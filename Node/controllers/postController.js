@@ -12,7 +12,7 @@ createPost_get = (req, res) => {
 createPost_post = (req, res) => {
 	postModel.createPost({
 		user_id: 2, 
-		category_id: 1, 
+		category_id: parseInt(req.body.category), 
 		title: req.body.title, 
 		description: req.body.description, 
 		price: req.body.price, 
@@ -37,8 +37,13 @@ post_get = (req, res) => {
 			if(post){
 				userModel.getUserById(post.user_id, ({ qerr, user }) => {
 					if(user){
-						console.log(user);
-						res.render('post', { title: 'Post', post: post, user: user });
+						postModel.getCategoryById(post.category_id, ({ qerr, category }) => {
+							if(category){
+								res.render('post', { title: 'Post', post: post, user: user, category: category });
+							} else{
+								res.status(500).render('500', { title: 'Error' });
+							}
+						});
 					} else{
 						res.status(500).render('500', { title: 'Error' });
 					}
@@ -49,21 +54,21 @@ post_get = (req, res) => {
 		}
 	});
 	/*
-	for (let i = 100; i < 10000; i++) {
-		postModel.createPost({
-			user_id: 2, 
-			category_id: 1, 
-			title: `Post ${i}`, 
-			description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Placerat orci nulla pellentesque dignissim enim. Nunc eget lorem dolor sed viverra. Aliquet risus feugiat in ante. Egestas diam in arcu cursus euismod quis viverra nibh cras.", 
-			price: `${i*37/3}`, 
-			address: `consectetur ${i*3-i/2} adipiscing elit`
-		}, ({ qerr }) => {
-			if (qerr) {
-				console.error('Error executing query', err.stack);
-			}
-		});
-	}
-	*/
+	//delete all posts
+	postModel.getAllPosts(({ qerr, posts }) => {
+		if (qerr) {
+			console.error('Error executing query', qerr.stack);
+		} else {
+			posts.forEach(post => {
+				postModel.deletePostById(post.post_id, ({ qerr }) => {
+					if (qerr) {
+						console.error('Error executing query', qerr.stack);
+					}
+				});
+			})
+		}
+	});
+	//*/
 }
 
 post_delete = (req, res) => {
@@ -124,6 +129,22 @@ allCategories_get = (req, res) => {
 			res.json({ categories: categories })
 		}
 	});
+	/*
+	for (let i = 0; i < 10000; i++) {
+		postModel.createPost({
+			user_id: 2, 
+			category_id: _.random(1, 12),
+			title: `${Math.random().toString(36).slice(2)} ${Math.random().toString(36).slice(2)}`, 
+			description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Placerat orci nulla pellentesque dignissim enim. Nunc eget lorem dolor sed viverra. Aliquet risus feugiat in ante. Egestas diam in arcu cursus euismod quis viverra nibh cras.", 
+			price: `${_.random(0, 9999)}`, 
+			address: `${Math.random().toString(36).slice(2)} ${_.random(0, 999)} ${Math.random().toString(36).slice(2)} ${_.random(0, 999)}`
+		}, ({ qerr }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+			}
+		});
+	}
+	//*/
 }
 
 module.exports = {

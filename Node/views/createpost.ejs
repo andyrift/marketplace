@@ -17,6 +17,7 @@
 					<h4>Enter price in USD:</h4>
 					<h4 id="description">Enter post description:</h4>
 					<h4 id="address">Enter address:</h4>
+					<h4>Choose Category:</h4>
 				</div>
 
 				<div class="forminputs">
@@ -27,7 +28,7 @@
 					</div>
 
 					<div class="forminput">
-					<input type="number" min="0" step="0.01" id="price" placeholder="Price" name="price" required>
+					<input type="number" min="0" step="1" id="price" placeholder="Price" name="price" required>
 					</div>
 
 					<div class="forminput" id="description">
@@ -38,6 +39,9 @@
 					<div class="forminput" id="address">
 					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"></textarea>
 					</div>
+
+					<select id="category" name="category">
+					</select>
 				</div>
 			</div>
 			<div></div>
@@ -45,5 +49,6 @@
 		</form>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/createPostCategories.js"></script>
 </body>
 </html>

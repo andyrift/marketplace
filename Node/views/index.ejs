@@ -11,121 +11,12 @@
 			<div class="posts">
 
 			</div>
-			<script>
-
-				var postIds = [];
-
-				const endpoint = `/post/`;
-
-				tag = (name, attrs) => {
-				  var element = document.createElement(name.toString());
-
-				  !!attrs && Object.keys(attrs).forEach(function(key) {
-				    element.setAttribute(key, attrs[key]);
-				  });
-
-				  return element;
-				}
-
-				const postContainer = document.querySelector('div.posts');
-
-				makePost = (post) => {
-					postIds.push(post.post_id);
-
-					var postElement = tag('div', { 'class': 'post' });
-					var a = tag('a', { 'href': `/post/${post.post_id}`});
-
-					var img = tag('div', { 'id': 'image' });
-					a.appendChild(img);
-
-					var content = tag('div', { 'id': 'content' });
-					a.appendChild(content);
-
-					var h3 = tag('h3');
-					h3.innerHTML = `${post.title}`;
-					content.appendChild(h3);
-
-					var h3 = tag('h3');
-					h3.innerHTML = `$${post.price}`;
-					content.appendChild(h3);
-
-					var p = tag('p');
-					p.innerHTML = `${post.address}`;
-					content.appendChild(p);
-
-					postElement.appendChild(a);
-					return postElement;
-				}
-
-				drawPosts = (posts) => {
-					posts.forEach(post => {
-						postContainer.appendChild(makePost(post));
-					});
-					waiting = false;
-				}
-
-				var waiting = false
-
-				getPosts = (quantity) => {
-					let data = { quantity: quantity, postIds: postIds };
-			  		waiting = true;
-			  		fetch(endpoint, {
-						method: 'POST',
-					  	body: JSON.stringify(data),
-					  	headers: {
-							'Content-Type': 'application/json'
-						}
-					})
-					.then((res) => res.json())
-					.then((data) => {
-						drawPosts(data.posts);
-					})
-					.catch(err => console.log(err));
-				}
-
-				var i = 0;
-
-				var intervalId = window.setInterval(() => {
-					if(!waiting){
-						getPosts(6);
-					}
-					if(window.innerHeight <= document.body.scrollHeight) {
-						clearInterval(intervalId);
-					}
-				}, 100);
-
-				setTimeout(() => clearInterval(intervalId) , 5000);
-
-				scrollPosts = () => {
-				  	if (!waiting && 
-				  		(window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 500) {
-				  		getPosts(6);
-				    }
-				}
-
-				window.addEventListener('scroll', scrollPosts);
-			</script>
 		</div>
 		<div class="sidebar">
 			<%- include('./partials/sidebarfavorites.ejs') %>
 			<%- include('./partials/footer.ejs') %>
 		</div>
 	</div>
-
-	<script>
-		var categories = [];
-		setTimeout(() => {
-	  		fetch("/categories", {
-				method: 'GET',
-			})
-			.then((res) => res.json())
-			.then((data) => {
-				categories = data.categories;
-				console.log(categories);
-			})
-			.catch(err => console.log(err));
-		} , 100);
-	</script>>
-
+	<script src="/javascript/indexPosts.js"></script>
 </body>
 </html>

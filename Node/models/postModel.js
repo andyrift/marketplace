@@ -3,7 +3,7 @@ pool = require.main.pool;
 getPostById = (id, callback) => {
 	pool.connect((cerr, client, done) => {
 		if (cerr) throw cerr;
-		client.query('SELECT * FROM posts where post_id = $1 and deleted = FALSE', [id], (qerr, qres) => {
+		client.query('select * from posts where post_id = $1 and deleted = FALSE', [id], (qerr, qres) => {
 			done();
 			callback({ qerr: qerr, post: qres.rows[0] });
 		})
@@ -34,9 +34,19 @@ deletePostById = (id, callback) => {
 getAllPosts = (callback) => {
 	pool.connect((cerr, client, done) => {
 		if (cerr) throw cerr;
-		client.query('SELECT * FROM posts where deleted = FALSE', [], (qerr, qres) => {
+		client.query('select * from posts where deleted = FALSE', [], (qerr, qres) => {
 			done();
 			callback({ qerr: qerr, posts: qres.rows });
+		})
+	});
+}
+
+getCategoryById = (id, callback) => {
+	pool.connect((cerr, client, done) => {
+		if (cerr) throw cerr;
+		client.query('select * from categories where category_id = $1', [id], (qerr, qres) => {
+			done();
+			callback({ qerr: qerr, category: qres.rows[0] });
 		})
 	});
 }
@@ -44,7 +54,7 @@ getAllPosts = (callback) => {
 getAllCategories = (callback) => {
 	pool.connect((cerr, client, done) => {
 		if (cerr) throw cerr;
-		client.query('SELECT * FROM categories', [], (qerr, qres) => {
+		client.query('select * from categories', [], (qerr, qres) => {
 			done();
 			callback({ qerr: qerr, categories: qres.rows });
 		})
@@ -56,5 +66,6 @@ module.exports = {
 	createPost,
 	deletePostById,
 	getAllPosts,
-	getAllCategories
+	getAllCategories,
+	getCategoryById
 }
