@@ -7,7 +7,7 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<%- include('./partials/profile.ejs') %>
+			<%- include('./partials/profile.ejs', user) %>
 			<div class="postpage">
 				<h1 id="title"><%= post.title %></h1>
 				<h1 id="price">$<%= post.price %></h1>

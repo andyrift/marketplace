@@ -80,8 +80,7 @@ a:hover {
 }
 
 img#logo {
-  width: 8%;
-  height: auto;
+  height: 68px;
   float: left;
 }
 
@@ -96,14 +95,15 @@ div#searchbar, button, input::file-selector-button, input[type=submit] {
 
 div#searchbar {
   overflow:  visible;
-  width: 60%;
+  width: 65%;
   padding-left: 12px;
   color: var(--as-midgrey);
   background-color: white;
   float: right;
-  margin-left: 2%;
-  margin-top: 11px;
-  float: right;
+  margin-top: 12px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
 }
 
 button, input::file-selector-button, input[type=submit] {
@@ -120,10 +120,9 @@ input::file-selector-button, input[type=submit] {
   width: auto;
 }
 
-.search button {
-  width: 12%;
-  margin-left: 2%;
-  margin-top: 11px;
+.control button {
+  width: auto;
+  margin-top: 12px;
   float: right;
 }
 
@@ -132,16 +131,15 @@ button:hover, input::file-selector-button:hover, input[type=submit]:hover {
 }
 
 button#searchbutton {
-  width: 20%;
+  width: auto;
   margin: -2px -2px 0px 0px;
   border-radius: 0px var(--as-radius) var(--as-radius) 0px;
 }
 
-.search input[type=text] {
-  float: left;
+.control input[type=text] {
+  flex-grow: 1;
   padding: 0px;
   border: none;
-  width: 80%;
   font-size: var(--as-fontsize);
   color: var(--as-darkgrey);
   line-height: 28px;
@@ -158,6 +156,8 @@ button#searchbutton {
   padding-top: 20px;
   padding-bottom: 20px;
   background-color: var(--as-body-color);
+  display: flex;
+  justify-content: space-between;
 }
 
 .content, .footer {
@@ -202,6 +202,9 @@ button#searchbutton {
   width: 100%;
   margin: auto;
   padding-top: 10px;
+  justify-content: space-between;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .sidebarposts {
@@ -215,12 +218,26 @@ button#searchbutton {
 .post {
   float: left;
   width: 230px;
-  height: 300px;
+  height: 370px;
   margin: auto;
-  margin-right: 5px;
   margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.post div#image {
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+  margin: 0px;
   border: 1px solid lightgrey;
   border-radius: var(--as-radius);
+  box-sizing: border-box;
+}
+
+.post div#content {
+  padding-left: 2px;
+  padding-right: 2px;
+  box-sizing: border-box;
 }
 
 .sidebarpost {
@@ -229,6 +246,7 @@ button#searchbutton {
   height: 150px;
   margin: auto;
   margin-bottom: 5px;
+  box-sizing: border-box;
   border: 1px solid lightgrey;
   border-radius: var(--as-radius);
 }
@@ -242,7 +260,8 @@ button#searchbutton {
   float: left;
   height: 150px; 
   width: 150px; 
-  background-color: lightgrey;
+  box-sizing: border-box;
+  border: 1px solid lightgrey;
   border-radius: var(--as-radius);
 }
 
@@ -252,7 +271,8 @@ button#searchbutton {
   width: 300px;
   margin-top: 50px;
   margin-left: 20px; 
-  background-color: lightgrey;
+  box-sizing: border-box;
+  border: 1px solid lightgrey;
   border-radius: var(--as-radius);
 }
 

@@ -23,6 +23,7 @@ require.main.pool.on('error', (err, client) => {
 });
 
 const postRoutes = require("./routes/postRoutes.js");
+const postController = require("./controllers/postController.js");
 
 // listen
 const port = 3000
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 
 app.use(express.static('static'))
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(morgan('dev'));
 
 app.post('/register', (req, res) => {
@@ -60,24 +62,12 @@ app.post('/register', (req, res) => {
 		.catch(qerr => console.error('Error executing query', qerr.stack));
 })
 
-app.get('/', (req, res) => {
-	//res.sendFile('./views/index.html', { root: __dirname });
-	pool.connect((err, client, done) => {
-		if (err) throw err
-		client.query('SELECT * FROM posts where deleted = FALSE', [], (err, qres) => {
-			done();
-			if (err) {
-				console.error('Error executing query', err.stack);
-				res.status(500).render('500', { title: 'Error' });
-			} else {
-				res.render('index', { title: 'Home', posts: qres.rows });
-			}
-		})
-	});
-});
+app.get('/', postController.allPosts_get);
+
+app.get('/categories', postController.allCategories_get);
 
 app.get('/profile', (req, res) => {
-	res.render('profile', { title: 'Profile' });
+	res.render('profile', { title: 'Profile', user: {} });
 });
 app.get('/register', (req, res) => {
 	res.render('createuser', { title: 'Register' });
@@ -89,7 +79,7 @@ app.get('/help', (req, res) => {
 	res.render('help', { title: 'Help' });
 });
 app.get('/messages', (req, res) => {
-	res.render('messages', { title: 'Messages' });
+	res.render('messages', { title: 'Messages', user: {} });
 });
 app.get('/dialogue', (req, res) => {
 	res.render('dialogue', { title: 'Chat' });
