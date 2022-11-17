@@ -11,7 +11,7 @@ createPost_get = (req, res) => {
 
 createPost_post = (req, res) => {
 	postModel.createPost({
-		user_id: 2, 
+		user_id: parseInt(2), 
 		category_id: parseInt(req.body.category), 
 		title: req.body.title, 
 		description: req.body.description, 
@@ -29,30 +29,34 @@ createPost_post = (req, res) => {
 }
 
 post_get = (req, res) => {
-	postModel.getPostById(req.params.id, ({ qerr, post }) => {
-		if (qerr) {
-			console.error('Error executing query', qerr.stack);
-			res.status(500).render('500', { title: 'Error' });
-		} else {
-			if(post){
-				userModel.getUserById(post.user_id, ({ qerr, user }) => {
-					if(user){
-						postModel.getCategoryById(post.category_id, ({ qerr, category }) => {
-							if(category){
-								res.render('post', { title: 'Post', post: post, user: user, category: category });
-							} else{
-								res.status(500).render('500', { title: 'Error' });
-							}
-						});
-					} else{
-						res.status(500).render('500', { title: 'Error' });
-					}
-				});
+	if (!_.isInteger(parseInt(req.params.id))) {
+	  res.status(404).render('404', { title: 'Post Not Found' });
+	} else {
+		postModel.getPostById(parseInt(req.params.id), ({ qerr, post }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
 			} else {
-				res.status(404).render('404', { title: 'Not Found' });
+				if(post){
+					userModel.getUserById(post.user_id, ({ qerr, user }) => {
+						if(user){
+							postModel.getCategoryById(post.category_id, ({ qerr, category }) => {
+								if(category){
+									res.render('post', { title: 'Post', post: post, user: user, category: category });
+								} else{
+									res.status(500).render('500', { title: 'Error' });
+								}
+							});
+						} else{
+							res.status(500).render('500', { title: 'Error' });
+						}
+					});
+				} else {
+					res.status(404).render('404', { title: 'Not Found' });
+				}
 			}
-		}
-	});
+		});
+	}
 	/*
 	//delete all posts
 	postModel.getAllPosts(({ qerr, posts }) => {
@@ -72,15 +76,19 @@ post_get = (req, res) => {
 }
 
 post_delete = (req, res) => {
-	postModel.deletePostById(req.params.id, ({ qerr, post }) => {
-		if (qerr) {
-			console.error('Error executing query', qerr.stack);
-			res.status(500).render('500', { title: 'Error' });
-		} else {
-			console.log('successfully deleted post');
-			res.json({ redirect: '/' })
-		}
-	});
+	if (!_.isInteger(parseInt(req.params.id))) {
+	  res.status(404).render('404', { title: 'Post Not Found' });
+	} else {
+		postModel.deletePostById(parseInt(req.params.id), ({ qerr, post }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else {
+				console.log('successfully deleted post');
+				res.json({ redirect: '/' })
+			}
+		});
+	}
 }
 
 allPosts_get = (req, res) => {
@@ -94,30 +102,68 @@ allPosts_get = (req, res) => {
 	});
 }
 
-severalPosts_post = (req, res) => {
-	postModel.getAllPosts(({ qerr, posts }) => {
-		if (qerr) {
-			console.error('Error executing query', qerr.stack);
-			res.status(500).render('500', { title: 'Error' });
-		} else {
+getPosts_post = (req, res) => {
 
-			var resultPosts = [];
+	choosePosts = (posts, excludePostIds, quantity) => {
 
-			posts=_.shuffle(posts);
-
-			posts.every(post => {
-				if (!req.body.postIds.includes(post.post_id)) {
-					resultPosts.push(post);
-				}
-				if (resultPosts.length == req.body.quantity) {
-					return false;
-				}
-				return true;
-			});
-
-			res.json({ posts: resultPosts })
+		if(!quantity){
+			return [];
 		}
-	});
+
+		var resultPosts = [];
+
+		posts=_.shuffle(posts);
+
+		posts.every(post => {
+			if (!excludePostIds || !excludePostIds.includes(post.post_id)) {
+				resultPosts.push(post);
+			}
+			if (resultPosts.length == quantity) {
+				return false;
+			}
+			return true;
+		});
+
+		return resultPosts;
+	}
+
+	if(!req.body.user_id && !req.body.category_id) {
+		postModel.getAllPosts(({ qerr, posts }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else {
+				res.json({ posts: choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+			}
+		});
+	}	else if (!req.body.user_id) {
+		postModel.getPostsByCategory(req.body.category_id, ({ qerr, posts }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else {
+				res.json({ posts: choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+			}
+		});
+	} else if (!req.body.category_id) {
+		postModel.getPostsByUser(req.body.user_id, ({ qerr, posts }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else {
+				res.json({ posts: choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+			}
+		});
+	} else {
+		postModel.getPostsByUserAndCategory(req.body.user_id, req.body.category_id, ({ qerr, posts }) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else {
+				res.json({ posts: choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+			}
+		});
+	}
 }
 
 allCategories_get = (req, res) => {
@@ -153,6 +199,6 @@ module.exports = {
 	post_get,
 	post_delete,
 	allPosts_get,
-	severalPosts_post,
+	getPosts_post,
 	allCategories_get
 }

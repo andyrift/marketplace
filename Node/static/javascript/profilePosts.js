@@ -1,3 +1,6 @@
+path = window.location.pathname.split('/');
+user_id = parseInt(path[path.length - 1]);
+
 var postIds = [];
 
 const postContainer = document.querySelector('div.posts');
@@ -14,8 +17,8 @@ var waiting = false
 
 var i = 0;
 
-getRandomPosts = () => {
-	getPosts({ quantity: 6, excludePostIds: postIds }, (posts) => {
+getUserPosts = () => {
+	getPosts({ quantity: 6, excludePostIds: postIds, user_id: user_id }, (posts) => {
 		drawPosts(posts);
 	});
 	waiting = true;
@@ -23,7 +26,7 @@ getRandomPosts = () => {
 
 checkLoad = () => {
 	if (!waiting && (window.innerHeight + window.pageYOffset + 500) >= document.body.offsetHeight) {
-		getRandomPosts();
+		getUserPosts();
 	}
 }
 
@@ -31,7 +34,7 @@ var checkInterval;
 
 preLoad = () => {
 	if(!waiting){
-		getRandomPosts();
+		getUserPosts();
 	}
 	if(window.innerHeight <= document.body.scrollHeight) {
 		clearInterval(preloadInterval);
@@ -44,7 +47,5 @@ var preloadInterval;
 
 var preloadTimeout;
 
-getCategoriesSorted(() => {
-	preloadInterval = setInterval(preLoad, 100);
-	preloadTimeout = setTimeout(() => clearInterval(preloadInterval) , 5000);
-});
+preloadInterval = setInterval(preLoad, 100);
+preloadTimeout = setTimeout(() => clearInterval(preloadInterval) , 5000);

@@ -7,24 +7,10 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<%- include('./partials/profile.ejs') %>
+			<%- include('./partials/profile.ejs', ) %>
 			<h3>Your posts</h3>
 			<div class="posts">
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
-				<div class="post"></div>
+
 			</div>
 		</div>
 		<div class="sidebar">
@@ -32,5 +18,9 @@
 		</div>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/tag.js"></script>
+	<script src="/javascript/makePost.js"></script>
+	<script src="/javascript/getPosts.js"></script>
+	<script src="/javascript/profilePosts.js"></script>
 </body>
 </html>

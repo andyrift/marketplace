@@ -40,7 +40,7 @@
 					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"></textarea>
 					</div>
 
-					<select id="category" name="category">
+					<select id="category" name="category" required>
 					</select>
 				</div>
 			</div>
@@ -49,6 +49,8 @@
 		</form>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/tag.js"></script>
+	<script src="/javascript/getCategories.js"></script>
 	<script src="/javascript/createPostCategories.js"></script>
 </body>
 </html>

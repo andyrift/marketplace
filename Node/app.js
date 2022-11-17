@@ -22,6 +22,8 @@ require.main.pool.on('error', (err, client) => {
   process.exit(-1);
 });
 
+const userRoutes = require("./routes/userRoutes.js");
+
 const postRoutes = require("./routes/postRoutes.js");
 const postController = require("./controllers/postController.js");
 
@@ -66,9 +68,6 @@ app.get('/', postController.allPosts_get);
 
 app.get('/categories', postController.allCategories_get);
 
-app.get('/profile', (req, res) => {
-	res.render('profile', { title: 'Profile', user: {} });
-});
 app.get('/register', (req, res) => {
 	res.render('createuser', { title: 'Register' });
 });
@@ -92,6 +91,8 @@ app.get('/favorites', (req, res) => {
 });
 
 app.use('/post', postRoutes);
+
+app.use('/profile', userRoutes);
 
 
 NotFound = module.NotFound;

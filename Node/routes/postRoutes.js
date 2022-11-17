@@ -9,7 +9,7 @@ router.post('/create', postController.createPost_post);
 
 router.get('/:id', postController.post_get);
 
-router.post('/', postController.severalPosts_post);
+router.post('/', postController.getPosts_post);
 
 router.delete('/:id', postController.post_delete);
 
