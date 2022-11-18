@@ -1,6 +1,6 @@
 var postIds = [];
 
-const postContainer = document.querySelector('div.posts');
+const postContainer = document.querySelector('.main div.posts');
 
 drawPosts = (posts) => {
 	posts.forEach(post => {
@@ -16,6 +16,9 @@ var i = 0;
 
 getRandomPosts = () => {
 	getPosts({ quantity: 6, excludePostIds: postIds }, (posts) => {
+		if(posts.length === 0){
+			clearInterval(checkInterval);
+		}
 		drawPosts(posts);
 	});
 	waiting = true;

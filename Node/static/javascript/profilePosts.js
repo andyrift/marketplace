@@ -19,12 +19,16 @@ var i = 0;
 
 getUserPosts = () => {
 	getPosts({ quantity: 6, excludePostIds: postIds, user_id: user_id }, (posts) => {
+		if(posts.length === 0){
+			clearInterval(checkInterval);
+		}
 		drawPosts(posts);
 	});
 	waiting = true;
 }
 
 checkLoad = () => {
+	console.log('check');
 	if (!waiting && (window.innerHeight + window.pageYOffset + 500) >= document.body.offsetHeight) {
 		getUserPosts();
 	}
@@ -33,6 +37,7 @@ checkLoad = () => {
 var checkInterval;
 
 preLoad = () => {
+	console.log('preload');
 	if(!waiting){
 		getUserPosts();
 	}
@@ -43,9 +48,6 @@ preLoad = () => {
 	}
 }
 
-var preloadInterval;
+var preloadInterval = setInterval(preLoad, 100);
 
-var preloadTimeout;
-
-preloadInterval = setInterval(preLoad, 100);
-preloadTimeout = setTimeout(() => clearInterval(preloadInterval) , 5000);
+var preloadTimeout = setTimeout(() => clearInterval(preloadInterval) , 500);

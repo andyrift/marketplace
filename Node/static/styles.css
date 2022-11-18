@@ -166,6 +166,12 @@ button#searchbutton {
   justify-content: space-between;
 }
 
+@media screen and (max-width:800px) {
+  .control {
+    flex-wrap: wrap;
+  }
+}
+
 .content, .footer {
   overflow: hidden;
   max-width: var(--as-website-width);
@@ -208,26 +214,49 @@ button#searchbutton {
   width: 100%;
   margin: auto;
   padding-top: 10px;
-  justify-content: space-between;
+  padding-bottom: 10px;
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
-.sidebarposts {
-  overflow: hidden;
-  width: 100%;
-  margin: auto;
-  padding-top: 10px;
-  padding-bottom: 10px;
+.posts::after {
+  flex: auto;
 }
 
 .post {
-  float: left;
-  width: 230px;
-  height: 400px;
-  margin: auto;
-  margin-bottom: 5px;
   box-sizing: border-box;
+  margin: 10px 10px 0px 0px;
+  width: calc(1/3 * 100% - 10px);
+  padding-bottom: 0%;
+}
+
+.content #favorites .post {
+  width: calc(1/4 * 100% - 10px);
+}
+
+@media screen and (max-width:800px) {
+  .posts .post {
+    width: calc(1/2 * 100% - 10px);
+  }
+  .content #favorites .post {
+    width: calc(1/3 * 100% - 10px);
+  }
+}
+@media screen and (max-width: 480px) {
+  .posts .post {
+    width: calc(100% - 10px);
+  }
+  .content #favorites .post {
+    width: calc(1/2 * 100% - 10px);
+  }
+}
+
+.sidebar #favorites .post {
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
 }
 
 .post div#image {
@@ -256,17 +285,6 @@ button#searchbutton {
 
 .post div#content p#address {
   color: var(--as-midgrey);
-}
-
-.sidebarpost {
-  float: left;
-  width: 95%;
-  height: 150px;
-  margin: auto;
-  margin-bottom: 5px;
-  box-sizing: border-box;
-  border: 1px solid lightgrey;
-  border-radius: var(--as-radius);
 }
 
 .profile {

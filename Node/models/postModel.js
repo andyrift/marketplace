@@ -17,10 +17,14 @@ getPostById = (id, callback) => {
 createPost = ({user_id, category_id, title, description, price, address}, callback) => {
 	pool.connect((cerr, client, done) => {
 		if (cerr) throw cerr;
-		client.query('insert into posts(user_id, category_id, title, description, price, address) values($1, $2, $3, $4, $5, $6)',
+		client.query('insert into posts(user_id, category_id, title, description, price, address) values($1, $2, $3, $4, $5, $6) returning *',
 		[user_id, category_id, title, description, price, address], (qerr, qres) => {
 			done();
-			callback({ qerr: qerr });
+			if(!qres){
+				callback({ qerr: qerr });
+			} else {
+				callback({ qerr: qerr, post: qres.rows[0] });
+			}
 		})
 	});
 }

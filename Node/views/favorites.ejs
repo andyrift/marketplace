@@ -7,24 +7,15 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<h3>Posts you've saved</h3>
-		<div class="posts">
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
-			<div class="post"></div>
+		<div class="posts" id="favorites">
+			
 		</div>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/tag.js"></script>
+	<script src="/javascript/makePost.js"></script>
+	<script src="/javascript/getCategories.js"></script>
+	<script src="/javascript/getPosts.js"></script>
+	<script src="/javascript/favoritePosts.js"></script>
 </body>
 </html>

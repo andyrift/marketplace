@@ -1,20 +1,21 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
-
-// express app
+const _ = require('lodash');
 const app = express();
+
 
 // register view engine
 app.set('view engine', 'ejs');
 //app.set('views', 'views');
 
-// pool uses environment variables for connection information
 
+// pool
+// uses environment variables for connection information
 const { Pool } = require('pg');
-
 require.main.pool = new Pool();
 // the pool will emit an error on behalf of any idle clients it contains if a backend error or network partition happens
 require.main.pool.on('error', (err, client) => {
@@ -22,18 +23,20 @@ require.main.pool.on('error', (err, client) => {
   process.exit(-1);
 });
 
-const userRoutes = require("./routes/userRoutes.js");
 
+//components
+const userRoutes = require("./routes/userRoutes.js");
 const postRoutes = require("./routes/postRoutes.js");
 const postController = require("./controllers/postController.js");
+
 
 // listen
 const port = 3000
 app.listen(port);
 console.log(`now listening on port ${port}`);
 
-// middleware example
 
+// middleware example
 /*
 app.use((req, res, next) => {
 	console.log('new request made');
@@ -44,25 +47,19 @@ app.use((req, res, next) => {
 });
 */
 
+fs.readFile('./static/words_dictionary.json', (err, data) => {
+    if (err) throw err;
+    require.main.words = Object.keys(JSON.parse(data));
+    
+});
+
+
 // middleware & static files
 
 app.use(express.static('static'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
-
-app.post('/register', (req, res) => {
-	console.log(req.body);
-	pool
-		.query(
-			'insert into users(role_id, username, display_name, password_hash, email, avatar_link, address) values($1, $2, $3, $4, $5, $6, $7)',
-		 [1, req.body.username, req.body.displayname, req.body.password, req.body.email, "", req.body.address])
-		.then(qres => {
-			console.log('succesfully added user');
-			res.redirect('/profile');
-		})
-		.catch(qerr => console.error('Error executing query', qerr.stack));
-})
 
 app.get('/', postController.allPosts_get);
 
@@ -92,7 +89,7 @@ app.get('/favorites', (req, res) => {
 
 app.use('/post', postRoutes);
 
-app.use('/profile', userRoutes);
+app.use(userRoutes);
 
 
 NotFound = module.NotFound;

@@ -57,22 +57,6 @@ post_get = (req, res) => {
 			}
 		});
 	}
-	/*
-	//delete all posts
-	postModel.getAllPosts(({ qerr, posts }) => {
-		if (qerr) {
-			console.error('Error executing query', qerr.stack);
-		} else {
-			posts.forEach(post => {
-				postModel.deletePostById(post.post_id, ({ qerr }) => {
-					if (qerr) {
-						console.error('Error executing query', qerr.stack);
-					}
-				});
-			})
-		}
-	});
-	//*/
 }
 
 post_delete = (req, res) => {
@@ -175,22 +159,75 @@ allCategories_get = (req, res) => {
 			res.json({ categories: categories })
 		}
 	});
-	/*
-	for (let i = 0; i < 10000; i++) {
-		postModel.createPost({
-			user_id: 2, 
-			category_id: _.random(1, 12),
-			title: `${Math.random().toString(36).slice(2)} ${Math.random().toString(36).slice(2)}`, 
-			description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Placerat orci nulla pellentesque dignissim enim. Nunc eget lorem dolor sed viverra. Aliquet risus feugiat in ante. Egestas diam in arcu cursus euismod quis viverra nibh cras.", 
-			price: `${_.random(0, 9999)}`, 
-			address: `${Math.random().toString(36).slice(2)} ${_.random(0, 999)} ${Math.random().toString(36).slice(2)} ${_.random(0, 999)}`
-		}, ({ qerr }) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
+}
+
+deleteAllPosts = () => {
+	console.log('deleting all posts');
+	postModel.getAllPosts(({ qerr, posts }) => {
+		if (qerr) {
+			console.error('Error executing query', qerr.stack);
+		} else {
+			posts.forEach(post => {
+				postModel.deletePostById(post.post_id, ({ qerr }) => {
+					if (qerr) {
+						console.error('Error executing query', qerr.stack);
+					}
+				});
+			})
+		}
+	});
+}
+
+createPosts = () => {
+	console.log('creating posts');
+
+	userModel.getAllUsers(({ qerr, users }) => {
+		if (qerr) {
+			console.error('Error executing query', qerr.stack);
+		} else {
+			var allUserIds = [];
+			users.forEach(user => {
+				allUserIds.push(user.user_id);
+			});
+
+			for (let i = 0; i < 500; i++) {
+				var myuser_id = _.sample(allUserIds)
+
+				var w = _.random(0, 7);
+				var mytitle = _.capitalize(_.sample(require.main.words));
+				for (let i = 0; i < w; i++) {
+					if (_.random(0, 1)) { 
+						mytitle = mytitle + " " + _.sample(require.main.words);
+					} else{
+						mytitle = mytitle + " " + _.capitalize(_.sample(require.main.words));
+					}
+				}
+
+				var d = _.random(5, 100);
+				var mydescr = _.capitalize(_.sample(require.main.words));
+				for (let i = 0; i < d; i++) {
+					if (_.random(0, 1)) { 
+						mydescr = mydescr + " " + _.sample(require.main.words);
+					} else{
+						mydescr = mydescr + " " + _.capitalize(_.sample(require.main.words));
+					}
+				}
+				postModel.createPost({
+					user_id: myuser_id, 
+					category_id: _.random(1, 12),
+					title: mytitle, 
+					description: mydescr, 
+					price: `${_.random(0, 9999)}`,
+					address: users.find(user => {return (user.user_id === myuser_id)}).address,
+				}, ({ qerr, post}) => {
+					if (qerr) {
+						console.error('Error executing query', qerr.stack);
+					}
+					console.log(post);
+				});
 			}
-		});
-	}
-	//*/
+		}
+	});
 }
 
 module.exports = {
