@@ -1,43 +1,123 @@
 pool = require.main.pool;
 
 userModel = require("../models/userModel");
+postModel = require("../models/postModel");
 
 const _ = require('lodash');
+const multer  = require('multer');
+const fs = require('fs');
 
 user_get = (req, res) => {
-	if (!_.isInteger(parseInt(req.params.id))) {
-    res.status(404).render('404', { title: 'User Not Found' });
-  } else {
-		userModel.getUserById(parseInt(req.params.id), ({ qerr, user }) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
-				res.status(500).render('500', { title: 'Error' });
-			} else if(user) {
-				res.render('profile', { title: 'Profile', user: user });
-			} else{
-				res.status(404).render('404', { title: 'User Not Found' });
-			}
-		});
-	}
-}
-
-user_post = (req, res) => {
-	userModel.createUser({
-		username: req.body.username, 
-		displayname: req.body.displayname, 
-		password: req.body.password, 
-		email: req.body.email, 
-		address: req.body.address
-	}, ({ qerr, user }) => {
+	userModel.getUserByUsername(req.params.username, (qerr, user ) => {
 		if (qerr) {
 			console.error('Error executing query', qerr.stack);
 			res.status(500).render('500', { title: 'Error' });
-		} else if(user) {
-			res.redirect(`/profile/${user.user_id}`);
+		} else if (user) {
+			res.render('profile', { title: 'Profile', user: user });
 		} else{
-			res.status(500).render('500', { title: 'Error' });
+			res.status(404).render('404', { title: 'User Not Found' });
 		}
 	});
+}
+
+user_delete = (req, res) => {
+	userModel.deleteUserByUsername(req.params.username, (qerr, user) => {
+		if (qerr) {
+			console.error('Error executing query', qerr.stack);
+			res.status(500).render('500', { title: 'Error' });
+		} else {
+			console.log('successfully deleted user');
+			postModel.deletePostsByUserId(user.user_id, (qerr, posts) => {
+				if (qerr) {
+					console.error('Error executing query', qerr.stack);
+					res.status(500).render('500', { title: 'Error' });
+				} else {
+					posts.forEach(post => {
+						postModel.deletePostPicture(post);
+					})
+				}
+			});
+			if(user && user.picture_filename.length > 0) {
+				fs.unlink(`./uploads/${user.picture_filename}`, (err) => {
+				  if (err) {
+				    console.error(err);
+				    return;
+				  }
+				});
+			}
+			res.json({ redirect: '/' });
+		}
+	});
+}
+
+containsSpecialChars = (str) => {
+  const specialChars = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+  return specialChars.test(str);
+}
+
+user_post = (req, res) => {
+	if(req.headers['content-type'].split(';')[0] === "application/json") {
+		userModel.getUserByUsername(req.body.username, (qerr, user ) => {
+			if (qerr) {
+				console.error('Error executing query', qerr.stack);
+				res.status(500).render('500', { title: 'Error' });
+			} else if (user || containsSpecialChars(req.body.username)) {
+				res.status(200).json({ usernameAccepted: false })
+			} else {
+				res.status(200).json({ usernameAccepted: true });
+			}
+		});
+	}
+	if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
+		require.main.upload.single('picture')(req, res, (err) => {
+			if (err instanceof multer.MulterError) {
+	     	console.error('Multer error', err.stack);
+				res.status(500).render('500', { title: 'Error' });
+	    } else if (err) {
+	      console.error('Unknown error', err.stack);
+				res.status(500).render('500', { title: 'Error' });
+	    } else {
+				userModel.getUserByUsername(req.body.username, (qerr, user ) => {
+					if (qerr) {
+						console.error('Error executing query', qerr.stack);
+						res.status(500).render('500', { title: 'Error' });
+					} else if (user || containsSpecialChars(req.body.username)) {
+						if(req.file){
+							fs.unlink(`./uploads/${req.file.filename}`, (err) => {
+							  if (err) {
+							    console.error(err);
+							    return;
+							  }
+							});
+						}
+						res.status(200).json({ usernameAccepted: false });
+					} else {
+						let filename = "";
+						if(req.file){
+							filename = req.file.filename;
+						}
+						userModel.createUser({
+							username: req.body.username, 
+							displayname: req.body.displayname, 
+							password: req.body.password, 
+							email: req.body.email, 
+							address: req.body.address,
+							picture_filename: filename,
+						}, (qerr, user ) => {
+							if (qerr) {
+								console.error('Error executing query', qerr.stack);
+								res.status(500).render('500', { title: 'Error' });
+							} else if(user) {
+								res.status(302).json({ usernameAccepted: true, redirect: `/profile/${user.username}` });
+							} else {
+								res.status(500).render('500', { title: 'Error' });
+							}
+						});
+					}
+				});
+	    }
+	  });
+	}
 }
 
 createUsers = () => {
@@ -52,12 +132,12 @@ createUsers = () => {
 			if (qerr) {
 				console.error('Error executing query', qerr.stack);
 			}
-			console.log(user);
 		});
 	}
 }
 
 module.exports = {
 	user_get,
-	user_post
+	user_post,
+	user_delete
 }

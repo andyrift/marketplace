@@ -5,6 +5,8 @@ makePost = (post) => {
 	var img = tag('div', { 'id': 'image' });
 	a.appendChild(img);
 
+	img.innerHTML = `<img src="/${post.picture_filename}" alt="Post Picture">`;
+
 	var content = tag('div', { 'id': 'content' });
 	a.appendChild(content);
 

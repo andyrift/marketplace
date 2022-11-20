@@ -7,7 +7,38 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<%- include('./partials/profile.ejs', ) %>
+			<div class="profile">
+				<a href="/profile/<%= user.username %>">
+					<div id="profilepicture">
+						<img src="/<%= user.picture_filename %>" alt="Profile Picture">
+					</div>
+				</a>
+				<div id="rating">
+					
+				</div>
+				<div style="clear:both;"></div>
+				<a href="/profile/<%= user.username %>">
+					<h2 id="name"><%= user.displayname %></h2>
+				</a>
+				<div class="profilefooter">
+					<p>Joined <%= user.joined_timestamp %></p>
+				</div>
+				<button>Edit</button>
+				<a class="delete" data-doc="<%= user.username %>"><button class="delete">Delete</button></a>
+				<script>
+					const deleteButton = document.querySelector('a.delete');
+					deleteButton.addEventListener('click', (e) => {
+						const endpoint = `/profile/${deleteButton.dataset.doc}`;
+
+						fetch(endpoint, {
+							method: 'DELETE'
+						})
+						.then((res) => res.json())
+						.then((data) => window.location.href = data.redirect)
+						.catch(err => console.log(err));
+					})
+				</script>
+			</div>
 			<h3>Your posts</h3>
 			<div class="posts">
 

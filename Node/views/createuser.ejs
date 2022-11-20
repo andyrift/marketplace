@@ -9,7 +9,7 @@
 
 		<h3>Create your account</h3>
 
-		<form class="forminput" id="createuser" action="/register" method="POST">
+		<form class="forminput" id="createuser" name="createuser" onsubmit="return false">
 			<div>
 				<div class="formlabels">
 					<h4>Choose your profile picture:</h4>
@@ -23,16 +23,16 @@
 				<div class="forminputs">
 					<input type="file" accept=".png" id="picture" name="picture">
 
-					<div class="forminput">
+					<div class="forminput" id="username">
 					<input type="text" id="username" placeholder="Username" name="username" required>
 					</div>
 
 					<div class="forminput">
-					<input type="text" id="displayname" placeholder="Display name" name="displayname">
+					<input type="text" id="displayname" placeholder="Display name" name="displayname" required>
 					</div>
 					
 					<div class="forminput">
-					<input type="email" id="email" placeholder="E-mail" name="email" required>
+					<input type="text" id="email" placeholder="E-mail" name="email" required>
 					</div>
 					
 					<div class="forminput" id="address">
@@ -45,8 +45,64 @@
 				</div>
 			</div>
 			<div></div>
-			<input class="forminput" type="submit" value="Submit">
+			<button class="forminput" onclick="submitEvent()">Submit</button>
 		</form>
+			<script>
+				/*
+				// check file type
+			  if (!['image/jpeg', 'image/gif', 'image/png', 'image/svg+xml'].includes(file.type)) {
+			    console.log('Only images are allowed.')
+			    return
+			  }
+
+			  // check file size (< 2MB)
+			  if (file.size > 2 * 1024 * 1024) {
+			    console.log('File must be less than 2MB.')
+			    return
+			  }
+			  */
+
+				const form = document.querySelector('form#createuser');
+				const usernameBorder = document.querySelector('div#username');
+				const usernameInput = document.querySelector('input#username');
+				const pictureInput = document.querySelector('input[type="file"]');
+				usernameInput.addEventListener("input", () => {usernameBorder.style.borderColor = null});
+				submitEvent = () => {
+
+					var formData = new FormData(form);
+					var data = {};
+					formData.forEach((value, key) => data[key] = value);
+
+					if(!data.username || !data.displayname || !data.email || !data.password){
+						return;
+					}
+
+					fetch('/register/', {
+						method: 'POST',
+				  	body: JSON.stringify(data),
+				  	headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					.then((res) => res.json())
+					.then((data) => {
+						if(data.usernameAccepted) {
+							fetch('/register/', {
+								method: 'POST',
+								body: formData,
+							})
+							.then((res) => res.json())
+							.then((data) => {
+								window.location.href = data.redirect;
+							})
+							.catch(err => console.log(err));
+						} else {
+							usernameBorder.style.borderColor = "red";
+						}
+					})
+					.catch(err => console.log(err));
+				}
+			</script>
 	</div>
 	<%- include('./partials/footer.ejs') %>
 </body>

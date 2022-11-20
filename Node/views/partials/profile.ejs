@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <div class="profile">
-	<div id="profilepicture"></div>
-	<div id="rating"></div>
+	<a href="/profile/<%= user.username %>">
+		<div id="profilepicture">
+			<img src="/<%= user.picture_filename %>" alt="Profile Picture">
+		</div>
+	</a>
+	<div id="rating">
+		
+	</div>
 	<div style="clear:both;"></div>
-	<h2 id="name"><%= user.display_name %><h2>
+	<a href="/profile/<%= user.username %>">
+		<h2 id="name"><%= user.displayname %></h2>
+	</a>
 </div>

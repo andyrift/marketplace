@@ -4,7 +4,9 @@ if (process.env.NODE_ENV !== 'production') {
 const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
+const multer  = require('multer');
 const _ = require('lodash');
+const md5 = require('md5');
 const app = express();
 
 
@@ -12,6 +14,17 @@ const app = express();
 app.set('view engine', 'ejs');
 //app.set('views', 'views');
 
+multerStorage = multer.diskStorage({ 
+	destination: (req, file, cb) => {
+		cb(null, `uploads/`);
+	},
+	filename: (req, file, cb) => {
+		const ext = file.mimetype.split('/')[1];
+		cb(null, `${md5((Math.random().toString(36)+'00000000000000000').slice(2, 18))}-${Date.now()}.${ext}`);
+	}
+});
+
+require.main.upload = multer({ storage: multerStorage });
 
 // pool
 // uses environment variables for connection information
@@ -50,13 +63,13 @@ app.use((req, res, next) => {
 fs.readFile('./static/words_dictionary.json', (err, data) => {
     if (err) throw err;
     require.main.words = Object.keys(JSON.parse(data));
-    
 });
 
 
 // middleware & static files
 
-app.use(express.static('static'))
+app.use(express.static('static'));
+app.use(express.static('uploads'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
@@ -90,9 +103,6 @@ app.get('/favorites', (req, res) => {
 app.use('/post', postRoutes);
 
 app.use(userRoutes);
-
-
-NotFound = module.NotFound;
 
 // 404, this one works for every url, express reached this one only if it does not get a match before
 app.use((req, res) => {

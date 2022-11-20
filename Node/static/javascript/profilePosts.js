@@ -1,5 +1,5 @@
 path = window.location.pathname.split('/');
-user_id = parseInt(path[path.length - 1]);
+username = path[path.length - 1];
 
 var postIds = [];
 
@@ -18,7 +18,7 @@ var waiting = false
 var i = 0;
 
 getUserPosts = () => {
-	getPosts({ quantity: 6, excludePostIds: postIds, user_id: user_id }, (posts) => {
+	getPosts({ quantity: 6, excludePostIds: postIds, username: username }, (posts) => {
 		if(posts.length === 0){
 			clearInterval(checkInterval);
 		}

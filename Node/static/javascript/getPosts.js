@@ -1,7 +1,7 @@
-getPosts = ({ quantity, user_id, category_id, excludePostIds }, callback) => {
-	let data = { quantity, excludePostIds, user_id, category_id };
+getPosts = ({ quantity, username, category_id, excludePostIds }, callback) => {
+	let data = { quantity, excludePostIds, username, category_id };
 	fetch(/post/, {
-	method: 'POST',
+		method: 'POST',
   	body: JSON.stringify(data),
   	headers: {
 		'Content-Type': 'application/json'
