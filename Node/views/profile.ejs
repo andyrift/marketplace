@@ -23,7 +23,7 @@
 				<div class="profilefooter">
 					<p>Joined <%= user.joined_timestamp %></p>
 				</div>
-				<button>Edit</button>
+				<a href="/profile/edit/<%= user.username %>"><button>Edit</button></a>
 				<a class="delete" data-doc="<%= user.username %>"><button class="delete">Delete</button></a>
 				<script>
 					const deleteButton = document.querySelector('a.delete');

@@ -26,7 +26,7 @@ createPost_post = (req, res) => {
 					filename = req.file.filename;
 				}
 	    	postModel.createPost({
-					user_id: 14, 
+					user_id: 16, 
 					category_id: parseInt(req.body.category), 
 					title: req.body.title, 
 					description: req.body.description, 

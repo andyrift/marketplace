@@ -20,6 +20,19 @@ user_get = (req, res) => {
 	});
 }
 
+updateUser_get = (req, res) => {
+	userModel.getUserByUsername(req.params.username, (qerr, user ) => {
+		if (qerr) {
+			console.error('Error executing query', qerr.stack);
+			res.status(500).render('500', { title: 'Error' });
+		} else if (user) {
+			res.render('updateuser', { title: 'Profile', user: user });
+		} else{
+			res.status(404).render('404', { title: 'User Not Found' });
+		}
+	});
+}
+
 user_delete = (req, res) => {
 	userModel.deleteUserByUsername(req.params.username, (qerr, user) => {
 		if (qerr) {
@@ -55,7 +68,7 @@ containsSpecialChars = (str) => {
   return specialChars.test(str);
 }
 
-user_post = (req, res) => {
+createUser_post = (req, res) => {
 	if(req.headers['content-type'].split(';')[0] === "application/json") {
 		userModel.getUserByUsername(req.body.username, (qerr, user ) => {
 			if (qerr) {
@@ -67,8 +80,7 @@ user_post = (req, res) => {
 				res.status(200).json({ usernameAccepted: true });
 			}
 		});
-	}
-	if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
+	} else if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
 		require.main.upload.single('picture')(req, res, (err) => {
 			if (err instanceof multer.MulterError) {
 	     	console.error('Multer error', err.stack);
@@ -117,6 +129,63 @@ user_post = (req, res) => {
 				});
 	    }
 	  });
+	} else {
+		res.status(500).render('500', { title: 'Error' });
+	}
+}
+
+updateUser_post = (req, res) => {
+	if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
+		require.main.upload.single('picture')(req, res, (err) => {
+			if (err instanceof multer.MulterError) {
+	     	console.error('Multer error', err.stack);
+				res.status(500).render('500', { title: 'Error' });
+	    } else if (err) {
+	      console.error('Unknown error', err.stack);
+				res.status(500).render('500', { title: 'Error' });
+	    } else {
+				if(req.file){
+					userModel.getUserByUsername(req.params.username, (qerr, user ) => {
+						if (qerr) {
+							console.error('Error executing query', qerr.stack);
+							res.status(500).render('500', { title: 'Error' });
+						} else {
+							userModel.deleteUserPicture(user);
+							userModel.updateUserByUsername_pic({
+								username: req.params.username,
+								displayname: req.body.displayname,
+								email: req.body.email, 
+								address: req.body.address,
+								picture_filename: req.file.filename,
+							}, (qerr, user ) => {
+								if (qerr) {
+									console.error('Error executing query', qerr.stack);
+									res.status(500).render('500', { title: 'Error' });
+								} else {
+									res.redirect(`/profile/${user.username}`);
+								}
+							});
+						}
+					});
+				} else {
+					userModel.updateUserByUsername_nopic({
+						username: req.params.username,
+						displayname: req.body.displayname,
+						email: req.body.email, 
+						address: req.body.address,
+					}, (qerr, user ) => {
+						if (qerr) {
+							console.error('Error executing query', qerr.stack);
+							res.status(500).render('500', { title: 'Error' });
+						} else {
+							res.redirect(`/profile/${user.username}`);
+						}
+					});
+				}
+	    }
+	  });
+	} else {
+		res.status(500).render('500', { title: 'Error' });
 	}
 }
 
@@ -138,6 +207,8 @@ createUsers = () => {
 
 module.exports = {
 	user_get,
-	user_post,
+	updateUser_get,
+	createUser_post,
+	updateUser_post,
 	user_delete
 }

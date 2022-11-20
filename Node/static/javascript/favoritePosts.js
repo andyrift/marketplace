@@ -18,6 +18,7 @@ getRandomPosts = () => {
 	getPosts({ quantity: 12, excludePostIds: postIds }, (posts) => {
 		if(posts.length === 0){
 			clearInterval(checkInterval);
+			clearInterval(preloadInterval);
 		}
 		drawPosts(posts);
 	});

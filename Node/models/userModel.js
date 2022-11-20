@@ -1,6 +1,18 @@
 const md5 = require('md5');
+const fs = require('fs');
 
 pool = require.main.pool;
+
+deleteUserPicture = (user) => {
+	if(user && user.picture_filename.length > 0) {
+		fs.unlink(`./uploads/${user.picture_filename}`, (err) => {
+		  if (err) {
+		    console.error(err);
+		    return;
+		  }
+		});
+	}
+}
 
 getUserById = (id, callback) => {
 	pool.connect((cerr, client, done) => {
@@ -60,6 +72,38 @@ createUser = ({username, displayname, password, email, address, picture_filename
 	});
 }
 
+updateUserByUsername_pic = ({username, displayname, email, address, picture_filename}, callback) => {
+	pool.connect((cerr, client, done) => {
+		if (cerr) throw cerr;
+		client.query(
+			'update users set displayname = $1, email = $2, picture_filename = $3, address = $4 where username = $5 returning *',
+		 [displayname, email, picture_filename, address, username], (qerr, qres) => {
+			done();
+			if(qerr){
+				callback( qerr, undefined );
+			} else {
+				callback( undefined, qres.rows[0] );
+			}
+		})
+	});
+}
+
+updateUserByUsername_nopic = ({username, displayname, email, address, picture_filename}, callback) => {
+	pool.connect((cerr, client, done) => {
+		if (cerr) throw cerr;
+		client.query(
+			'update users set displayname = $1, email = $2, address = $3 where username = $4 returning *',
+		 [displayname, email, address, username], (qerr, qres) => {
+			done();
+			if(qerr){
+				callback( qerr, undefined );
+			} else {
+				callback( undefined, qres.rows[0] );
+			}
+		})
+	});
+}
+
 deleteUserByUsername = (username, callback) => {
 	pool.connect((cerr, client, done) => {
 		if (cerr) throw cerr;
@@ -79,5 +123,8 @@ module.exports = {
 	getUserByUsername,
 	createUser,
 	getAllUsers,
-	deleteUserByUsername
+	deleteUserByUsername,
+	updateUserByUsername_pic,
+	updateUserByUsername_nopic,
+	deleteUserPicture
 }

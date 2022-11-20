@@ -21,6 +21,7 @@ getUserPosts = () => {
 	getPosts({ quantity: 6, excludePostIds: postIds, username: username }, (posts) => {
 		if(posts.length === 0){
 			clearInterval(checkInterval);
+			clearInterval(preloadInterval);
 		}
 		drawPosts(posts);
 	});

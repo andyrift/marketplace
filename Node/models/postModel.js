@@ -21,7 +21,6 @@ getPostById = (id, callback) => {
 			if(qerr){
 				callback( qerr, undefined );
 			} else {
-				console.log(qres.rows[0].publication_timestamp);
 				callback( undefined, qres.rows[0] );
 			}
 		})
