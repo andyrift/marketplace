@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('./partials/head.ejs') %>
+</head>
+<body>
+	<%- include('./partials/topbar.ejs') %>
+	<div class="content">
+
+		<h3>Edit post</h3>
+
+		<form class="forminput" id="createpost" action="/post/edit/<%= post.post_id %>" method="POST" enctype="multipart/form-data">
+			<div>
+				<div class="formlabels">
+					<h4>Choose picture:</h4>
+					<h4>Enter post title:</h4>
+					<h4>Enter price in USD:</h4>
+					<h4 id="description">Enter post description:</h4>
+					<h4 id="address">Enter address:</h4>
+					<h4>Choose Category:</h4>
+				</div>
+
+				<div class="forminputs">
+					<input type="file" accept=".png" id="picture" name="picture">
+
+					<div class="forminput">
+					<input type="text" id="title" placeholder="Title" name="title" value="<%= post.title %>" required>
+					</div>
+
+					<div class="forminput">
+					<input type="number" min="0" step="1" id="price" placeholder="Price" name="price" value="<%= post.price %>" required>
+					</div>
+
+					<div class="forminput" id="description">
+					<textarea type="text" id="description" placeholder="Description" rows=8 
+					form="createpost" name="description" required><%= post.description %></textarea>
+					</div>
+					
+					<div class="forminput" id="address">
+					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= post.address %></textarea>
+					</div>
+
+					<select id="category" name="category" data-cat="<%= post.category_id %>" required>
+					</select>
+				</div>
+			</div>
+		</form>
+		<div style="clear: both;"></div>
+		<button form="createpost">Submit</button>
+	</div>
+	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/tag.js"></script>
+	<script src="/javascript/getCategories.js"></script>
+	<script src="/javascript/updatePostCategories.js"></script>
+</body>
+</html>

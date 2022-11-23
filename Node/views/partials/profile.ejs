@@ -2,14 +2,10 @@
 <div class="profile">
 	<a href="/profile/<%= user.username %>">
 		<div id="profilepicture">
-			<img src="/<%= user.picture_filename %>" alt="Profile Picture">
+			<img src="/<%= user.picture_filename %>" alt="">
 		</div>
 	</a>
-	<div id="rating">
-		
-	</div>
-	<div style="clear:both;"></div>
 	<a href="/profile/<%= user.username %>">
-		<h2 id="name"><%= user.displayname %></h2>
+		<h3 id="name"><%= user.displayname %></h3>
 	</a>
 </div>

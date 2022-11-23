@@ -6,10 +6,10 @@ drawFPosts = (posts) => {
 	});
 }
 
-getRandomFPosts = () => {
-	getPosts({ quantity: 2 }, (posts) => {
+getFPosts = () => {
+	getFavoritePosts({ quantity: 2, excludePostIds: [] }, (posts) => {
 		drawFPosts(posts);
 	});
 }
 
-getRandomFPosts();
+getFPosts();

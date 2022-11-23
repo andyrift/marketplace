@@ -40,6 +40,7 @@ require.main.pool.on('error', (err, client) => {
 //components
 const userRoutes = require("./routes/userRoutes.js");
 const postRoutes = require("./routes/postRoutes.js");
+const favoritesRoutes = require("./routes/favoritesRoutes.js");
 const postController = require("./controllers/postController.js");
 
 
@@ -74,7 +75,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.get('/', postController.allPosts_get);
+app.get('/', (req, res) => {
+	res.render('index', { title: 'Home' });
+});
 
 app.get('/categories', postController.allCategories_get);
 
@@ -96,11 +99,9 @@ app.get('/dialogue', (req, res) => {
 app.get('/blacklist', (req, res) => {
 	res.render('blacklist', { title: 'Blacklist' });
 });
-app.get('/favorites', (req, res) => {
-	res.render('favorites', { title: 'Favorites' });
-});
 
 app.use('/post', postRoutes);
+app.use('/favorites', favoritesRoutes);
 
 app.use(userRoutes);
 

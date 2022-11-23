@@ -25,19 +25,7 @@
 				</div>
 				<a href="/profile/edit/<%= user.username %>"><button>Edit</button></a>
 				<a class="delete" data-doc="<%= user.username %>"><button class="delete">Delete</button></a>
-				<script>
-					const deleteButton = document.querySelector('a.delete');
-					deleteButton.addEventListener('click', (e) => {
-						const endpoint = `/profile/${deleteButton.dataset.doc}`;
-
-						fetch(endpoint, {
-							method: 'DELETE'
-						})
-						.then((res) => res.json())
-						.then((data) => window.location.href = data.redirect)
-						.catch(err => console.log(err));
-					})
-				</script>
+				<script src="/javascript/profile.js"> </script>
 			</div>
 			<h3>Your posts</h3>
 			<div class="posts">
@@ -52,6 +40,7 @@
 	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
 	<script src="/javascript/getPosts.js"></script>
+	<script src="/javascript/getFavoritePosts.js"></script>
 	<script src="/javascript/profilePosts.js"></script>
 	<script src="/javascript/favoritePostsSide.js"></script>
 </body>

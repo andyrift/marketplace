@@ -7,6 +7,10 @@ router.get('/create',  postController.createPost_get);
 
 router.post('/create', postController.createPost_post);
 
+router.get('/edit/:id', postController.updatePost_get);
+
+router.post('/edit/:id', postController.updatePost_post);
+
 router.get('/:id', postController.post_get);
 
 router.post('/', postController.getPosts_post);

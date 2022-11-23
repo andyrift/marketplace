@@ -1,6 +1,6 @@
-getPosts = ({ quantity, username, category_id, excludePostIds }, callback) => {
-	let data = { quantity, excludePostIds, username, category_id };
-	fetch(/post/, {
+getFavoritePosts = ({ quantity, excludePostIds }, callback) => {
+	let data = { quantity, excludePostIds };
+	fetch(/favorites/, {
 		method: 'POST',
   	body: JSON.stringify(data),
   	headers: {

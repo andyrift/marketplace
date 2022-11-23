@@ -14,8 +14,8 @@ var waiting = false
 
 var i = 0;
 
-getRandomPosts = () => {
-	getPosts({ quantity: 12, excludePostIds: postIds }, (posts) => {
+getFavorites = () => {
+	getFavoritePosts({ quantity: 12, excludePostIds: postIds }, (posts) => {
 		if(posts.length === 0){
 			clearInterval(checkInterval);
 			clearInterval(preloadInterval);
@@ -27,7 +27,7 @@ getRandomPosts = () => {
 
 checkLoad = () => {
 	if (!waiting && (window.innerHeight + window.pageYOffset + 500) >= document.body.offsetHeight) {
-		getRandomPosts();
+		getFavorites();
 	}
 }
 
@@ -35,7 +35,7 @@ var checkInterval;
 
 preLoad = () => {
 	if(!waiting){
-		getRandomPosts();
+		getFavorites();
 	}
 	if(window.innerHeight <= document.body.scrollHeight) {
 		clearInterval(preloadInterval);
