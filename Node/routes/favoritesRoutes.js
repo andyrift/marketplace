@@ -5,10 +5,6 @@ const router = express.Router();
 
 router.get('/',  favoritesController.favoritesPage_get);
 
-router.post('/',  favoritesController.getFavorites_post);
-
-router.delete('/',  favoritesController.deleteFavorite_delete);
-
-router.post('/add', favoritesController.addFavorite_post);
+router.post('/',  favoritesController.favorites_post);
 
 module.exports = router;

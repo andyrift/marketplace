@@ -7,50 +7,22 @@ favoritesPage_get = (req, res) => {
 	res.render('favorites', { title: 'Favorites', user_id: 14 });
 }
 
-addFavorite_post = (req, res) => {
-	favoritesModel.getFavorite({
-		user_id: parseInt(14),
-		post_id: parseInt(req.body.post_id),
-	})
-	.then(qres => {
-		if (qres) {
-			console.log(qres);
-			res.status(302).json({ redirect: '/favorites' });
-		} else{
-			favoritesModel.addFavorite({
-				user_id: parseInt(14),
-				post_id: parseInt(req.body.post_id),
-			}, (err) => {
-				if (err) {
-					console.error('Error adding favorite', err);
-					fetchError.sendError(res);
-				} else {
-					res.status(302).json({ redirect: '/favorites' });
-				}
-			});
-		}
-	})
-	.catch (err => {
-		console.error('Error adding favorite', err);
-		fetchError.sendError(res);
-	});
-}
-
-deleteFavorite_delete = (req, res) => {
-  favoritesModel.deleteFavorite({
-		user_id: parseInt(14),
-		post_id: parseInt(req.body.post_id),
-	}, (err) => {
-		if (err) {
-			console.error('Error deleting favorite', err);
-			fetchError.sendError(res);
+changeFavorite = async (req, res) => {
+	try {
+		favorite = !!(await favoritesModel.getFavorite({ user_id: parseInt(14), post_id: parseInt(req.body.post_id) }));
+		if (favorite) {
+			await favoritesModel.deleteFavorite({ user_id: parseInt(14), post_id: parseInt(req.body.post_id) });
 		} else {
-			res.status(302).json({ redirect: '/favorites' });
+			await favoritesModel.addFavorite({ user_id: parseInt(14), post_id: parseInt(req.body.post_id) });
 		}
-	});
+		res.status(200).json({ redirect: undefined, favorite: !favorite });
+	} catch (err) {
+		console.error("Error changing favorite", err);
+		fetchError.sendError(res);
+	}
 }
 
-getFavorites_post = (req, res) => {
+getFavorites = (req, res) => {
 	favoritesModel.getFavoritesByUserId(14, (err, posts) => {
 		if (err) {
 			console.error('Error getting favorites', err);
@@ -61,9 +33,15 @@ getFavorites_post = (req, res) => {
 	});
 }
 
+favorites_post = (req, res) => {
+	if (req.body.change) {
+		changeFavorite(req, res);
+	} else if (req.body.get) {
+		getFavorites(req, res)
+	}
+}
+
 module.exports = {
 	favoritesPage_get,
-	addFavorite_post,
-	deleteFavorite_delete,
-	getFavorites_post,
+	favorites_post
 }

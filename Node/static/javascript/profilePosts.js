@@ -3,12 +3,21 @@ username = path[path.length - 1];
 
 var postIds = [];
 
-const postContainer = document.querySelector('div.posts');
+const openPostContainer = document.querySelector('div#open');
+const closedPostContainer = document.querySelector('div#closed');
 
-drawPosts = (posts) => {
+drawOpenPosts = (posts) => {
 	posts.forEach(post => {
 		postIds.push(post.post_id);
-		postContainer.appendChild(makePost(post));
+		openPostContainer.appendChild(makePost(post));
+	});
+	waiting = false;
+}
+
+drawClosedPosts = (posts) => {
+	posts.forEach(post => {
+		postIds.push(post.post_id);
+		closedPostContainer.appendChild(makePost(post));
 	});
 	waiting = false;
 }
@@ -18,13 +27,19 @@ var waiting = false
 var i = 0;
 
 getUserPosts = () => {
-	getPosts({ quantity: 6, excludePostIds: postIds, username: username }, (posts) => {
-		if(posts.length === 0){
-			clearInterval(checkInterval);
-			clearInterval(preloadInterval);
-		}
-		drawPosts(posts);
+	let postslen = 0;
+	getPosts({ quantity: 6, excludePostIds: postIds, username: username, closed: false }, (posts) => {
+		postslen += posts.length;
+		drawOpenPosts(posts);
 	});
+	getPosts({ quantity: 6, excludePostIds: postIds, username: username, closed: true }, (posts) => {
+		postslen += posts.length;
+		drawClosedPosts(posts);
+	});
+	if(postslen === 0){
+		clearInterval(checkInterval);
+		clearInterval(preloadInterval);
+	}
 	waiting = true;
 }
 

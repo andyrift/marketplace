@@ -13,7 +13,7 @@ createPost_get = (req, res) => {
 	res.render('createpost', { title: 'Create' });
 }
 
-createPost_post = async (req, res) => {
+createPost = async (req, res) => {
 	try{
 		if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
 			require.main.upload.single('picture')(req, res, async (err) => {
@@ -61,7 +61,7 @@ post_get = async (req, res) => {
 	  res.status(404).render('404', { title: 'Post Not Found' });
 	} else {
 		try {
-			post = await postModel.getPostById(parseInt(req.params.id));
+			post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
 			if (!post) {
 				res.status(404).render('404', { title: 'Post Not Found' });
 			}
@@ -73,7 +73,8 @@ post_get = async (req, res) => {
 			if (!category) {
 				res.status(500).render('500', { title: 'Error' });
 			}
-			res.render('post', { title: 'Post', post: post, user: user, category: category });
+			favorite = !!(await favoritesModel.getFavorite({ user_id: parseInt(14), post_id: parseInt(req.params.id) }));
+			res.render('post', { title: 'Post', post, user, category, favorite });
 		} catch (err) {
 			console.error('Error getting post', err);
 			res.status(500).render('500', { title: 'Error' });
@@ -85,7 +86,7 @@ updatePost_get = (req, res) => {
 	if (!_.isInteger(parseInt(req.params.id))) {
 	  res.status(404).render('404', { title: 'Post Not Found' });
 	} else {
-		postModel.getPostById(parseInt(req.params.id))
+		postModel.getPostById({ post_id: parseInt(req.params.id) })
 		.then(post => {
 			if(!post){
 				res.status(404).render('404', { title: 'Post Not Found' });
@@ -104,7 +105,7 @@ post_delete = async (req, res) => {
 	  fetchError.sendError(res);
 	} else {
 		try {
-			post = await postModel.deletePostById(parseInt(req.params.id));
+			post = await postModel.deletePostById({ post_id: parseInt(req.params.id) });
 			if (post) {
 				await favoritesModel.deleteFavoritesByPostId(post.post_id);
 				fileModel.deletePostPicture(post);
@@ -119,7 +120,7 @@ post_delete = async (req, res) => {
 	}
 }
 
-updatePost_post = async (req, res) => {
+updatePost = async (req, res) => {
 	try {
 		if (!_.isInteger(parseInt(req.params.id))) {
 		  throw "Could not find post";
@@ -132,7 +133,7 @@ updatePost_post = async (req, res) => {
 		      console.error('Unknown error', err.stack);
 					res.status(500).render('500', { title: 'Error' });
 		    } else if (req.file) {
-					post = await postModel.getPostById(parseInt(req.params.id));
+					post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
 					if(post) {
 						fileModel.deletePostPicture(post);
 						try {
@@ -182,18 +183,18 @@ updatePost_post = async (req, res) => {
 	}
 }
 
-getPosts_post = (req, res) => {
+getPosts = (req, res) => {
 	if(!req.body.username && !req.body.category_id) {
-		postModel.getAllPosts((qerr, posts) => {
+		postModel.getAllPosts({closed: req.body.closed}, (qerr, posts) => {
 			if (qerr) {
 				console.error('Error executing query', qerr.stack);
 				fetchError.sendError(res);
 			} else {
-				res.status(200).json({ posts: postModel.choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+				res.status(200).json({closed: req.body.closed, posts: postModel.choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
 			}
 		});
 	}	else if (!req.body.username) {
-		postModel.getPostsByCategory(req.body.category_id, (qerr, posts) => {
+		postModel.getPostsByCategory({closed: req.body.closed, category_id: req.body.category_id }, (qerr, posts) => {
 			if (qerr) {
 				console.error('Error executing query', qerr.stack);
 				fetchError.sendError(res);
@@ -207,7 +208,7 @@ getPosts_post = (req, res) => {
 				console.error('Error executing query', qerr.stack);
 				fetchError.sendError(res);
 			} else {
-				postModel.getPostsByUserId(user.user_id, (qerr, posts) => {
+				postModel.getPostsByUserId({closed: req.body.closed, user_id: user.user_id }, (qerr, posts) => {
 					if (qerr) {
 						console.error('Error executing query', qerr.stack);
 						fetchError.sendError(res);
@@ -223,7 +224,7 @@ getPosts_post = (req, res) => {
 				console.error('Error executing query', qerr.stack);
 				fetchError.sendError(res);
 			} else {
-				postModel.getPostsByUserIdAndCategory(user.user_id, req.body.category_id, (qerr, posts) => {
+				postModel.getPostsByUserIdAndCategory({closed: req.body.closed, user_id: user.user_id, category_id: req.body.category_id }, (qerr, posts) => {
 					if (qerr) {
 						console.error('Error executing query', qerr.stack);
 						fetchError.sendError(res);
@@ -233,6 +234,30 @@ getPosts_post = (req, res) => {
 				});
 			}
 		});
+	}
+}
+
+changeClosed = async (req, res) => {
+	try {
+		post = await postModel.getPostById({ post_id: parseInt(req.body.post_id) });
+		closed = !!(post.closed);
+		await postModel.setPostClosedById({ post_id: parseInt(req.body.post_id), closed: !closed });
+		res.status(200).json({ redirect: undefined, closed: !closed });
+	} catch (err) {
+		console.error("Error changing closed", err);
+		fetchError.sendError(res);
+	}
+}
+
+post_post = (req, res) => {
+	if (req.body.get) {
+		getPosts(req, res);
+	} else if (req.body.create) {
+		createPost(req, res);
+	} else if (req.body.edit) {
+		updatePost(req, res);
+	} else if (req.body.changeClosed) {
+		changeClosed(req, res);
 	}
 }
 
@@ -320,11 +345,9 @@ createPosts = () => {
 
 module.exports = {
 	createPost_get,
-	createPost_post,
+	post_post,
 	updatePost_get,
-	updatePost_post,
 	post_get,
 	post_delete,
-	getPosts_post,
 	allCategories_get,
 }

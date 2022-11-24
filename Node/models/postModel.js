@@ -24,14 +24,14 @@ choosePosts = (posts, excludePostIds, quantity) => {
 	return resultPosts;
 }
 
-getPostById = (id, callback) => {
+getPostById = ({ post_id }, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
 			client.query('select posts.user_id, posts.post_id, posts.category_id, posts.picture_filename, ' +
 				'posts.price, posts.title, posts.description, posts.address, posts.publication_timestamp, ' +
 				'posts.favorite_count, posts.view_count, posts.closed, posts.deleted ' + 
-				'from posts where post_id = $1 and deleted = FALSE', [id])
+				'from posts where post_id = $1 and deleted = FALSE', [post_id])
 			.then(res => {
 				client.release();
 				if(typeof resolve !== "undefined") {
@@ -80,7 +80,7 @@ createPost = ({user_id, category_id, title, description, price, address, picture
 	});
 }
 
-deletePostById = (post_id, callback) => {
+deletePostById = ({ post_id }, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
@@ -104,6 +104,39 @@ deletePostById = (post_id, callback) => {
 				}
 			})
 		})
+	});
+}
+
+setPostClosedById = ({post_id, closed}, callback) => {
+	return new Promise((resolve, reject) => {
+		pool.connect()
+		.then(client => {
+			let query;
+			if (closed) {
+				query = 'update posts set closed=TRUE where post_id = $1 returning *'
+			} else {
+				query = 'update posts set closed=FALSE where post_id = $1 returning *'
+			}
+			client.query(query, [post_id])
+			.then(res => {
+				client.release();
+				if(typeof resolve !== "undefined") {
+					resolve(res.rows[0]);
+				}
+				if(typeof callback !== "undefined") {
+					callback(undefined, res.rows[0]);
+				}
+			}).catch(err => {
+				console.error(err);
+				client.release();
+				if(typeof reject !== "undefined") {
+					reject(err);
+				}
+				if(typeof callback !== "undefined") {
+					callback(err, undefined);
+				}
+			});
+		});
 	});
 }
 
@@ -161,7 +194,7 @@ updatePostById_nopic = ({post_id, category_id, title, description, price, addres
 	});
 }
 
-deletePostsByUserId = (user_id, callback) => {
+deletePostsByUserId = ({user_id}, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
@@ -187,11 +220,17 @@ deletePostsByUserId = (user_id, callback) => {
 	});
 }
 
-getAllPosts = (callback) => {
+getAllPosts = ({closed}, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
-			client.query('select * from posts where deleted = FALSE', [])
+			let query;
+			if (closed) {
+				query = 'select * from posts where deleted = FALSE and closed = TRUE'
+			} else {
+				query = 'select * from posts where deleted = FALSE and closed = FALSE'
+			}
+			client.query(query, [])
 			.then(res => {
 				client.release();
 				if(typeof resolve !== "undefined") {
@@ -213,11 +252,17 @@ getAllPosts = (callback) => {
 	});
 }
 
-getPostsByCategory = (category_id, callback) => {
+getPostsByCategory = ({category_id, closed}, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
-			client.query('select * from posts where deleted = FALSE and category_id = $1', [category_id])
+			let query;
+			if (closed) {
+				query = 'select * from posts where deleted = FALSE and closed = TRUE and category_id = $1'
+			} else {
+				query = 'select * from posts where deleted = FALSE and closed = FALSE and category_id = $1'
+			}
+			client.query(query, [category_id])
 			.then(res => {
 				client.release();
 				if(typeof resolve !== "undefined") {
@@ -239,11 +284,17 @@ getPostsByCategory = (category_id, callback) => {
 	});
 }
 
-getPostsByUserId = (user_id, callback) => {
+getPostsByUserId = ({user_id, closed}, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
-			client.query('select * from posts where deleted = FALSE and user_id = $1', [user_id])
+			let query;
+			if (closed) {
+				query = 'select * from posts where deleted = FALSE and closed = TRUE and user_id = $1'
+			} else {
+				query = 'select * from posts where deleted = FALSE and closed = FALSE and user_id = $1'
+			}
+			client.query(query, [user_id])
 			.then(res => {
 				client.release();
 				if(typeof resolve !== "undefined") {
@@ -265,11 +316,17 @@ getPostsByUserId = (user_id, callback) => {
 	});
 }
 
-getPostsByUserIdAndCategory = (user_id, category_id, callback) => {
+getPostsByUserIdAndCategory = ({user_id, category_id, closed}, callback) => {
 	return new Promise((resolve, reject) => {
 		pool.connect()
 		.then(client => {
-			client.query('select * from posts where deleted = FALSE and user_id = $1 and category_id = $2', [user_id, category_id])
+			let query;
+			if (closed) {
+				query = 'select * from posts where deleted = FALSE and closed = TRUE and user_id = $1 and category_id = $2'
+			} else {
+				query = 'select * from posts where deleted = FALSE and closed = FALSE and user_id = $1 and category_id = $2'
+			}
+			client.query(query, [user_id, category_id])
 			.then(res => {
 				client.release();
 				if(typeof resolve !== "undefined") {
@@ -356,5 +413,6 @@ module.exports = {
 	deletePostsByUserId,
 	updatePostById_pic,
 	updatePostById_nopic,
-	choosePosts
+	choosePosts,
+	setPostClosedById
 }

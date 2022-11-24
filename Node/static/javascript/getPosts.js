@@ -1,5 +1,5 @@
-getPosts = ({ quantity, username, category_id, excludePostIds }, callback) => {
-	let data = { quantity, excludePostIds, username, category_id };
+getPosts = ({ quantity, username, category_id, excludePostIds, closed }, callback) => {
+	let data = { quantity, excludePostIds, username, category_id, get: true, closed };
 	fetch(/post/, {
 		method: 'POST',
   	body: JSON.stringify(data),

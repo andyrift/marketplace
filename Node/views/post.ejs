@@ -23,10 +23,25 @@
 					<p>Viewed: <%= post.view_count %></p>
 					<p>Favorited: <%= post.favorite_count %></p>
 				</div>
-				<a id="favoriteAdd" data-doc="<%= post.post_id %>"><button>Add to favorites</button></a>
-				<a id="favoriteDelete" data-doc="<%= post.post_id %>"><button>Delete from favorites</button></a>
+				<a id="favorite" data-doc="<%= post.post_id %>"><button id="favorite">
+				
+				<% if (favorite) { %>
+				Remove from favorites
+				<% } else { %>
+				Add to favorites
+				<% } %>
+
+				</button></a>
 				<a href="/post/edit/<%= post.post_id %>"><button>Edit</button></a>
-				<button>Close</button>
+				<a id="close" data-doc="<%= post.post_id %>"><button id="close">
+				
+				<% if (post.closed) { %>
+				Open
+				<% } else { %>
+				Close
+				<% } %>
+
+				</button></a>
 				<a class="delete" data-doc="<%= post.post_id %>"><button class="delete">Delete</button></a>
 				<script src="/javascript/post.js"></script>
 			</div>

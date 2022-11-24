@@ -1,5 +1,5 @@
 getFavoritePosts = ({ quantity, excludePostIds }, callback) => {
-	let data = { quantity, excludePostIds };
+	let data = { get: true, quantity, excludePostIds };
 	fetch(/favorites/, {
 		method: 'POST',
   	body: JSON.stringify(data),
