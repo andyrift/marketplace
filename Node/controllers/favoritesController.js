@@ -3,7 +3,7 @@ pool = require.main.pool;
 favoritesModel = require("../models/favoritesModel");
 fetchError = require("./fetchError");
 
-favoritesPage_get = (req, res) => {
+module.exports.favoritesPage_get = (req, res) => {
 	res.render('favorites', { title: 'Favorites', user_id: 14 });
 }
 
@@ -33,15 +33,10 @@ getFavorites = (req, res) => {
 	});
 }
 
-favorites_post = (req, res) => {
+module.exports.favorites_post = (req, res) => {
 	if (req.body.change) {
 		changeFavorite(req, res);
 	} else if (req.body.get) {
 		getFavorites(req, res)
 	}
-}
-
-module.exports = {
-	favoritesPage_get,
-	favorites_post
 }

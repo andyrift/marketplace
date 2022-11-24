@@ -9,7 +9,7 @@ fileModel = require("../models/fileModel");
 const _ = require('lodash');
 const multer  = require('multer');
 
-user_get = (req, res) => {
+module.exports.user_get = (req, res) => {
 	userModel.getUserByUsername(req.params.username)
 	.then(user => {
 		if (user) {
@@ -24,7 +24,7 @@ user_get = (req, res) => {
 	});
 }
 
-updateUser_get = async (req, res) => {
+module.exports.updateUser_get = async (req, res) => {
 	try {
 		user = await userModel.getUserByUsername(req.params.username);
 		if (user) {
@@ -38,7 +38,7 @@ updateUser_get = async (req, res) => {
 	}
 }
 
-user_delete = async (req, res) => {
+module.exports.user_delete = async (req, res) => {
 	try {
 		user = await userModel.deleteUserByUsername(req.params.username)
 		fileModel.deleteUserPicture(user);
@@ -59,7 +59,7 @@ containsSpecialChars = (str) => {
   return specialChars.test(str);
 }
 
-createUser_post = async (req, res) => {
+module.exports.createUser_post = async (req, res) => {
 	try {
 		if(req.headers['content-type'].split(';')[0] === "application/json") {
 			user = await userModel.getUserByUsername(req.body.username);
@@ -121,7 +121,7 @@ createUser_post = async (req, res) => {
 	}
 }
 
-updateUser_post = async (req, res) => {
+module.exports.updateUser_post = async (req, res) => {
 	try {
 		if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
 			require.main.upload.single('picture')(req, res, async (err) => {
@@ -199,11 +199,3 @@ createUsers = () => {
 	}
 }
 */
-
-module.exports = {
-	user_get,
-	updateUser_get,
-	createUser_post,
-	updateUser_post,
-	user_delete
-}

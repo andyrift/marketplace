@@ -38,6 +38,7 @@ require.main.pool.on('error', (err, client) => {
 
 
 //components
+const authRoutes = require("./routes/authRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 const postRoutes = require("./routes/postRoutes.js");
 const favoritesRoutes = require("./routes/favoritesRoutes.js");
@@ -81,12 +82,6 @@ app.get('/', (req, res) => {
 
 app.get('/categories', postController.allCategories_get);
 
-app.get('/register', (req, res) => {
-	res.render('createuser', { title: 'Register' });
-});
-app.get('/login', (req, res) => {
-	res.render('login', { title: 'Log in' });
-});
 app.get('/help', (req, res) => {
 	res.render('help', { title: 'Help' });
 });
@@ -104,6 +99,7 @@ app.use('/post', postRoutes);
 app.use('/favorites', favoritesRoutes);
 
 app.use(userRoutes);
+app.use(authRoutes);
 
 // 404, this one works for every url, express reached this one only if it does not get a match before
 app.use((req, res) => {

@@ -27,7 +27,7 @@ submitEvent = () => {
 		return;
 	}
 
-	fetch('/register/', {
+	fetch('/signup/', {
 		method: 'POST',
   	body: JSON.stringify(data),
   	headers: {
@@ -39,7 +39,7 @@ submitEvent = () => {
 		.then(data => {
 			if(res.status < 400){
 				if(data.usernameAccepted) {
-					fetch('/register/', {
+					fetch('/signup/', {
 						method: 'POST',
 						body: formData,
 					})

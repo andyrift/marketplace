@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-deleteFile = (filename) => {
+module.exports.deleteFile = (filename) => {
 	fs.unlink(`./uploads/${filename}`, (err) => {
 	  if (err) {
 	    console.error(err);
@@ -8,7 +8,7 @@ deleteFile = (filename) => {
 	});
 }
 
-deleteUserPicture = (user) => {
+module.exports.deleteUserPicture = (user) => {
 	if(user && user.picture_filename.length > 0) {
 		fs.unlink(`./uploads/${user.picture_filename}`, (err) => {
 		  if (err) {
@@ -19,7 +19,7 @@ deleteUserPicture = (user) => {
 	}
 }
 
-deletePostPicture = (post) => {
+module.exports.deletePostPicture = (post) => {
 	if(post && post.picture_filename.length > 0) {
 		fs.unlink(`./uploads/${post.picture_filename}`, (err) => {
 		  if (err) {
@@ -28,10 +28,4 @@ deletePostPicture = (post) => {
 		  }
 		});
 	}
-}
-
-module.exports = {
-	deleteFile,
-	deleteUserPicture,
-	deletePostPicture
 }

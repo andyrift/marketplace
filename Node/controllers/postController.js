@@ -9,7 +9,7 @@ fileModel = require("../models/fileModel");
 const _ = require('lodash'); 
 const multer  = require('multer');
 
-createPost_get = (req, res) => {
+module.exports.createPost_get = (req, res) => {
 	res.render('createpost', { title: 'Create' });
 }
 
@@ -56,7 +56,7 @@ createPost = async (req, res) => {
 	}
 }
 
-post_get = async (req, res) => {
+module.exports.post_get = async (req, res) => {
 	if (!_.isInteger(parseInt(req.params.id))) {
 	  res.status(404).render('404', { title: 'Post Not Found' });
 	} else {
@@ -82,7 +82,7 @@ post_get = async (req, res) => {
 	}
 }
 
-updatePost_get = (req, res) => {
+module.exports.updatePost_get = (req, res) => {
 	if (!_.isInteger(parseInt(req.params.id))) {
 	  res.status(404).render('404', { title: 'Post Not Found' });
 	} else {
@@ -100,7 +100,7 @@ updatePost_get = (req, res) => {
 	}
 }
 
-post_delete = async (req, res) => {
+module.exports.post_delete = async (req, res) => {
 	if (!_.isInteger(parseInt(req.params.id))) {
 	  fetchError.sendError(res);
 	} else {
@@ -249,7 +249,7 @@ changeClosed = async (req, res) => {
 	}
 }
 
-post_post = (req, res) => {
+module.exports.post_post = (req, res) => {
 	if (req.body.get) {
 		getPosts(req, res);
 	} else if (req.body.create) {
@@ -261,7 +261,7 @@ post_post = (req, res) => {
 	}
 }
 
-allCategories_get = (req, res) => {
+module.exports.allCategories_get = (req, res) => {
 	postModel.getAllCategories((err, categories) => {
 		if (err) {
 			console.error('Error executing query', err.stack);
@@ -342,12 +342,3 @@ createPosts = () => {
 	});
 }
 */
-
-module.exports = {
-	createPost_get,
-	post_post,
-	updatePost_get,
-	post_get,
-	post_delete,
-	allCategories_get,
-}

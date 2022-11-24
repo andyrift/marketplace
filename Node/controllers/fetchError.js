@@ -1,4 +1,4 @@
-sendError = (res) => {
+module.exports.sendError = (res) => {
 	res.app.render('500', { title: 'Error' }, (err, html) => {
 		if (err) {
 			console.error(err);
@@ -7,8 +7,4 @@ sendError = (res) => {
 			res.status(500).json({ body: html });
 		}
 	});
-}
-
-module.exports = {
-	sendError
 }
