@@ -4,10 +4,8 @@ module.exports.getFavoritesByUserId = (id, callback) => {
 	return cbpromise.makeQuery({
 		query: {
 			text: 
-				'select posts.user_id, posts.post_id, posts.category_id, posts.picture_filename, ' +
-				'posts.price, posts.title, posts.description, posts.address, posts.publication_timestamp, ' +
-				'posts.favorite_count, posts.view_count, posts.closed, posts.deleted ' + 
-				'from posts, favorites where posts.deleted = FALSE and favorites.post_id = posts.post_id and favorites.user_id = $1', 
+				'select posts.* from posts, favorites ' + 
+				'where posts.deleted = FALSE and favorites.post_id = posts.post_id and favorites.user_id = $1', 
 			values: [id],
 		}, 
 		single: false,

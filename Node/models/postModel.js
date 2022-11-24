@@ -28,10 +28,7 @@ module.exports.getPostById = ({ post_id }, callback) => {
 	return cbpromise.makeQuery({
 		query: {
 			text: 
-				'select posts.user_id, posts.post_id, posts.category_id, posts.picture_filename, ' +
-				'posts.price, posts.title, posts.description, posts.address, posts.publication_timestamp, ' +
-				'posts.favorite_count, posts.view_count, posts.closed, posts.deleted ' + 
-				'from posts where post_id = $1 and deleted = FALSE', 
+				'select * from posts where post_id = $1 and deleted = FALSE', 
 			values: [post_id],
 		}, 
 		single: true,
@@ -66,10 +63,8 @@ module.exports.deletePostById = ({ post_id }, callback) => {
 module.exports.setPostClosedById = ({post_id, closed}, callback) => {
 	return cbpromise.makeQuery({
 		query: {
-			text: closed ? 
-				'update posts set closed=TRUE where post_id = $1 returning *' : 
-				'update posts set closed=FALSE where post_id = $1 returning *', 
-			values: [post_id],
+			text: 'update posts set closed=$1 where post_id = $2 returning *', 
+			values: [!!closed, post_id],
 		}, 
 		single: true,
 		callback: callback
@@ -112,10 +107,8 @@ module.exports.deletePostsByUserId = ({user_id}, callback) => {
 module.exports.getAllPosts = ({closed}, callback) => {
 	return cbpromise.makeQuery({
 		query: {
-			text: closed ? 
-				'select * from posts where deleted = FALSE and closed = TRUE' : 
-				'select * from posts where deleted = FALSE and closed = FALSE', 
-			values: [],
+			text: 'select * from posts where deleted = FALSE and closed = $1', 
+			values: [!!closed],
 		}, 
 		single: false,
 		callback: callback
@@ -125,10 +118,8 @@ module.exports.getAllPosts = ({closed}, callback) => {
 module.exports.getPostsByCategory = ({category_id, closed}, callback) => {
 	return cbpromise.makeQuery({
 		query: {
-			text: closed ?
-				'select * from posts where deleted = FALSE and closed = TRUE and category_id = $1' : 
-				'select * from posts where deleted = FALSE and closed = FALSE and category_id = $1', 
-			values: [category_id],
+			text: 'select * from posts where deleted = FALSE and closed = $1 and category_id = $2', 
+			values: [!!closed, category_id],
 		}, 
 		single: false,
 		callback: callback
@@ -138,10 +129,8 @@ module.exports.getPostsByCategory = ({category_id, closed}, callback) => {
 module.exports.getPostsByUserId = ({user_id, closed}, callback) => {
 	return cbpromise.makeQuery({
 		query: {
-			text: closed ? 
-				'select * from posts where deleted = FALSE and closed = TRUE and user_id = $1' : 
-				'select * from posts where deleted = FALSE and closed = FALSE and user_id = $1', 
-			values: [user_id],
+			text: 'select * from posts where deleted = FALSE and closed = $1 and user_id = $2', 
+			values: [!!closed, user_id],
 		}, 
 		single: false,
 		callback: callback
@@ -151,10 +140,8 @@ module.exports.getPostsByUserId = ({user_id, closed}, callback) => {
 module.exports.getPostsByUserIdAndCategory = ({user_id, category_id, closed}, callback) => {
 	return cbpromise.makeQuery({
 		query: {
-			text: closed ?
-				'select * from posts where deleted = FALSE and closed = TRUE and user_id = $1 and category_id = $2' : 
-				'select * from posts where deleted = FALSE and closed = FALSE and user_id = $1 and category_id = $2', 
-			values: [user_id, category_id],
+			text: 'select * from posts where deleted = FALSE and closed = $1 and user_id = $2 and category_id = $3', 
+			values: [!!closed, user_id, category_id],
 		}, 
 		single: false,
 		callback: callback
