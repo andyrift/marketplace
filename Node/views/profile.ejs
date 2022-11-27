@@ -7,7 +7,7 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<div class="profile">
+			<div class="profile" data-username="<%= user.username %>">
 				<a href="/profile">
 					<div id="profilepicture">
 						<img src="/<%= user.picture_filename %>" alt="Profile Picture">
@@ -25,7 +25,7 @@
 				</div>
 				<a href="/profile/edit"><button>Edit</button></a>
 				<a class="delete"><button class="delete">Delete</button></a>
-				<script src="/javascript/profile.js"> </script>
+				<script src="/javascript/frontendLogic/profile.js"> </script>
 			</div>
 			<h3>Your posts</h3>
 			<div id="open" class="posts">
@@ -43,10 +43,10 @@
 	<%- include('./partials/footer.ejs') %>
 	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
+	<script src="/javascript/gettingPosts/getPosts.js"></script>
+	<script src="/javascript/gettingPosts/profilePosts.js"></script>
 	<!--
-	<script src="/javascript/getPosts.js"></script>
 	<script src="/javascript/getFavoritePosts.js"></script>
-	<script src="/javascript/profilePosts.js"></script>
 	<script src="/javascript/favoritePostsSide.js"></script>
 	-->
 </body>

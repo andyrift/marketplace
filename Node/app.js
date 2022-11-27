@@ -30,7 +30,9 @@ require.main.upload = multer({ storage: multerStorage });
 // pool
 // uses environment variables for connection information
 const { Pool } = require('pg');
-require.main.pool = new Pool();
+require.main.pool = new Pool({
+	max: 1
+});
 // the pool will emit an error on behalf of any idle clients it contains if a backend error or network partition happens
 require.main.pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client', err);
@@ -91,7 +93,7 @@ app.get('/help', (req, res) => {
 /*
 
 app.get('/messages', auth.requireAuth, (req, res) => {
-	res.render('messages', { title: 'Messages', user: {} });
+	res.render('messages', { title: 'Messages' });
 });
 app.get('/dialogue', auth.requireAuth, (req, res) => {
 	res.render('dialogue', { title: 'Chat' });
@@ -100,11 +102,11 @@ app.get('/blacklist', auth.requireAuth, (req, res) => {
 	res.render('blacklist', { title: 'Blacklist' });
 });
 
-app.use('/post', postRoutes);
 app.use('/favorites', auth.requireAuth, favoritesRoutes);
 
 */
 
+app.use('/post', postRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
 

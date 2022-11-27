@@ -7,7 +7,7 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<div class="profile">
+			<div class="profile" data-username="<%= owner.username %>">
 				<a href="/user/<%= owner.username %>">
 					<div id="profilepicture">
 						<img src="/<%= owner.picture_filename %>" alt="Profile Picture">
@@ -40,10 +40,10 @@
 	<%- include('./partials/footer.ejs') %>
 	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
+	<script src="/javascript/gettingPosts/getPosts.js"></script>
+	<script src="/javascript/gettingPosts/profilePosts.js"></script>
 	<!--
-	<script src="/javascript/getPosts.js"></script>
 	<script src="/javascript/getFavoritePosts.js"></script>
-	<script src="/javascript/profilePosts.js"></script>
 	<script src="/javascript/favoritePostsSide.js"></script>
 	-->
 </body>

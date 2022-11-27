@@ -23,9 +23,10 @@
 					<p>Viewed: <%= post.view_count %></p>
 					<p>Favorited: <%= post.favorite_count %></p>
 				</div>
-
+				
 				<% if (typeof user !== 'undefined' && user) { %>
-
+				
+				<!--
 				<a id="favorite" data-doc="<%= post.post_id %>"><button id="favorite">
 				
 				<% if (favorite) { %>
@@ -35,30 +36,45 @@
 				<% } %>
 
 				</button></a>
+				-->
 
 				<% if (owner.user_id === user.user_id) { %>
-				<a href="/post/edit/<%= post.post_id %>"><button>Edit</button></a>
-				<a id="close" data-doc="<%= post.post_id %>"><button id="close">
 				
+				<a href="/post/edit/<%= post.post_id %>"><button>Edit</button></a>
+
+				<a id="close" data-doc="<%= post.post_id %>"><button id="close">
 				<% if (post.closed) { %>
 				Open
 				<% } else { %>
 				Close
 				<% } %>
-
 				</button></a>
+
 				<a class="delete" data-doc="<%= post.post_id %>"><button class="delete">Delete</button></a>
 				<% } %>
 
 				<% } %>
-				<script src="/javascript/post.js"></script>
+				<script src="/javascript/frontendLogic/post.js"></script>
+				
 			</div>
 		</div>
 		<div class="sidebar">
-			<%- include('./partials/profile.ejs', user) %>
+			<div class="profile">
+				<a href="/user/<%= owner.username %>">
+					<div id="profilepicture">
+						<img src="/<%= owner.picture_filename %>" alt="">
+					</div>
+				</a>
+				<a href="/user/<%= owner.username %>">
+					<h3 id="name"><%= owner.displayname %></h3>
+				</a>
+			</div>
+			<!--
 			<button id="write">Write to owner</button>
+			-->
+			<%- include('./partials/footer.ejs') %>
 		</div>
 	</div>
-	<%- include('./partials/footer.ejs') %>
+	
 </body>
 </html>

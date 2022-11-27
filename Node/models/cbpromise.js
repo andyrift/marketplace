@@ -22,13 +22,18 @@ module.exports.makeQuery = ({ query, single, callback }) => {
 			try {
 				client = await pool.connect();
 				try {
-					res = await client.query(query);
-					client.release();
-					client = undefined;
-					if(single) {
-						resolve(res.rows[0]);
+					if (client) {
+						res = await client.query(query);
+						client.release();
+						client = undefined;
+						if(single) {
+							resolve(res.rows[0]);
+						} else {
+							resolve(res.rows);
+						}
 					} else {
-						resolve(res.rows);
+						console.log(query);
+						throw "err";
 					}
 				} catch (err) {
 					if(client) {
