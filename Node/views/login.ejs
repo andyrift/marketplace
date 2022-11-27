@@ -9,7 +9,7 @@
 
 		<h3>Log in</h3>
 
-		<form class="forminput" id="createuser" action="#">
+		<form class="forminput" id="loginuser" onsubmit="return false">
 			<div>
 				<div class="formlabels">
 					<h4>Enter your username:</h4>
@@ -17,18 +17,59 @@
 				</div>
 
 				<div class="forminputs">
-					<div class="forminput">
-					<input type="text" id="username" placeholder="Username" required>
+					<div class="forminput" id="username">
+					<input type="text" id="username" placeholder="Username">
 					</div>
-					<div class="forminput">
-					<input type="password" id="password" placeholder="Password" required>
+					<div class="forminput" id="password">
+					<input type="password" id="password" placeholder="Password">
 					</div>
 				</div>
 			</div>
 			<div></div>
-			<input class="forminput" type="submit" value="Log in">
+			<button class="forminput" onclick="submitEvent()">Log in</button>
 		</form>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script>
+		const form = document.querySelector('form');
+		const usernameBorder = document.querySelector('div#username');
+		document.querySelector('input#username').addEventListener("input", () => {usernameBorder.style.borderColor = null});
+		const passwordBorder = document.querySelector('div#password');
+		document.querySelector('input#password').addEventListener("input", () => {passwordBorder.style.borderColor = null});
+
+		submitEvent = async () => {
+			try {
+				res = await fetch('/login/', {
+					method: 'POST',
+			  	body: JSON.stringify({ 
+			  		username: form.username.value, 
+			  		password: form.password.value 
+			  	}),
+			  	headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+				data = await res.json();
+				if (res.status < 400) {
+					if (data.errors) {
+						if (data.errors.username) {
+							usernameBorder.style.borderColor = "red";
+						} 
+						if (data.errors.password) {
+							passwordBorder.style.borderColor = "red";
+						}
+					} else {
+						if (data.redirect) {
+							window.location.href = data.redirect;
+						}
+					}
+				} else {
+					document.write(data.body);
+				}
+			} catch(err) {
+				console.log(err);
+			};
+		}
+	</script>
 </body>
 </html>

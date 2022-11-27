@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <div class="profile">
-	<a href="/profile/<%= user.username %>">
+	<a href="/profile/<%= owner.username %>">
 		<div id="profilepicture">
-			<img src="/<%= user.picture_filename %>" alt="">
+			<img src="/<%= owner.picture_filename %>" alt="">
 		</div>
 	</a>
-	<a href="/profile/<%= user.username %>">
-		<h3 id="name"><%= user.displayname %></h3>
+	<a href="/profile/<%= owner.username %>">
+		<h3 id="name"><%= owner.displayname %></h3>
 	</a>
 </div>

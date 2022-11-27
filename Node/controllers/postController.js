@@ -26,7 +26,7 @@ createPost = async (req, res) => {
 		    } else {
 		    	try {
 			    	post = await postModel.createPost({
-							user_id: 19, 
+							user_id: req.body.userInfo.user_id, 
 							category_id: parseInt(req.body.category), 
 							title: req.body.title, 
 							description: req.body.description, 
@@ -65,16 +65,19 @@ module.exports.post_get = async (req, res) => {
 			if (!post) {
 				res.status(404).render('404', { title: 'Post Not Found' });
 			}
-			user = await userModel.getUserById(post.user_id);
-			if (!user) {
+			owner = await userModel.getUserById(post.user_id);
+			if (!owner) {
 				res.status(500).render('500', { title: 'Error' });
 			}
 			category = await postModel.getCategoryById(post.category_id);
 			if (!category) {
 				res.status(500).render('500', { title: 'Error' });
 			}
-			favorite = !!(await favoritesModel.getFavorite({ user_id: parseInt(14), post_id: parseInt(req.params.id) }));
-			res.render('post', { title: 'Post', post, user, category, favorite });
+			let favorite = false;
+			if (req.body.userInfo) {
+				favorite = !!(await favoritesModel.getFavorite({ user_id: req.body.userInfo.user_id, post_id: parseInt(req.params.id) }));
+			}
+			res.render('post', { title: 'Post', post, owner, category, favorite });
 		} catch (err) {
 			console.error('Error getting post', err);
 			res.status(500).render('500', { title: 'Error' });
@@ -101,17 +104,18 @@ module.exports.updatePost_get = (req, res) => {
 }
 
 module.exports.post_delete = async (req, res) => {
-	if (!_.isInteger(parseInt(req.params.id))) {
+	if (!_.isInteger(parseInt(req.params.id)) ) {
 	  fetchError.sendError(res);
 	} else {
 		try {
-			post = await postModel.deletePostById({ post_id: parseInt(req.params.id) });
-			if (post) {
+			post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
+			if(post && req.body.userInfo.user_id === post.user_id) {
+				await postModel.deletePostById({ post_id: post.post_id });
 				await favoritesModel.deleteFavoritesByPostId(post.post_id);
 				fileModel.deletePostPicture(post);
 				res.json({ redirect: '/' });
 			} else {
-				throw "could not find post";
+				throw "could not delete post";
 			}
 		} catch (err) {
 			console.error('Error deleting post', err);

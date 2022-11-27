@@ -1,6 +1,6 @@
 const deleteButton = document.querySelector('a.delete');
 deleteButton.addEventListener('click', (e) => {
-	const endpoint = `/profile/${deleteButton.dataset.doc}`;
+	const endpoint = `/profile`;
 
 	fetch(endpoint, {
 		method: 'DELETE'

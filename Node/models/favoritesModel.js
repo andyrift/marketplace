@@ -1,7 +1,7 @@
-const cbpromise = require('./cbpromise.js');
+const { makeQuery } = require('./cbpromise.js');
 
 module.exports.getFavoritesByUserId = (id, callback) => {
-	return cbpromise.makeQuery({
+	return makeQuery({
 		query: {
 			text: 
 				'select posts.* from posts, favorites ' + 
@@ -14,7 +14,7 @@ module.exports.getFavoritesByUserId = (id, callback) => {
 }
 
 module.exports.addFavorite = ({ user_id, post_id }, callback) => {
-	return cbpromise.makeQuery({
+	return makeQuery({
 		query: {
 			text: 'insert into favorites(user_id, post_id) values($1, $2) returning *', 
 			values: [user_id, post_id],
@@ -25,7 +25,7 @@ module.exports.addFavorite = ({ user_id, post_id }, callback) => {
 }
 
 module.exports.getFavorite = ({ user_id, post_id }, callback) => {
-	return cbpromise.makeQuery({
+	return makeQuery({
 		query: {
 			text: 'select * from favorites where user_id = $1 and post_id = $2', 
 			values: [user_id, post_id],
@@ -36,7 +36,7 @@ module.exports.getFavorite = ({ user_id, post_id }, callback) => {
 }
 
 module.exports.deleteFavorite = ({ user_id, post_id }, callback) => {
-	return cbpromise.makeQuery({
+	return makeQuery({
 		query: {
 			text: 'delete from favorites where user_id = $1 and post_id = $2 returning *', 
 			values: [user_id, post_id],
@@ -47,7 +47,7 @@ module.exports.deleteFavorite = ({ user_id, post_id }, callback) => {
 }
 
 module.exports.deleteFavoritesByUserId = (user_id, callback) => {
-	return cbpromise.makeQuery({
+	return makeQuery({
 		query: {
 			text: 'delete from favorites where user_id = $1 returning *', 
 			values: [user_id],
@@ -58,7 +58,7 @@ module.exports.deleteFavoritesByUserId = (user_id, callback) => {
 }
 
 module.exports.deleteFavoritesByPostId = (post_id, callback) => {
-	return cbpromise.makeQuery({
+	return makeQuery({
 		query: {
 			text: 'delete from favorites where post_id = $1 returning *', 
 			values: [post_id],

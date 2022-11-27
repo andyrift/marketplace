@@ -3,16 +3,22 @@
 	<div class="topbar-content">
 		<a class="topbar-div-left" href="/help">Help</a>
 		<a class="topbar-div-left" href="/">Home</a>
-		<a class="topbar-div-right" href="/login">Log in</a>
-		<a class="topbar-div-right" href="/signup">Sign up</a>
-		<a class="topbar-div-right" href="/profile">Profile</a>
-		<a class="topbar-div-right" href="/messages">Messages</a>
-		<a class="topbar-div-right" href="/dialogue">Chat</a>
+		<% if (typeof user !== 'undefined' && user) { %>
+			<a class="topbar-div-right" href="/logout">Log out</a>
+			<a class="topbar-div-right" href="/profile">Profile</a>
+			<!--
+			<a class="topbar-div-right" href="/messages">Messages</a>
+			<a class="topbar-div-right" href="/dialogue">Chat</a>
+			-->
+		<% } else { %>
+			<a class="topbar-div-right" href="/login">Log in</a>
+			<a class="topbar-div-right" href="/signup">Sign up</a>
+		<% } %>
 	</div>
 </div>
 <div class="control">
 	<a href="/"><img id="logo" src="/img/logo.png" alt="AppleSause"/></a>
-	<button id="categoriesbutton">Categories</button>
+	<a href="/categories"><button id="categoriesbutton">Categories</button></a>
 	<div id="searchbar">
 		<input type="text" placeholder="Search for anything..">
 		<button id="searchbutton">Search</button>

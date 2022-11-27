@@ -13,16 +13,23 @@
 			</div>
 		</div>
 		<div class="sidebar">
-			<%- include('./partials/sidebarfavorites.ejs') %>
+			<!--
+			<% if (typeof user !== 'undefined' && user) { %>
+				<%- include('./partials/sidebarfavorites.ejs') %>
+			<% } %>
+			-->
 			<%- include('./partials/footer.ejs') %>
 		</div>
 	</div>
+	
 	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
+	<!--
 	<script src="/javascript/getCategories.js"></script>
 	<script src="/javascript/getPosts.js"></script>
 	<script src="/javascript/getFavoritePosts.js"></script>
 	<script src="/javascript/indexPosts.js"></script>
 	<script src="/javascript/favoritePostsSide.js"></script>
+	-->
 </body>
 </html>

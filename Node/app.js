@@ -7,8 +7,9 @@ const morgan = require('morgan');
 const multer  = require('multer');
 const _ = require('lodash');
 const md5 = require('md5');
+const cookieParser = require('cookie-parser');
 const app = express();
-
+const auth = require('./middleware/authMiddleware.js');
 
 // register view engine
 app.set('view engine', 'ejs');
@@ -50,58 +51,64 @@ const port = 3000
 app.listen(port);
 console.log(`now listening on port ${port}`);
 
-
-// middleware example
 /*
-app.use((req, res, next) => {
-	console.log('new request made');
-	console.log('host', req.hostname);
-	console.log('path', req.path);
-	console.log('method', req.method);
-	next();
-});
-*/
+// dictionary for text generator 
 
 fs.readFile('./static/words_dictionary.json', (err, data) => {
     if (err) throw err;
     require.main.words = Object.keys(JSON.parse(data));
 });
+*/
 
-
-// middleware & static files
+// static files
 
 app.use(express.static('static'));
 app.use(express.static('uploads'));
+
+// middleware
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cookieParser());
+
+app.use(auth.checkAuth);
+app.use(auth.checkUser);
+
+// routes
 
 app.get('/', (req, res) => {
 	res.render('index', { title: 'Home' });
 });
+
 
 app.get('/categories', postController.allCategories_get);
 
 app.get('/help', (req, res) => {
 	res.render('help', { title: 'Help' });
 });
-app.get('/messages', (req, res) => {
+
+/*
+
+app.get('/messages', auth.requireAuth, (req, res) => {
 	res.render('messages', { title: 'Messages', user: {} });
 });
-app.get('/dialogue', (req, res) => {
+app.get('/dialogue', auth.requireAuth, (req, res) => {
 	res.render('dialogue', { title: 'Chat' });
 });
-app.get('/blacklist', (req, res) => {
+app.get('/blacklist', auth.requireAuth, (req, res) => {
 	res.render('blacklist', { title: 'Blacklist' });
 });
 
 app.use('/post', postRoutes);
-app.use('/favorites', favoritesRoutes);
+app.use('/favorites', auth.requireAuth, favoritesRoutes);
+
+*/
 
 app.use(userRoutes);
 app.use(authRoutes);
 
-// 404, this one works for every url, express reached this one only if it does not get a match before
+
 app.use((req, res) => {
 	//res.sendFile('./views/404.html', { root: __dirname });
 	//res.status(404).sendFile('./views/404.html', { root: __dirname });
