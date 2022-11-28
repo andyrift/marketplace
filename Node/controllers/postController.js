@@ -17,7 +17,12 @@ getPosts = (req, res) => {
 				console.error('Error executing query', qerr.stack);
 				fetchError.sendError(res);
 			} else {
-				res.status(200).json({ posts: postModel.choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+				res.status(200).json({ posts: postModel.choosePosts({ 
+					posts, 
+					excludePostIds: req.body.excludePostIds, 
+					quantity: req.body.quantity,
+					shuffle: req.body.shuffle,
+				}) });
 			}
 		});
 	}	else if (!req.body.username) {
@@ -26,7 +31,12 @@ getPosts = (req, res) => {
 				console.error('Error executing query', qerr.stack);
 				fetchError.sendError(res);
 			} else {
-				res.status(200).json({ posts: postModel.choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+				res.status(200).json({ posts: postModel.choosePosts({ 
+					posts, 
+					excludePostIds: req.body.excludePostIds, 
+					quantity: req.body.quantity,
+					shuffle: req.body.shuffle,
+				}) });
 			}
 		});
 	} else if (!req.body.category_id) {
@@ -40,7 +50,12 @@ getPosts = (req, res) => {
 						console.error('Error executing query', qerr.stack);
 						fetchError.sendError(res);
 					} else {
-						res.status(200).json({ posts: postModel.choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+						res.status(200).json({ posts: postModel.choosePosts({ 
+							posts, 
+							excludePostIds: req.body.excludePostIds, 
+							quantity: req.body.quantity,
+							shuffle: req.body.shuffle,
+						}) });
 					}
 				});
 			} else {
@@ -58,7 +73,12 @@ getPosts = (req, res) => {
 						console.error('Error executing query', qerr.stack);
 						fetchError.sendError(res);
 					} else {
-						res.status(200).json({ posts: postModel.choosePosts(posts, req.body.excludePostIds, req.body.quantity) });
+						res.status(200).json({ posts: postModel.choosePosts({ 
+							posts, 
+							excludePostIds: req.body.excludePostIds, 
+							quantity: req.body.quantity,
+							shuffle: req.body.shuffle,
+						}) });
 					}
 				});
 			} else {
@@ -236,21 +256,25 @@ module.exports.post_get = async (req, res) => {
 	  res.status(404).render('404', { title: 'Post Not Found' });
 	} else {
 		try {
-			post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
+			post = await postModel.getPostByIdIncrementViews({ post_id: parseInt(req.params.id) });
 			if (!post) {
 				res.status(404).render('404', { title: 'Post Not Found' });
+				return;
 			}
+			await postModel.updatePostFavoritesById({ post_id: post.post_id });
 			owner = await userModel.getUserById(post.user_id);
 			if (!owner) {
 				res.status(500).render('500', { title: 'Error' });
+				return;
 			}
 			category = await postModel.getCategoryById(post.category_id);
 			if (!category) {
 				res.status(500).render('500', { title: 'Error' });
+				return;
 			}
 			let favorite = false;
-			if (req.body.userInfo) {
-				favorite = !!(await favoritesModel.getFavorite({ user_id: req.body.userInfo.user_id, post_id: parseInt(req.params.id) }));
+			if (req.userInfo) {
+				favorite = !!(await favoritesModel.getFavorite({ user_id: req.userInfo.user_id, post_id: post.post_id }));
 			}
 			res.render('post', { title: 'Post', post, owner, category, favorite });
 		} catch (err) {

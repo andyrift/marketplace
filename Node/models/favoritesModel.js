@@ -5,7 +5,8 @@ module.exports.getFavoritesByUserId = (id, callback) => {
 		query: {
 			text: 
 				'select posts.* from posts, favorites ' + 
-				'where posts.deleted = FALSE and favorites.post_id = posts.post_id and favorites.user_id = $1', 
+				'where posts.deleted = FALSE and favorites.post_id = posts.post_id and favorites.user_id = $1 ' +
+				'order by publication_timestamp desc', 
 			values: [id],
 		}, 
 		single: false,

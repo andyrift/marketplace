@@ -102,10 +102,9 @@ app.get('/blacklist', auth.requireAuth, (req, res) => {
 	res.render('blacklist', { title: 'Blacklist' });
 });
 
-app.use('/favorites', auth.requireAuth, favoritesRoutes);
-
 */
 
+app.use('/favorites', favoritesRoutes);
 app.use('/post', postRoutes);
 app.use(userRoutes);
 app.use(authRoutes);

@@ -6,6 +6,8 @@ favoritesModel = require("../models/favoritesModel");
 fetchError = require("./fetchError");
 fileModel = require("../models/fileModel");
 
+userModel.hashPassword("2552222002").then(res => console.log(res));
+
 const _ = require('lodash');
 const multer  = require('multer');
 

@@ -21,30 +21,39 @@
 					<h2 id="name"><%= owner.displayname %></h2>
 				</a>
 				<div class="profilefooter">
-					<p>Joined <%= owner.joined_timestamp %></p>
+					<p>Username: <%= owner.username %></p>
+					<p>Email: <%= owner.email %></p>
+					<p>Address: <%= owner.address %></p>
+					<p>Joined: <%= owner.joined_timestamp %></p>
 				</div>
 			</div>
-			<h3><%= owner.displayname %>'s posts</h3>
+
+			<button onclick="showOpen()">Open</button> <button onclick="showClosed()">Closed</button>
+			
 			<div id="open" class="posts">
-
+				<h3 style="flex-basis: 100%"><%= owner.displayname %>'s posts</h3>
+				
 			</div>
-			<h3><%= owner.displayname %>'s closed posts</h3>
+			
 			<div id="closed" class="posts">
-
+				<h3 style="flex-basis: 100%"><%= owner.displayname %>'s closed posts</h3>
+				
 			</div>
+			
 		</div>
 		<div class="sidebar">
-			<!--<%- include('./partials/sidebarfavorites.ejs') %>-->
+			<% if (typeof user !== 'undefined' && user) { %>
+				<%- include('./partials/sidebarfavorites.ejs') %>
+			<% } %>
 		</div>
 	</div>
 	<%- include('./partials/footer.ejs') %>
 	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
-	<script src="/javascript/gettingPosts/getPosts.js"></script>
+	<script src="/javascript/gettingPosts/postGetter.js"></script>
 	<script src="/javascript/gettingPosts/profilePosts.js"></script>
-	<!--
-	<script src="/javascript/getFavoritePosts.js"></script>
-	<script src="/javascript/favoritePostsSide.js"></script>
-	-->
+	<% if (typeof user !== 'undefined' && user) { %>
+		<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
+	<% } %>
 </body>
 </html>

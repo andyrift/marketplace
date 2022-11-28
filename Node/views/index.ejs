@@ -13,11 +13,9 @@
 			</div>
 		</div>
 		<div class="sidebar">
-			<!--
 			<% if (typeof user !== 'undefined' && user) { %>
 				<%- include('./partials/sidebarfavorites.ejs') %>
 			<% } %>
-			-->
 			<%- include('./partials/footer.ejs') %>
 		</div>
 	</div>
@@ -25,11 +23,25 @@
 	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
 	<script src="/javascript/getCategories.js"></script>
-	<script src="/javascript/gettingPosts/getPosts.js"></script>
-	<!--
-	<script src="/javascript/getFavoritePosts.js"></script>
-	<script src="/javascript/favoritePostsSide.js"></script>
-	-->
-	<script src="/javascript/gettingPosts/indexPosts.js"></script>
+	<script src="/javascript/gettingPosts/postGetter.js"></script>
+	<% if (typeof user !== 'undefined' && user) { %>
+		<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
+	<% } %>
+	<script>
+		const indexPosts = new postGetter({ 
+			postContainer: document.querySelector('.main div.posts'), 
+			postParams: { 
+				quantity: 6,
+				exclude: true,
+				shuffle: true
+			},
+			getPostsMethod: getPosts, 
+			makePostMethod: makePost,
+		});
+
+		getCategoriesSorted(() => {
+			indexPosts.start();
+		});
+	</script>
 </body>
 </html>

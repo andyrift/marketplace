@@ -1,15 +1,12 @@
-const fPostContainer = document.querySelector('div.posts#favorites');
+const favoritePostsSide = new postGetter({ 
+	postContainer: document.querySelector('div.posts#favorites'), 
+	postParams: { 
+		quantity: 2,
+		total: 2,
+		exclude: true,
+	},
+	getPostsMethod: getFavoritePosts, 
+	makePostMethod: makePost,
+});
 
-drawFPosts = (posts) => {
-	posts.forEach(post => {
-		fPostContainer.appendChild(makePost(post));
-	});
-}
-
-getFPosts = () => {
-	getFavoritePosts({ quantity: 2, excludePostIds: [] }, (posts) => {
-		drawFPosts(posts);
-	});
-}
-
-getFPosts();
+favoritePostsSide.start();

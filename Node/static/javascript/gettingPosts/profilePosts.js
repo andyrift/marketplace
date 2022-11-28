@@ -1,104 +1,43 @@
 username = document.querySelector('div.profile').dataset.username;
 
-console.log(username);
+const openPosts = new postGetter({ 
+	postContainer: document.querySelector('div#open'), 
+	postParams: { 
+		quantity: 6,
+		exclude: true,
+		username: username, 
+		closed: false,
+	},
+	getPostsMethod: getPosts, 
+	makePostMethod: makePost,
+});
 
-var postIds = [];
+const closedPosts = new postGetter({ 
+	postContainer: document.querySelector('div#closed'), 
+	postParams: { 
+		quantity: 6,
+		exclude: true,
+		username: username, 
+		closed: true,
+	},
+	getPostsMethod: getPosts, 
+	makePostMethod: makePost,
+});
 
-var waiting = false
-
-const openPostContainer = document.querySelector('div#open');
-var openCheckInterval;
-
-drawOpenPosts = (posts) => {
-	posts.forEach(post => {
-		postIds.push(post.post_id);
-		openPostContainer.appendChild(makePost(post));
-	});
-	waiting = false;
+showOpen = () => {
+	openPosts.start();
+	closedPosts.stop();
+	openPosts.getPostContainer.style = null;
+	closedPosts.getPostContainer.style = "display: none;";
 }
 
-getOpenPosts = () => {
-	let postslen = 0;
-	getPosts({ quantity: 6, excludePostIds: postIds, username: username, closed: false }, (posts) => {
-		postslen += posts.length;
-		drawOpenPosts(posts);
-	});
-	if(postslen === 0){
-		clearInterval(openCheckInterval);
-		clearInterval(openPreloadInterval);
-	}
-	waiting = true;
+showClosed = () => {
+	openPosts.stop();
+	closedPosts.start();
+	openPosts.getPostContainer.style = "display: none;";
+	closedPosts.getPostContainer.style = null;
 }
 
-openCheckLoad = () => {
-	console.log('check');
-	if (!waiting && (window.innerHeight + window.pageYOffset + 500) >= document.body.offsetHeight) {
-		getOpenPosts();
-	}
-}
-
-openPreLoad = () => {
-	console.log('preload');
-	if(!waiting){
-		getOpenPosts();
-	}
-	if(window.innerHeight <= document.body.scrollHeight) {
-		clearInterval(openPreloadInterval);
-		clearTimeout(openPreloadTimeout);
-		openCheckInterval = setInterval(openCheckLoad, 100);
-	}
-}
-
-var openPreloadInterval = setInterval(openPreLoad, 100);
-
-var openPreloadTimeout = setTimeout(() => clearInterval(openPreloadInterval) , 500);
+showOpen();
 
 
-
-const closedPostContainer = document.querySelector('div#closed');
-
-var closedCheckInterval;
-
-drawClosedPosts = (posts) => {
-	posts.forEach(post => {
-		postIds.push(post.post_id);
-		closedPostContainer.appendChild(makePost(post));
-	});
-	waiting = false;
-}
-
-getClosedPosts = () => {
-	let postslen = 0;
-	getPosts({ quantity: 6, excludePostIds: postIds, username: username, closed: true }, (posts) => {
-		postslen += posts.length;
-		drawClosedPosts(posts);
-	});
-	if(postslen === 0){
-		clearInterval(closedCheckInterval);
-		clearInterval(closedPreloadInterval);
-	}
-	waiting = true;
-}
-
-closedCheckLoad = () => {
-	console.log('check');
-	if (!waiting && (window.innerHeight + window.pageYOffset + 500) >= document.body.offsetHeight) {
-		getClosedPosts();
-	}
-}
-
-closedPreLoad = () => {
-	console.log('preload');
-	if(!waiting){
-		getClosedPosts();
-	}
-	if(window.innerHeight <= document.body.scrollHeight) {
-		clearInterval(closedPreloadInterval);
-		clearTimeout(closedPreloadTimeout);
-		closedCheckInterval = setInterval(closedCheckLoad, 100);
-	}
-}
-
-var closedPreloadInterval = setInterval(closedPreLoad, 100);
-
-var closedPreloadTimeout = setTimeout(() => clearInterval(closedPreloadInterval) , 500);
