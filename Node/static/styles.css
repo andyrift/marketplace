@@ -8,7 +8,7 @@
   --as-topbar-height: 40px;
   --as-website-width: 960px;
   --as-button-height: 32px;
-  --as-radius: 16px;
+  --as-radius: 6px;
   --as-orange: #F7931E;
   --as-orange-hover: #F79D34;
   --as-fontsize: 16px;
@@ -165,12 +165,21 @@ button#searchbutton {
   background-color: var(--as-body-color);
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-@media screen and (max-width:800px) {
-  .control {
-    flex-wrap: wrap;
-  }
+.control .categories {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:20px;
+}
+
+.control .categories div {
+  min-width: 20%;
+  width: fit-content;
+  cursor: pointer;
+  text-align: left;
 }
 
 .content, .footer {
@@ -230,7 +239,11 @@ button#searchbutton {
   box-sizing: border-box;
   margin: 10px 10px 0px 0px;
   width: calc(1/3 * 100% - 10px);
-  padding-bottom: 0%;
+  padding-bottom: 10px;
+}
+
+.closed {
+  opacity: 60%;
 }
 
 .content #favorites .post {
@@ -254,6 +267,7 @@ button#searchbutton {
   }
 }
 
+
 .sidebar #favorites .post {
   width: 95%;
   margin: auto;
@@ -264,10 +278,10 @@ button#searchbutton {
   width: 100%;
   padding-top: 100%;
   margin-bottom: 10px;
-  border: 1px solid lightgrey;
   border-radius: var(--as-radius);
   box-sizing: border-box;
   position: relative;
+  box-shadow:inset 0px 0px 0px 1px var(--as-lightgrey);
 }
 
 .post div#image img {
@@ -358,7 +372,7 @@ button#searchbutton {
 
 #rating {
   float: left;
-  height:150px; 
+  height: 150px; 
   width: 300px;
   margin-left: 20px; 
   box-sizing: border-box;

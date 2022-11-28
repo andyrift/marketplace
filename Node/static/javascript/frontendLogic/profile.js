@@ -1,5 +1,9 @@
 const deleteButton = document.querySelector('a.delete');
 deleteButton.addEventListener('click', (e) => {
+	if(!confirm('Are you sure you want to delete your profile?')) {
+      return;
+  }
+
 	const endpoint = `/profile`;
 
 	fetch(endpoint, {

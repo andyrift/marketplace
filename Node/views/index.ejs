@@ -20,9 +20,7 @@
 		</div>
 	</div>
 	
-	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
-	<script src="/javascript/getCategories.js"></script>
 	<script src="/javascript/gettingPosts/postGetter.js"></script>
 	<% if (typeof user !== 'undefined' && user) { %>
 		<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
@@ -39,9 +37,7 @@
 			makePostMethod: makePost,
 		});
 
-		getCategoriesSorted(() => {
-			indexPosts.start();
-		});
+		indexPosts.start();
 	</script>
 </body>
 </html>

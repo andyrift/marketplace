@@ -7,11 +7,15 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main">
+			<% if (post.closed) { %>
+			<div class="postpage closed">
+			<% } else { %>
 			<div class="postpage">
+			<% } %>
 				<h1 id="title"><%= post.title %></h1>
 				<h1 id="price">$<%= post.price %></h1>
 				<div style="clear:both;"></div>
-				<img src="/<%= post.picture_filename %>" alt="Post Picture">
+				<img src="/<%= post.picture_filename %>" alt="Post Picture" onerror="this.style.display='none'">
 				<h2 id="address">Address</h2>
 				<p><%= post.address %></p>
 				<h2>Description</h2>
@@ -67,6 +71,9 @@
 				</a>
 				<a href="/user/<%= owner.username %>">
 					<h3 id="name"><%= owner.displayname %></h3>
+					<div class="profilefooter">
+						<p><%= owner.email %></p>
+					</div>
 				</a>
 			</div>
 			<!--

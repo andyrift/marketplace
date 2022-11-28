@@ -1,6 +1,10 @@
 const deleteButton = document.querySelector('a.delete');
 if (deleteButton) {
 	deleteButton.addEventListener('click', (e) => {
+		if(!confirm('Are you sure you want to delete the post?')) {
+        return;
+    }
+
 		const endpoint = `/post/${deleteButton.dataset.doc}`;
 
 		fetch(endpoint, {
@@ -51,6 +55,7 @@ if(favoriteButton) {
 
 const closeButton = document.querySelector('a#close');
 if (closeButton) {
+	const postPage = document.querySelector('div.postpage');
 	const closeButtonElement = document.querySelector('button#close');
 	closeButton.addEventListener('click', async (e) => {
 		const endpoint = '/post/';
@@ -66,8 +71,10 @@ if (closeButton) {
 		if(res.status === 200){
 			if (data.closed) {
 				closeButtonElement.innerHTML = "Open";
+				postPage.classList.add("closed");
 			} else {
 				closeButtonElement.innerHTML = "Close";
+				postPage.classList.remove("closed");
 			}
 		} else {
 			document.write(data.body);

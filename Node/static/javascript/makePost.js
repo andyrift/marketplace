@@ -1,11 +1,20 @@
 makePost = (post) => {
-	var postElement = tag('div', { 'class': 'post' });
+	var postElement;
+
+	if (post.closed) {
+		postElement = tag('div', { 'class': 'post closed' });
+	} else {
+		postElement = tag('div', { 'class': 'post' });
+	}
+
 	var a = tag('a', { 'href': `/post/${post.post_id}`});
+
+	postElement.appendChild(a);
 
 	var img = tag('div', { 'id': 'image' });
 	a.appendChild(img);
 
-	img.innerHTML = `<img src="/${post.picture_filename}" alt="Post Picture">`;
+	img.innerHTML = `<img src="/${post.picture_filename}" alt="" onerror="this.style.display='none'">`; 
 
 	var content = tag('div', { 'id': 'content' });
 	a.appendChild(content);
@@ -26,6 +35,6 @@ makePost = (post) => {
 	//p.innerHTML = `${categories.find(cat => {return cat.category_id === post.category_id}).category_name}`;
 	//content.appendChild(p);
 
-	postElement.appendChild(a);
+	
 	return postElement;
 }
