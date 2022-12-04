@@ -3,14 +3,18 @@
 :root {
   --as-body-color: #f8f8f8;
   --as-lightgrey: #EEEEEE;
-  --as-midgrey: #888888;
+  --as-midgrey: #999999;
+  --as-midgrey-hover: #A0A0A0;
   --as-darkgrey: #333333;
+  --as-orange: #F7931E;
+  --as-orange-hover: #F79D34;
+  --as-red: #F05555;
+  --as-red-hover: #F66060;
+  --as-lightred: #F68585;
   --as-topbar-height: 40px;
   --as-website-width: 960px;
   --as-button-height: 32px;
-  --as-radius: 6px;
-  --as-orange: #F7931E;
-  --as-orange-hover: #F79D34;
+  --as-radius: 8px;
   --as-fontsize: 16px;
 }
 
@@ -79,7 +83,7 @@ a:hover {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 100;
 }
 
 .sticky + .control {
@@ -134,6 +138,26 @@ input::file-selector-button, input[type=submit] {
 }
 
 button:hover, input::file-selector-button:hover, input[type=submit]:hover {
+  background-color: var(--as-orange-hover);
+}
+
+button.tab {
+  border-color: var(--as-midgrey);
+  background-color: var(--as-midgrey);
+  border-radius: var(--as-radius) var(--as-radius) 0px 0px;
+  border-bottom: none;
+}
+
+button:hover.tab {
+  background-color: var(--as-midgrey-hover);
+}
+
+button.tab.active {
+  border-color: var(--as-orange);
+  background-color: var(--as-orange);;
+}
+
+button:hover.tab.active {
   background-color: var(--as-orange-hover);
 }
 
@@ -235,6 +259,11 @@ button#searchbutton {
   flex: auto;
 }
 
+.posts.tabbed {
+  z-index: 0;
+  border-top: 2px solid var(--as-orange);
+}
+
 .post {
   box-sizing: border-box;
   margin: 10px 10px 0px 0px;
@@ -267,7 +296,6 @@ button#searchbutton {
   }
 }
 
-
 .sidebar #favorites .post {
   width: 95%;
   margin: auto;
@@ -282,18 +310,6 @@ button#searchbutton {
   box-sizing: border-box;
   position: relative;
   box-shadow:inset 0px 0px 0px 1px var(--as-lightgrey);
-}
-
-.post div#image img {
-  border-radius: var(--as-radius);
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-position: center;
-  object-fit: cover;
 }
 
 .post div#content {
@@ -317,49 +333,41 @@ button#searchbutton {
 .profile  {
   overflow: hidden;
   padding-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .profile a {
   text-decoration: none;
 }
 
-.sidebar .profile a {
+.sidebar .profile {
+  flex: none;
+  display: grid;
+}
+
+.sidebar .profile > * {
   margin: auto;
 }
 
 #profilepicture {
-  float: left;
   height: 150px; 
   width: 150px; 
-  box-sizing: border-box;
-  border: 1px solid lightgrey;
   border-radius: var(--as-radius);
-}
-
-#profilepicture img{
-  float: left;
-  height: inherit; 
-  width: inherit; 
-  box-sizing: border-box;
-  border-radius: var(--as-radius);
-  object-position: center;
-  object-fit: cover;
-}
-
-.sidebar .profile #profilepicture {
-  width: 80px;
-  height:  80px;
-  margin-bottom: 20px;
-  margin-left: 20px;
-  border: 1px solid lightgrey;
-  border-radius: 50%;
+  margin-bottom: 10px;
   box-sizing: border-box;
   position: relative;
-  float:  right;
+  box-shadow:inset 0px 0px 0px 1px var(--as-lightgrey);
 }
 
-.sidebar .profile #profilepicture img {
-  border-radius: 50%;
+.rating {
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 10px;
+}
+
+#profilepicture img, .post div#image img{
+  border-radius: var(--as-radius);
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -370,30 +378,40 @@ button#searchbutton {
   object-fit: cover;
 }
 
-#rating {
-  float: left;
-  height: 150px; 
-  width: 300px;
-  margin-left: 20px; 
-  box-sizing: border-box;
-  border: 1px solid lightgrey;
-  border-radius: var(--as-radius);
+.sidebar .profile #profilepicture {
+  width: 100px;
+  height:  100px;
+  margin: auto;
+  margin-bottom: 10px;
+  border-radius: 50%;
 }
 
-.profilefooter {
-  margin-top: 20px;
+.sidebar .profile #profilepicture img {
+  border-radius: 50%;
+}
+
+.profileinfo {
+  max-width: calc(100% - 150px);
+  padding-left: 20px;
   color: var(--as-midgrey);
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+.profileinfo p {
+  word-wrap: break-word;
+  white-space: initial;
+}
+
+.sidebar .profileinfo {
+  max-width: 100%;
+  padding-left: 0px;
 }
 
 .profile button.delete {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
-#name {
-  margin-top: 20px;
-}
-
 .sidebar #name {
   margin-top: 0px;
   float:  left;
@@ -575,10 +593,12 @@ input::-webkit-inner-spin-button {
 
 .postfooter {
   padding-top: 20px;
-  margin-bottom: 30px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
   color: var(--as-midgrey);
   display: flex;
   justify-content: left;
+  border-bottom: 1px solid lightgrey;
 }
 
 .postfooter p {
@@ -595,4 +615,49 @@ div.dialoguepm {
 
 div.post {
   overflow: hidden;
+}
+
+.star-rating {
+  width: 0;
+  position: relative;
+  display:inline-block;
+  background-image: url(/img/star_0.svg);
+  background-position: 0 0;
+  background-repeat: repeat-x;
+}
+
+.star-rating .star-value {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: url('/img/star_1.svg') ;
+  background-repeat: repeat-x;
+}
+
+.star-rating.is-busy {
+  cursor: wait;
+}
+
+#closed-alert {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--as-lightred);
+  margin-bottom: 10px;
+  color: white;
+}
+
+#closed-alert h2 {
+  color: var(--as-darkgrey);
+}
+
+button.delete {
+  background-color: var(--as-red);
+  border-color: var(--as-red);
+}
+
+button:hover.delete {
+  background-color: var(--as-red-hover);
 }

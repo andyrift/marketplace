@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <div class="profile">
-	<a href="/profile/<%= owner.username %>">
-		<div id="profilepicture">
-			<img src="/<%= owner.picture_filename %>" alt="">
-		</div>
-	</a>
+	<div style="flex-basis: 100%; justify-self: end;" >
+		<a href="/profile/<%= owner.username %>">
+			<div id="profilepicture">
+				<img src="/<%= owner.picture_filename %>" alt="">
+			</div>
+		</a>
+	</div>
 	<a href="/profile/<%= owner.username %>">
 		<h3 id="name"><%= owner.displayname %></h3>
 	</a>

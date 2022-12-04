@@ -6,8 +6,6 @@ favoritesModel = require("../models/favoritesModel");
 fetchError = require("./fetchError");
 fileModel = require("../models/fileModel");
 
-userModel.hashPassword("2552222002").then(res => console.log(res));
-
 const _ = require('lodash');
 const multer  = require('multer');
 
@@ -16,11 +14,24 @@ module.exports.user_get = (req, res) => {
 		res.redirect('/profile');
 	} else {
 		userModel.getUserByUsername(req.params.username)
-		.then(user => {
-			if (user) {
-				res.render('user', { title: 'User', owner: user });
-			} else {
-				res.status(404).render('404', { title: 'User Not Found' });
+		.then(async (user) => {
+			try {
+				if (user) {
+					if (req.userInfo) {
+						rating = await userModel.getRating({ sender_id: req.userInfo.user_id, reciever_id: user.user_id })
+						if(rating) {
+							rating = rating.rating;
+						}
+						res.render('user', { title: 'User', owner: user, rating });
+					} else {
+						res.render('user', { title: 'User', owner: user, rating: undefined });
+					}
+				} else {
+					res.status(404).render('404', { title: 'User Not Found' });
+				}
+			} catch(err) {
+				console.error(err);
+				res.status(500).render('500', { title: 'Error' });
 			}
 		})
 		.catch(err => {
@@ -43,6 +54,7 @@ module.exports.profile_delete = async (req, res) => {
 		user = await userModel.deleteUserByUsername(req.userInfo.username)
 		fileModel.deleteUserPicture(user);
 		await favoritesModel.deleteFavoritesByUserId(user.user_id);
+		await userModel.clearRating({reciever_id: user.user_id});
 		posts = await postModel.deletePostsByUserId(user.user_id);
 		posts.forEach(post => {
 			postModel.deletePostPicture(post);
@@ -112,6 +124,25 @@ module.exports.updateProfile_post = async (req, res) => {
 	} catch (err) {
 		console.error('Error while deleting user', err);
 		res.status(500).render('500', { title: 'Error' });
+	}
+}
+
+module.exports.user_post = async (req, res) => {
+	try {
+		rating = await userModel.setRating({
+			sender_id: req.userInfo.user_id,
+			reciever_id: parseInt(req.body.user_id),
+			rating: req.body.rating
+		})
+		rating = await userModel.calculateUserRating({
+			reciever_id: parseInt(req.body.user_id),
+		})
+		await userModel.updateUserRating({ user_id: req.body.user_id, rating: rating.avg });
+		console.log(rating);
+		res.status(302).json({});
+	} catch(err) {
+		console.error(err);
+		fetchError.sendError(res);
 	}
 }
 

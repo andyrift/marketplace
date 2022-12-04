@@ -8,40 +8,39 @@
 	<div class="content">
 		<div class="main"> 
 			<div class="profile" data-username="<%= user.username %>">
-				<a href="/profile">
-					<div id="profilepicture">
-						<img src="/<%= user.picture_filename %>" alt="Profile Picture">
-					</div>
-				</a>
-				<div id="rating">
-					
+				<div>
+					<a href="/profile %>">
+						<div id="profilepicture">
+							<img src="/<%= user.picture_filename %>" alt="Profile Picture">
+						</div>
+					</a>
 				</div>
-				<div style="clear:both;"></div>
-				<a href="/profile">
+				<div class="profileinfo">
 					<h2 id="name"><%= user.displayname %></h2>
-				</a>
-				<div class="profilefooter">
 					<p>Username: <%= user.username %></p>
+					<% if (user.email) { %>
 					<p>Email: <%= user.email %></p>
+					<% } %>
+					<% if (user.address) { %>
 					<p>Address: <%= user.address %></p>
+					<% } %>
 					<p>Joined: <%= user.joined_timestamp %></p>
 				</div>
-				<a href="/profile/edit"><button>Edit</button></a>
-				<a class="delete"><button class="delete">Delete</button></a>
-				<script src="/javascript/frontendLogic/profile.js"> </script>
+				<div class="rating" style="flex-basis: 100%">
+					<span><div data-rating="<%= user.rating %>" id="average">
+					</div>(<span class="average"></span>)</span>
+				</div>
+				<div>
+					<a href="/profile/edit"><button>Edit</button></a>
+					<a class="delete"><button class="delete">Delete</button></a>
+				</div>
 			</div>
 
-			<button onclick="showOpen()">Open</button> <button onclick="showClosed()">Closed</button>
-			
-			<div id="open" class="posts">
-				<h3 style="flex-basis: 100%">Your posts</h3>
-				
-			</div>
-			
-			<div id="closed" class="posts">
-				<h3 style="flex-basis: 100%">Your closed posts</h3>
-				
-			</div>
+			<h3 style="margin-bottom: 10px;">Your posts</h3>
+			<button id="open" class="tab active" onclick="showOpen()">Open</button>
+			<button id="closed" class="tab" onclick="showClosed()">Closed</button>
+			<div id="open" class="posts tabbed"></div>
+			<div id="closed" class="posts tabbed"></div>
 
 		</div>
 		<div class="sidebar">
@@ -51,11 +50,15 @@
 		</div>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/tag.js"></script>
 	<script src="/javascript/makePost.js"></script>
 	<script src="/javascript/gettingPosts/postGetter.js"></script>
 	<script src="/javascript/gettingPosts/profilePosts.js"></script>
 	<% if (typeof user !== 'undefined' && user) { %>
 		<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
 	<% } %>
+	<script src="/javascript/starRating.js"></script>
+	<script src="/javascript/frontendLogic/profile.js"> </script>
+	<script src="/javascript/frontendLogic/averageRating.js"></script>
 </body>
 </html>

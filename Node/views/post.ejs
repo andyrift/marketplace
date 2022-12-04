@@ -7,6 +7,15 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main">
+
+			<% if (post.closed) { %>
+			<div id="closed-alert"> 
+			<% } else { %>
+			<div id="closed-alert" style="display: none;">
+			<% } %>
+
+			<h2>This post has been closed</h2></div>
+
 			<% if (post.closed) { %>
 			<div class="postpage closed">
 			<% } else { %>
@@ -45,7 +54,6 @@
 				<% if (owner.user_id === user.user_id) { %>
 				
 				<div class="postcontrol" style="float: right;">
-					<a href="/post/edit/<%= post.post_id %>"><button>Edit</button></a>
 					<a id="close" data-doc="<%= post.post_id %>"><button id="close">
 					<% if (post.closed) { %>
 					Open
@@ -53,28 +61,34 @@
 					Close
 					<% } %>
 					</button></a>
+					<a href="/post/edit/<%= post.post_id %>"><button>Edit</button></a>
 					<a class="delete" data-doc="<%= post.post_id %>"><button class="delete">Delete</button></a>
 				</div>
 				<% } %>
 
 				<% } %>
-				<script src="/javascript/frontendLogic/post.js"></script>
-				
 			</div>
 		</div>
 		<div class="sidebar">
+
 			<div class="profile">
-				<a href="/user/<%= owner.username %>">
-					<div id="profilepicture">
-						<img src="/<%= owner.picture_filename %>" alt="">
-					</div>
-				</a>
+				<div>
+					<a href="/user/<%= owner.username %>">
+						<div id="profilepicture">
+							<img src="/<%= owner.picture_filename %>" alt="">
+						</div>
+					</a>
+				</div>
 				<a href="/user/<%= owner.username %>">
 					<h3 id="name"><%= owner.displayname %></h3>
-					<div class="profilefooter">
-						<p><%= owner.email %></p>
-					</div>
 				</a>
+				<div class="profileinfo">
+					<p><%= owner.email %></p>
+				</div>
+				<div class="rating">
+					<span><div data-rating="<%= owner.rating %>" id="average">
+					</div>(<span class="average"></span>)</span>
+				</div>
 			</div>
 			<!--
 			<button id="write">Write to owner</button>
@@ -83,5 +97,8 @@
 		</div>
 	</div>
 	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/frontendLogic/post.js"></script>
+	<script src="/javascript/starRating.js"></script>
+	<script src="/javascript/frontendLogic/averageRating.js"></script>
 </body>
 </html>

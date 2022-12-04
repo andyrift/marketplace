@@ -10,7 +10,7 @@ module.exports.requireAuth = (req, res, next) => {
 				console.log(err);
 				res.redirect('/login');
 			} else {
-				console.log(tokenDecoded);
+				//console.log(tokenDecoded);
 				next();
 			}
 		});

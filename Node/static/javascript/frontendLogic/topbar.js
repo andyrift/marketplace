@@ -13,8 +13,6 @@ window.addEventListener('scroll', stickTopbar);
 
 makeCategory = (category) => {
 
-
-
   let cat;
 
   cat = tag('div');

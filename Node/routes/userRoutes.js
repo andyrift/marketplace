@@ -14,4 +14,6 @@ router.delete('/profile', auth.requireAuth, userController.profile_delete);
 
 router.get('/user/:username', userController.user_get);
 
+router.post('/user/:username', auth.requireAuth, userController.user_post);
+
 module.exports = router;

@@ -72,9 +72,11 @@ if (closeButton) {
 			if (data.closed) {
 				closeButtonElement.innerHTML = "Open";
 				postPage.classList.add("closed");
+				document.querySelector('#closed-alert').style.display=null;
 			} else {
 				closeButtonElement.innerHTML = "Close";
 				postPage.classList.remove("closed");
+				document.querySelector('#closed-alert').style.display="none";
 			}
 		} else {
 			document.write(data.body);

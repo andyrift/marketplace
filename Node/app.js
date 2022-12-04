@@ -47,12 +47,6 @@ const postRoutes = require("./routes/postRoutes.js");
 const favoritesRoutes = require("./routes/favoritesRoutes.js");
 const postController = require("./controllers/postController.js");
 
-
-// listen
-const port = 3000
-app.listen(port);
-console.log(`now listening on port ${port}`);
-
 /*
 // dictionary for text generator 
 
@@ -121,3 +115,9 @@ pool.end(() => {
   console.log('pool has ended')
 })
 */
+
+
+// listen
+const port = 80
+app.listen(port);
+console.log(`now listening on port ${port}`);

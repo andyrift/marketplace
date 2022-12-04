@@ -29,6 +29,8 @@ showOpen = () => {
 	closedPosts.stop();
 	openPosts.getPostContainer.style = null;
 	closedPosts.getPostContainer.style = "display: none;";
+	document.querySelector('button#open').classList.add("active");
+	document.querySelector('button#closed').classList.remove("active");
 }
 
 showClosed = () => {
@@ -36,6 +38,8 @@ showClosed = () => {
 	closedPosts.start();
 	openPosts.getPostContainer.style = "display: none;";
 	closedPosts.getPostContainer.style = null;
+	document.querySelector('button#closed').classList.add("active");
+	document.querySelector('button#open').classList.remove("active");
 }
 
 showOpen();

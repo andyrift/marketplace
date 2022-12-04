@@ -92,3 +92,64 @@ module.exports.deleteUserByUsername = (username, callback) => {
 		callback: callback
 	});
 }
+
+module.exports.setRating = ({ sender_id, reciever_id, rating }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				'insert into ratings(sender_id, reciever_id, rating) values($1, $2, $3) ' + 
+				'on conflict (sender_id, reciever_id) do update set rating=$4 returning *', 
+			values: [sender_id, reciever_id, rating, rating],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
+module.exports.getRating = ({ sender_id, reciever_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				'select * from ratings where sender_id = $1 and reciever_id = $2', 
+			values: [sender_id, reciever_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
+module.exports.updateUserRating = ({ user_id, rating }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				'update users set rating = $1 where user_id = $2 returning *', 
+			values: [rating, user_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
+module.exports.calculateUserRating = ({ reciever_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				'select avg(rating) from ratings where reciever_id = $1', 
+			values: [reciever_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
+module.exports.clearRating = ({ reciever_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				'delete from ratings where reciever_id = $1', 
+			values: [reciever_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
