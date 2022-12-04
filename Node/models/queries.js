@@ -1,4 +1,5 @@
 pool = require.main.pool;
+const Cursor = require('pg-cursor');
 
 module.exports.makeQuery = ({ query, single, callback }) => {
 	if(typeof callback !== "undefined") {
@@ -45,5 +46,15 @@ module.exports.makeQuery = ({ query, single, callback }) => {
 				reject(err);
 			}
 		});
+	}
+}
+
+module.exports.makeCursor = async ({ query }) => {
+	try {
+		const client = await pool.connect();
+		return { client, cursor: client.query(new Cursor(query.text, query.values)) };
+	} catch(err){
+		console.error(err);
+		return undefined;
 	}
 }

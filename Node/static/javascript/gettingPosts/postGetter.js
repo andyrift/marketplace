@@ -1,4 +1,4 @@
-getPosts = ({ quantity, username, category_id, excludePostIds, closed, shuffle }, callback) => {
+getPosts = async ({ quantity, username, category_id, excludePostIds, closed, shuffle }, callback) => {
 	let data = { 
 		get: true, 
 		quantity, 
@@ -8,25 +8,23 @@ getPosts = ({ quantity, username, category_id, excludePostIds, closed, shuffle }
 		closed,
 		shuffle,
 	};
-	fetch(/post/, {
-		method: 'POST',
-  	body: JSON.stringify(data),
-  	headers: {
-			'Content-Type': 'application/json'
-		}
-	})
-	.then(res => {
-		res.json()
-		.then(data => {
-			if(res.status === 200){
-				callback(data.posts);
-			} else {
-				document.write(data.body);
+	try {
+		res = await fetch(/post/, {
+			method: 'POST',
+	  	body: JSON.stringify(data),
+	  	headers: {
+				'Content-Type': 'application/json'
 			}
-		})
-		.catch(err => console.log(err));
-	})
-	.catch(err => console.log(err));
+		});
+		data = await res.json();
+		if(res.status === 200){
+			callback(data.posts);
+		} else {
+			document.write(data.body);
+		}
+	} catch(err) {
+		console.log(err)
+	}
 }
 
 getFavoritePosts = ({ quantity, excludePostIds }, callback) => {
@@ -57,13 +55,14 @@ getFavoritePosts = ({ quantity, excludePostIds }, callback) => {
 }
 
 class postGetter {
-	constructor({ postContainer, postParams, exclude, getPostsMethod, makePostMethod }) {
+	constructor({ postContainer, postParams, exclude, getPostsMethod, makePostMethod, onEmpty }) {
 		this.postContainer = postContainer;
 		this.postParams = postParams;
 		this.getPostsMethod = getPostsMethod;
 		this.makePostMethod = makePostMethod;
 		this.postIds = [];
 		this.waiting = false;
+		this.onEmpty = onEmpty;
 	}
 
 	get getPostContainer() {
@@ -110,9 +109,15 @@ class postGetter {
 		}
 		this.postParams.excludePostIds = this.postParams.exclude ? this.postIds : undefined;
 		this.getPostsMethod(this.postParams, (posts) => {
-			if(posts.length === 0){
+			if(!posts.length){
 				clearInterval(this.checkInterval);
 				clearInterval(this.preloadInterval);
+				if(!this.postIds.length) {
+					if(typeof this.onEmpty === "function") {
+						this.onEmpty();
+					}
+				}
+				return;
 			}
 			this.drawPosts(posts);
 		});

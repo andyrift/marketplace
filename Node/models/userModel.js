@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const { makeQuery } = require('./cbpromise.js');
+const { makeQuery } = require('./queries.js');
 
 module.exports.getUserById = (user_id, callback) => {
 	return makeQuery({

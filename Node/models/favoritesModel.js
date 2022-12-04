@@ -1,4 +1,4 @@
-const { makeQuery } = require('./cbpromise.js');
+const { makeQuery } = require('./queries.js');
 
 module.exports.getFavoritesByUserId = (id, callback) => {
 	return makeQuery({

@@ -10,82 +10,123 @@ const _ = require('lodash');
 const multer  = require('multer');
 
 
-getPosts = (req, res) => {
+getPosts = async (req, res) => {
+
+	let readSize = 2;
+
+	let cursor;
+	let client;
+
 	if(!req.body.username && !req.body.category_id) {
-		postModel.getAllPosts({closed: req.body.closed}, (qerr, posts) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
-				fetchError.sendError(res);
-			} else {
-				res.status(200).json({ posts: postModel.choosePosts({ 
-					posts, 
-					excludePostIds: req.body.excludePostIds, 
-					quantity: req.body.quantity,
-					shuffle: req.body.shuffle,
-				}) });
-			}
-		});
-	}	else if (!req.body.username) {
-		postModel.getPostsByCategory({closed: req.body.closed, category_id: req.body.category_id }, (qerr, posts) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
-				fetchError.sendError(res);
-			} else {
-				res.status(200).json({ posts: postModel.choosePosts({ 
-					posts, 
-					excludePostIds: req.body.excludePostIds, 
-					quantity: req.body.quantity,
-					shuffle: req.body.shuffle,
-				}) });
-			}
-		});
+		if(req.body.shuffle) {
+			obj = await postModel.getAllPostsCursorShuffle({
+				closed: req.body.closed
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		} else {
+			obj = await postModel.getAllPostsCursor({
+				closed: req.body.closed
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		}
+	} else if (!req.body.username) {
+		if(req.body.shuffle) {
+			obj = await postModel.getPostsByCategoryCursorShuffle({ 
+				closed: req.body.closed, 
+				category_id: req.body.category_id 
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		} else {
+			obj = await postModel.getPostsByCategoryCursor({ 
+				closed: req.body.closed, 
+				category_id: req.body.category_id 
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		}
 	} else if (!req.body.category_id) {
-		userModel.getUserByUsername(req.body.username, (qerr, user) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
-				fetchError.sendError(res);
-			} else if (user) {
-				postModel.getPostsByUserId({closed: req.body.closed, user_id: user.user_id }, (qerr, posts) => {
-					if (qerr) {
-						console.error('Error executing query', qerr.stack);
-						fetchError.sendError(res);
-					} else {
-						res.status(200).json({ posts: postModel.choosePosts({ 
-							posts, 
-							excludePostIds: req.body.excludePostIds, 
-							quantity: req.body.quantity,
-							shuffle: req.body.shuffle,
-						}) });
-					}
-				});
-			} else {
-				res.status(200).json({ posts: [] });
-			}
-		});
+		user = await userModel.getUserByUsername(req.body.username);
+		if (!user) {
+			res.status(200).json({ posts: [] });
+			return;
+		}
+		if(req.body.shuffle) {
+			obj = await postModel.getPostsByUserIdCursorShuffle({ 
+				closed: req.body.closed, 
+				user_id: user.user_id 
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		} else {
+			obj = await postModel.getPostsByUserIdCursor({ 
+				closed: req.body.closed, 
+				user_id: user.user_id 
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		}
 	} else {
-		userModel.getUserByUsername(req.body.username, (qerr, user) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
-				fetchError.sendError(res);
-			} else if (user) {
-				postModel.getPostsByUserIdAndCategory({closed: req.body.closed, user_id: user.user_id, category_id: req.body.category_id }, (qerr, posts) => {
-					if (qerr) {
-						console.error('Error executing query', qerr.stack);
-						fetchError.sendError(res);
-					} else {
-						res.status(200).json({ posts: postModel.choosePosts({ 
-							posts, 
-							excludePostIds: req.body.excludePostIds, 
-							quantity: req.body.quantity,
-							shuffle: req.body.shuffle,
-						}) });
-					}
-				});
-			} else {
-				res.status(200).json({ posts: [] });
-			}
-		});
+		user = await userModel.getUserByUsername(req.body.username);
+		if (!user) {
+			res.status(200).json({ posts: [] });
+			return;
+		}
+		if(req.body.shuffle) {
+			obj = await postModel.getPostsByUserIdAndCategoryCursorShuffle({
+				closed: req.body.closed, 
+				user_id: user.user_id, 
+				category_id: req.body.category_id 
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		} else {
+			obj = await postModel.getPostsByUserIdAndCategoryCursor({
+				closed: req.body.closed, 
+				user_id: user.user_id, 
+				category_id: req.body.category_id 
+			});
+			cursor = obj.cursor;
+			client = obj.client;
+		}
 	}
+
+	if(!cursor) {
+		if(client) {
+			client.release();
+		}
+		fetchError.sendError(res);
+		return;
+	}
+
+	posts = [];
+
+	if (!req.body.quantity){
+		res.status(200).json({ posts });
+		return;
+	}
+
+	rows = await cursor.read(readSize);
+	while (rows.length && posts.length < req.body.quantity) {
+		if(req.body.quantity - posts.length > 0) {
+			postModel.choosePosts({ 
+				posts: rows, 
+				excludePostIds: req.body.excludePostIds, 
+				quantity: req.body.quantity - posts.length,
+			}).forEach(post => {
+				posts.push(post);
+			});
+			rows = await cursor.read(readSize);
+		} else {
+			await cursor.close();
+			break;
+		}
+	}
+	client.release();
+
+	res.status(200).json({ posts });
 }
 
 changeClosed = async (req, res) => {

@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { makeQuery } = require('./cbpromise.js');
+const { makeQuery, makeCursor } = require('./queries.js');
 
 module.exports.choosePosts = ( { posts, excludePostIds, quantity, shuffle } ) => {
 
@@ -159,10 +159,48 @@ module.exports.getAllPosts = ({closed}, callback) => {
 	});
 }
 
+module.exports.getAllPostsCursor = async ({closed}) => {
+	return await makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 order by publication_timestamp desc', 
+			values: [!!closed],
+		}
+	});
+}
+
+module.exports.getAllPostsCursorShuffle = async ({closed}) => {
+	return await makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 order by random()', 
+			values: [!!closed],
+		}
+	});
+}
+
 module.exports.getPostsByCategory = ({category_id, closed}, callback) => {
 	return makeQuery({
 		query: {
 			text: 'select * from posts where deleted = FALSE and closed = $1 and category_id = $2 order by publication_timestamp desc', 
+			values: [!!closed, category_id],
+		}, 
+		single: false,
+		callback: callback
+	});
+}
+
+module.exports.getPostsByCategoryCursor = ({category_id, closed}) => {
+	return makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 and category_id = $2 order by publication_timestamp desc', 
+			values: [!!closed, category_id],
+		}
+	});
+}
+
+module.exports.getPostsByCategoryCursorShuffle = ({category_id, closed}) => {
+	return makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 and category_id = $2 order by random()', 
 			values: [!!closed, category_id],
 		}, 
 		single: false,
@@ -181,6 +219,24 @@ module.exports.getPostsByUserId = ({user_id, closed}, callback) => {
 	});
 }
 
+module.exports.getPostsByUserIdCursor = ({user_id, closed}) => {
+	return makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 and user_id = $2 order by publication_timestamp desc', 
+			values: [!!closed, user_id],
+		}
+	});
+}
+
+module.exports.getPostsByUserIdCursorShuffle = ({user_id, closed}) => {
+	return makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 and user_id = $2 order by random()', 
+			values: [!!closed, user_id],
+		}
+	});
+}
+
 module.exports.getPostsByUserIdAndCategory = ({user_id, category_id, closed}, callback) => {
 	return makeQuery({
 		query: {
@@ -189,6 +245,24 @@ module.exports.getPostsByUserIdAndCategory = ({user_id, category_id, closed}, ca
 		}, 
 		single: false,
 		callback: callback
+	});
+}
+
+module.exports.getPostsByUserIdAndCategoryCursor = ({user_id, category_id, closed}) => {
+	return makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 and user_id = $2 and category_id = $3 order by publication_timestamp desc', 
+			values: [!!closed, user_id, category_id],
+		}
+	});
+}
+
+module.exports.getPostsByUserIdAndCategoryCursorShuffle = ({user_id, category_id, closed}) => {
+	return makeCursor({
+		query: {
+			text: 'select * from posts where deleted = FALSE and closed = $1 and user_id = $2 and category_id = $3 order by random()', 
+			values: [!!closed, user_id, category_id],
+		}
 	});
 }
 

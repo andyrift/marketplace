@@ -39,8 +39,12 @@
 			<h3 style="margin-bottom: 10px;">Your posts</h3>
 			<button id="open" class="tab active" onclick="showOpen()">Open</button>
 			<button id="closed" class="tab" onclick="showClosed()">Closed</button>
-			<div id="open" class="posts tabbed"></div>
-			<div id="closed" class="posts tabbed"></div>
+			<div id="open" class="posts tabbed">
+				<div class="empty" style="display: none;"><h3>Empty</h3></div>
+			</div>
+			<div id="closed" class="posts tabbed">
+				<div class="empty" style="display: none;"><h3>Empty</h3></div>
+			</div>
 
 		</div>
 		<div class="sidebar">

@@ -10,6 +10,9 @@ const openPosts = new postGetter({
 	},
 	getPostsMethod: getPosts, 
 	makePostMethod: makePost,
+	onEmpty: () => {
+		document.querySelector('div#open').querySelector("div.empty").style.display = null;
+	}
 });
 
 const closedPosts = new postGetter({ 
@@ -22,6 +25,9 @@ const closedPosts = new postGetter({
 	},
 	getPostsMethod: getPosts, 
 	makePostMethod: makePost,
+	onEmpty: () => {
+		document.querySelector('div#closed').querySelector("div.empty").style.display = null;
+	}
 });
 
 showOpen = () => {
