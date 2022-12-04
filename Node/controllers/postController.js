@@ -11,41 +11,29 @@ const multer  = require('multer');
 
 
 getPosts = async (req, res) => {
-
 	let readSize = 2;
-
-	let cursor;
-	let client;
-
+	let {cursor, client} = {};
 	if(!req.body.username && !req.body.category_id) {
 		if(req.body.shuffle) {
-			obj = await postModel.getAllPostsCursorShuffle({
+			({cursor, client} = await postModel.getAllPostsCursorShuffle({
 				closed: req.body.closed
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		} else {
-			obj = await postModel.getAllPostsCursor({
+			({cursor, client} = await postModel.getAllPostsCursor({
 				closed: req.body.closed
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		}
 	} else if (!req.body.username) {
 		if(req.body.shuffle) {
-			obj = await postModel.getPostsByCategoryCursorShuffle({ 
+			({cursor, client} = await postModel.getPostsByCategoryCursorShuffle({ 
 				closed: req.body.closed, 
 				category_id: req.body.category_id 
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		} else {
-			obj = await postModel.getPostsByCategoryCursor({ 
+			({cursor, client} = await postModel.getPostsByCategoryCursor({ 
 				closed: req.body.closed, 
 				category_id: req.body.category_id 
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		}
 	} else if (!req.body.category_id) {
 		user = await userModel.getUserByUsername(req.body.username);
@@ -54,19 +42,15 @@ getPosts = async (req, res) => {
 			return;
 		}
 		if(req.body.shuffle) {
-			obj = await postModel.getPostsByUserIdCursorShuffle({ 
+			({cursor, client} = await postModel.getPostsByUserIdCursorShuffle({ 
 				closed: req.body.closed, 
 				user_id: user.user_id 
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		} else {
-			obj = await postModel.getPostsByUserIdCursor({ 
+			({cursor, client} = await postModel.getPostsByUserIdCursor({ 
 				closed: req.body.closed, 
 				user_id: user.user_id 
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		}
 	} else {
 		user = await userModel.getUserByUsername(req.body.username);
@@ -75,21 +59,17 @@ getPosts = async (req, res) => {
 			return;
 		}
 		if(req.body.shuffle) {
-			obj = await postModel.getPostsByUserIdAndCategoryCursorShuffle({
+			({cursor, client} = await postModel.getPostsByUserIdAndCategoryCursorShuffle({
 				closed: req.body.closed, 
 				user_id: user.user_id, 
 				category_id: req.body.category_id 
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		} else {
-			obj = await postModel.getPostsByUserIdAndCategoryCursor({
+			({cursor, client} = await postModel.getPostsByUserIdAndCategoryCursor({
 				closed: req.body.closed, 
 				user_id: user.user_id, 
 				category_id: req.body.category_id 
-			});
-			cursor = obj.cursor;
-			client = obj.client;
+			}));
 		}
 	}
 
