@@ -30,12 +30,19 @@ makeCategory = (category) => {
   cat = tag('div');
   a = tag('a');
   a.onclick = () => {
+    const form = document.querySelector('form#search');
     if ('URLSearchParams' in window) {
       var searchParams = new URLSearchParams(window.location.search);
       searchParams.set("category_id", category.category_id);
       if(category.category_id === 1) {
         searchParams.delete("category_id");
       }
+
+      searchParams.set("string", form.search.value);
+      if (!form.search.value) {
+        searchParams.delete("string");
+      }
+
       window.location = "/?" + searchParams.toString();
     }
   }

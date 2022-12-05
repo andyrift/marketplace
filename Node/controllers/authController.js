@@ -59,7 +59,7 @@ module.exports.signup_post = async (req, res) => {
 		      console.error('Unknown error', err);
 					fetchError.sendError(res);
 		    } else {
-		    	user = await userModel.getUserByUsername(req.body.username);
+		    	user = await userModel.getUserByUsernameAny(req.body.username);
 		    	check = checkInputsSignUp(req.body, !!user);
 					if (user || !check.pass) {
 						if(req.file) {

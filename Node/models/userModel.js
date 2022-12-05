@@ -24,6 +24,17 @@ module.exports.getUserByUsername = (username, callback) => {
 	});
 }
 
+module.exports.getUserByUsernameAny = (username, callback) => {
+	return makeQuery({
+		query: {
+			text: 'select * from users where username = $1', 
+			values: [username],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
 module.exports.getAllUsers = (callback) => {
 	return makeQuery({
 		query: {
@@ -85,7 +96,7 @@ module.exports.updateUserByUsername_nopic = ({username, displayname, email, addr
 module.exports.deleteUserByUsername = (username, callback) => {
 	return makeQuery({
 		query: {
-			text: 'update users set deleted=TRUE where username = $1 returning *', 
+			text: 'update users set deleted=TRUE, username=NULL where username = $1 returning *', 
 			values: [username],
 		}, 
 		single: true,
