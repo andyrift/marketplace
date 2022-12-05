@@ -7,7 +7,23 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<h3>Random posts for you</h3>
+
+			<div class="h-rand">
+				<h3>Random posts</h3>
+			</div>
+
+			<div class="h-str" style="display: none;">
+				<h3><span>Search results</span></h3>
+			</div>
+
+			<div class="h-rand-cat" style="display: none;">
+				<h3><span>Random posts in category</span> "<span class="h-rand-cat"></span>"</h3>
+			</div>
+
+			<div class="h-str-cat" style="display: none;">
+				<h3><span>Search results in category</span> "<span class="h-str-cat"></span>"</h3>
+			</div>
+
 			<div class="posts">
 				<div class="empty" style="display: none;"><h3>Empty</h3></div>
 			</div>
@@ -25,21 +41,6 @@
 	<% if (typeof user !== 'undefined' && user) { %>
 		<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
 	<% } %>
-	<script>
-		const indexPosts = new postGetter({ 
-			postContainer: document.querySelector('.main div.posts'), 
-			postParams: { 
-				quantity: 6,
-				exclude: true,
-				shuffle: true
-			},
-			getPostsMethod: getPosts, 
-			makePostMethod: makePost,
-			onEmpty: () => {
-				document.querySelector('.main div.posts').querySelector("div.empty").style.display = null;
-			}
-		});
-		indexPosts.start();
-	</script>
+	<script src="/javascript/frontendLogic/index.js"></script>
 </body>
 </html>

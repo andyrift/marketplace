@@ -1,8 +1,6 @@
 const form = document.querySelector('form#loginuser');
 const usernameBorder = document.querySelector('div#username');
-document.querySelector('input#username').addEventListener("input", () => {usernameBorder.style.borderColor = null});
 const passwordBorder = document.querySelector('div#password');
-document.querySelector('input#password').addEventListener("input", () => {passwordBorder.style.borderColor = null});
 
 submitEvent = async () => {
 	try {
@@ -37,3 +35,9 @@ submitEvent = async () => {
 		console.log(err);
 	};
 }
+
+init(() => {
+	document.querySelector('input#username').addEventListener("input", () => {usernameBorder.style.borderColor = null});
+	document.querySelector('input#password').addEventListener("input", () => {passwordBorder.style.borderColor = null});
+	document.querySelector('button.forminput').onclick = submitEvent;
+});

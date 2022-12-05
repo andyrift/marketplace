@@ -14,11 +14,8 @@ if (file.size > 2 * 1024 * 1024) {
 
 const form = document.querySelector('form#createuser');
 const usernameBorder = document.querySelector('div#username');
-document.querySelector('input#username').addEventListener("input", () => {usernameBorder.style.borderColor = null});
 const displaynameBorder = document.querySelector('div#displayname');
-document.querySelector('input#displayname').addEventListener("input", () => {displaynameBorder.style.borderColor = null});
 const passwordBorder = document.querySelector('div#password');
-document.querySelector('input#password').addEventListener("input", () => {passwordBorder.style.borderColor = null});
 
 submitEvent = async () => {
 	var formData = new FormData(form);
@@ -51,3 +48,10 @@ submitEvent = async () => {
 		console.log(err);
 	};
 }
+
+init(() => {
+	document.querySelector('input#username').addEventListener("input", () => {usernameBorder.style.borderColor = null});
+	document.querySelector('input#displayname').addEventListener("input", () => {displaynameBorder.style.borderColor = null});
+	document.querySelector('input#password').addEventListener("input", () => {passwordBorder.style.borderColor = null});
+	document.querySelector('button.forminput').onclick = submitEvent;
+});

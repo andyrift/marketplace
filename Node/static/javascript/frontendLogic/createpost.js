@@ -8,6 +8,7 @@ makeOption = (category) => {
 	return option;
 }
 
-getCategoriesSorted(() => {
+init(() => {
 	categories.forEach(category => select.appendChild(makeOption(category)));
-});
+	document.querySelector('input.forminput').style.display = null;
+}); 

@@ -37,12 +37,12 @@
 			</div>
 
 			<h3 style="margin-bottom: 10px;">Your posts</h3>
-			<button id="open" class="tab active" onclick="showOpen()">Open</button>
-			<button id="closed" class="tab" onclick="showClosed()">Closed</button>
-			<div id="open" class="posts tabbed">
+			<button id="open" class="tab active">Open</button>
+			<button id="closed" class="tab">Closed</button>
+			<div id="open" class="posts tabbed" style="display: none;">
 				<div class="empty" style="display: none;"><h3>Empty</h3></div>
 			</div>
-			<div id="closed" class="posts tabbed">
+			<div id="closed" class="posts tabbed" style="display: none;">
 				<div class="empty" style="display: none;"><h3>Empty</h3></div>
 			</div>
 
@@ -58,11 +58,9 @@
 	<script src="/javascript/makePost.js"></script>
 	<script src="/javascript/gettingPosts/postGetter.js"></script>
 	<script src="/javascript/gettingPosts/profilePosts.js"></script>
-	<% if (typeof user !== 'undefined' && user) { %>
-		<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
-	<% } %>
+	<script src="/javascript/gettingPosts/favoritePostsSide.js"></script>
 	<script src="/javascript/starRating.js"></script>
-	<script src="/javascript/frontendLogic/profile.js"> </script>
 	<script src="/javascript/frontendLogic/averageRating.js"></script>
+	<script src="/javascript/frontendLogic/profile.js"> </script>
 </body>
 </html>

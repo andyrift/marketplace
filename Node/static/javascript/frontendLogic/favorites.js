@@ -11,6 +11,6 @@ const favoritePosts = new postGetter({
 	}
 });
 
-getCategoriesSorted(() => {
+init(() => {
 	favoritePosts.start();
 });

@@ -48,6 +48,11 @@ showClosed = () => {
 	document.querySelector('button#open').classList.remove("active");
 }
 
-showOpen();
+profilePostsInit = () => {
+	document.querySelector('button#open').onclick = showOpen;
+	document.querySelector('button#closed').onclick = showClosed;
+	showOpen();
+}
+
 
 

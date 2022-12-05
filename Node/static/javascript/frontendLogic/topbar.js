@@ -45,24 +45,35 @@ makeCategory = (category) => {
   return cat;
 }
 
-categories = () => {
-  if(document.querySelector('.control .categories').style.display) {
-    document.querySelector('.control .categories').style.display=null;
+categoriesTab = () => {
+  catTab = document.querySelector('.control .categories');
+  if(catTab.style.display) {
+    catTab.style.display=null;
   } else {
-    document.querySelector('.control .categories').style.display="none";
+    catTab.style.display="none";
   }
 }
 
-getCategoriesSorted(() => {
-  categories.forEach(category => {
-    if (category.category_id > 1) {
-      document.querySelector('.control .categories').appendChild(makeCategory(category));
+init = (callback) => {
+  getCategoriesSorted(() => {
+    categories.forEach(category => {
+      if (category.category_id > 1) {
+        document.querySelector('.control .categories').appendChild(makeCategory(category));
+      }
+    });
+    document.querySelector('.control .categories').appendChild(makeCategory({category_id: 1, category_name: 'None'}));
+
+    document.querySelector('#categoriesbutton').onclick=categoriesTab;
+    document.querySelector('#searchbutton').onclick=search;
+
+    document.querySelector('form#search').search.value = new URLSearchParams(window.location.search).get("string");
+
+    if(typeof favoritePostsSide !== "undefined") {
+      favoritePostsSide.start();
     }
+
+    callback();
   });
-  document.querySelector('.control .categories').appendChild(makeCategory({category_id: 1, category_name: 'None'}));
-});
+}
 
-document.querySelector('#categoriesbutton').onclick=categories;
-document.querySelector('#searchbutton').onclick=search;
 
-document.querySelector('form#search').search.value = new URLSearchParams(window.location.search).get("string");
