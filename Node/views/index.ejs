@@ -9,7 +9,7 @@
 		<div class="main"> 
 			<h3>Random posts for you</h3>
 			<div class="posts">
-
+				<div class="empty" style="display: none;"><h3>Empty</h3></div>
 			</div>
 		</div>
 		<div class="sidebar">
@@ -35,6 +35,9 @@
 			},
 			getPostsMethod: getPosts, 
 			makePostMethod: makePost,
+			onEmpty: () => {
+				document.querySelector('.main div.posts').querySelector("div.empty").style.display = null;
+			}
 		});
 		indexPosts.start();
 	</script>

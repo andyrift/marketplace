@@ -20,8 +20,10 @@
 	<a href="/"><img id="logo" src="/img/logo.png" alt="AppleSause"/></a>
 	<button id="categoriesbutton">Categories</button>
 	<div id="searchbar">
-		<input type="text" placeholder="Search for anything..">
-		<button id="searchbutton">Search</button>
+		<form id="search" onsubmit="return false">
+			<input type="text" name="search" placeholder="Search for anything..">
+			<button id="searchbutton">Search</button>
+		</form>
 	</div>
 	<a href="/post/create"><button id="createbutton">Create</button></a>
 	<div class="categories" style="display: none;">

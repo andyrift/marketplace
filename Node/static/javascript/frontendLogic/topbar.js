@@ -11,12 +11,34 @@ stickTopbar = () => {
 
 window.addEventListener('scroll', stickTopbar);
 
+search = () => {
+  const form = document.querySelector('form#search');
+  if ('URLSearchParams' in window) {
+    var searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("string", form.search.value);
+    if (!form.search.value) {
+      searchParams.delete("string");
+    }
+    window.location = "/?" + searchParams.toString();
+  }
+}
+
 makeCategory = (category) => {
 
   let cat;
 
   cat = tag('div');
   a = tag('a');
+  a.onclick = () => {
+    if ('URLSearchParams' in window) {
+      var searchParams = new URLSearchParams(window.location.search);
+      searchParams.set("category_id", category.category_id);
+      if(category.category_id === 1) {
+        searchParams.delete("category_id");
+      }
+      window.location = "/?" + searchParams.toString();
+    }
+  }
   cat.appendChild(a);
   a.innerHTML = `${category.category_name}`;
   
@@ -41,3 +63,6 @@ getCategoriesSorted(() => {
 });
 
 document.querySelector('#categoriesbutton').onclick=categories;
+document.querySelector('#searchbutton').onclick=search;
+
+document.querySelector('form#search').search.value = new URLSearchParams(window.location.search).get("string");

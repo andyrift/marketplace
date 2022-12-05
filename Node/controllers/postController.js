@@ -9,11 +9,21 @@ fileModel = require("../models/fileModel");
 const _ = require('lodash'); 
 const multer  = require('multer');
 
-
 getPosts = async (req, res) => {
 	let readSize = 2;
 	let {cursor, client} = {};
-	if(!req.body.username && !req.body.category_id) {
+	if (req.query.category_id || req.query.string) {
+		if(parseInt(req.query.category_id)) {
+			({cursor, client} = await postModel.getPostsByCategoryCursorShuffle({
+				closed: req.body.closed,
+				category_id: parseInt(req.query.category_id)
+			}));
+		} else {
+			({cursor, client} = await postModel.getAllPostsCursorShuffle({
+				closed: req.body.closed
+			}));
+		}
+	} else if(!req.body.username && !req.body.category_id) {
 		if(req.body.shuffle) {
 			({cursor, client} = await postModel.getAllPostsCursorShuffle({
 				closed: req.body.closed
@@ -75,7 +85,7 @@ getPosts = async (req, res) => {
 
 	if(!cursor) {
 		if(client) {
-			client.release();
+			await client.release();
 		}
 		fetchError.sendError(res);
 		return;
@@ -84,28 +94,33 @@ getPosts = async (req, res) => {
 	posts = [];
 
 	if (!req.body.quantity){
+		await cursor.close();
+		await client.release();
 		res.status(200).json({ posts });
 		return;
 	}
 
 	rows = await cursor.read(readSize);
-	while (rows.length && posts.length < req.body.quantity) {
-		if(req.body.quantity - posts.length > 0) {
+	while (rows.length) {
+		if(posts.length < req.body.quantity) {
+
 			postModel.choosePosts({ 
 				posts: rows, 
 				excludePostIds: req.body.excludePostIds, 
 				quantity: req.body.quantity - posts.length,
+				string: req.query.string
 			}).forEach(post => {
 				posts.push(post);
 			});
+
 			rows = await cursor.read(readSize);
 		} else {
 			await cursor.close();
 			break;
 		}
 	}
-	client.release();
-
+	await client.release();
+	
 	res.status(200).json({ posts });
 }
 

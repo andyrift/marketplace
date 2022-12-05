@@ -1,5 +1,6 @@
 pool = require.main.pool;
 
+postModel = require("../models/postModel");
 favoritesModel = require("../models/favoritesModel");
 fetchError = require("./fetchError");
 
@@ -22,23 +23,54 @@ changeFavorite = async (req, res) => {
 	}
 }
 
-getFavorites = (req, res) => {
-	favoritesModel.getFavoritesByUserId(req.userInfo.user_id, (err, posts) => {
-		if (err) {
-			console.error('Error getting favorites', err);
-			fetchError.sendError(res);
-		} else {
-			res.status(200).json({ posts: postModel.choosePosts({ 
-				posts, 
-				excludePostIds: req.body.excludePostIds, 
-				quantity: req.body.quantity,
-				shuffle: req.body.shuffle,
-			}) });
+getFavorites = async (req, res) => {
+	let readSize = 2;
+	let {cursor, client} = {};
+
+	if(req.body.shuffle) {
+		({cursor, client} = await favoritesModel.getFavoritesByUserIdCursorShuffle(req.userInfo.user_id));
+	} else {
+		({cursor, client} = await favoritesModel.getFavoritesByUserIdCursor(req.userInfo.user_id));
+	}
+
+	if(!cursor) {
+		if(client) {
+			await client.release();
 		}
-	});
+		fetchError.sendError(res);
+		return;
+	}
+
+	posts = [];
+
+	if (!req.body.quantity){
+		await cursor.close();
+		await client.release();
+		res.status(200).json({ posts });
+		return;
+	}
+
+	rows = await cursor.read(readSize);
+	while (rows.length) {
+		if(posts.length < req.body.quantity) {
+			postModel.choosePosts({ 
+				posts: rows, 
+				excludePostIds: req.body.excludePostIds, 
+				quantity: req.body.quantity - posts.length,
+			}).forEach(post => {
+				posts.push(post);
+			});
+			rows = await cursor.read(readSize);
+		} else {
+			await cursor.close();
+			break;
+		}
+	}
+	await client.release();
+	res.status(200).json({ posts });
 }
 
-module.exports.favorites_post = (req, res) => {
+module.exports.favorites_post = async (req, res) => {
 	if (req.body.change) {
 		changeFavorite(req, res);
 	} else if (req.body.get) {

@@ -1,4 +1,8 @@
 getPosts = async ({ quantity, username, category_id, excludePostIds, closed, shuffle }, callback) => {
+	let searchParams;
+	if ('URLSearchParams' in window) {
+    searchParams = new URLSearchParams(window.location.search);
+  }
 	let data = { 
 		get: true, 
 		quantity, 
@@ -9,7 +13,7 @@ getPosts = async ({ quantity, username, category_id, excludePostIds, closed, shu
 		shuffle,
 	};
 	try {
-		res = await fetch(/post/, {
+		res = await fetch("/post/?" + searchParams.toString(), {
 			method: 'POST',
 	  	body: JSON.stringify(data),
 	  	headers: {

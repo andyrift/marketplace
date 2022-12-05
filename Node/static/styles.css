@@ -167,7 +167,7 @@ button#searchbutton {
   border-radius: 0px var(--as-radius) var(--as-radius) 0px;
 }
 
-.control input[type=text] {
+.control input[type=text], .control form {
   flex-grow: 1;
   padding: 0px;
   border: none;
@@ -178,6 +178,10 @@ button#searchbutton {
   border:none;
   box-shadow: none;
   outline: none;
+}
+
+.control form {
+  display: flex;
 }
 
 .control {

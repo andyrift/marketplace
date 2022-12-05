@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const { makeQuery, makeCursor } = require('./queries.js');
 
-module.exports.choosePosts = ( { posts, excludePostIds, quantity, shuffle } ) => {
+module.exports.choosePosts = ( { posts, excludePostIds, quantity, string } ) => {
 
 	if(!quantity || quantity <= 0){
 		return [];
@@ -9,12 +9,8 @@ module.exports.choosePosts = ( { posts, excludePostIds, quantity, shuffle } ) =>
 
 	var resultPosts = [];
 
-	if(shuffle) {
-		posts=_.shuffle(posts);
-	}
-
 	posts.every(post => {
-		if (!excludePostIds || !excludePostIds.includes(post.post_id)) {
+		if ((!excludePostIds || !excludePostIds.includes(post.post_id)) && (string ? _.includes(_.lowerCase(post.title), _.lowerCase(string)) : true ) ) {
 			resultPosts.push(post);
 		}
 		if (resultPosts.length == quantity) {
@@ -202,9 +198,7 @@ module.exports.getPostsByCategoryCursorShuffle = ({category_id, closed}) => {
 		query: {
 			text: 'select * from posts where deleted = FALSE and closed = $1 and category_id = $2 order by random()', 
 			values: [!!closed, category_id],
-		}, 
-		single: false,
-		callback: callback
+		}
 	});
 }
 

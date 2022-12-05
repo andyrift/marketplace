@@ -1,4 +1,4 @@
-const { makeQuery } = require('./queries.js');
+const { makeQuery, makeCursor } = require('./queries.js');
 
 module.exports.getFavoritesByUserId = (id, callback) => {
 	return makeQuery({
@@ -11,6 +11,30 @@ module.exports.getFavoritesByUserId = (id, callback) => {
 		}, 
 		single: false,
 		callback: callback
+	});
+}
+
+module.exports.getFavoritesByUserIdCursor = (id) => {
+	return makeCursor({
+		query: {
+			text: 
+				'select posts.* from posts, favorites ' + 
+				'where posts.deleted = FALSE and favorites.post_id = posts.post_id and favorites.user_id = $1 ' +
+				'order by publication_timestamp desc', 
+			values: [id],
+		}
+	});
+}
+
+module.exports.getFavoritesByUserIdCursorShuffle = (id) => {
+	return makeCursor({
+		query: {
+			text: 
+				'select posts.* from posts, favorites ' + 
+				'where posts.deleted = FALSE and favorites.post_id = posts.post_id and favorites.user_id = $1 ' +
+				'order by random()', 
+			values: [id],
+		}
 	});
 }
 
