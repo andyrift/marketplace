@@ -6,28 +6,25 @@
 <body>
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
-
-		<h3>Log in</h3>
-
 		<form class="forminput" id="loginuser" onsubmit="return false">
-			<div>
-				<div class="formlabels">
-					<h4>Enter your username:</h4>
-					<h4>Enter your password:</h4>
-				</div>
+			
+			<h2>Log in</h2>
 
-				<div class="forminputs">
-					<div class="forminput" id="username">
-					<input type="text" id="username" placeholder="Username">
-					</div>
-					<div class="forminput" id="password">
-					<input type="password" id="password" placeholder="Password">
-					</div>
-				</div>
+			<label>Username:</label>
+			<div class="forminput" id="username">
+				<input type="text" id="username" placeholder="Username">
 			</div>
-			<div></div>
-			<button class="forminput">Log in</button>
-			or <a href="/signup">Sign up</a>
+
+			<label>Password:</label>
+			<div class="forminput" id="password">
+				<input type="password" id="password" placeholder="Password">
+			</div>
+
+			<div>
+				<button class="forminput">Log in</button>
+				or <a href="/signup">Sign up</a>
+			</div>
+
 		</form>
 		<script src="/javascript/frontendLogic/login.js"></script>
 	</div>

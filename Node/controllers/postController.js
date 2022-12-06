@@ -156,37 +156,59 @@ module.exports.createPost_get = (req, res) => {
 	res.render('createpost', { title: 'Create' });
 }
 
+const checkInputsPost = (inputs) => {
+	let errors = { title: undefined, price: undefined, picture: undefined };
+	let pass = true;
+	if (!inputs.title) {
+		errors.title = "Please enter a valid title";
+		pass = false;
+	}
+	if (!inputs.price || !Number.isInteger(parseInt(inputs.price))) {
+		errors.price = "Please enter a valid price";
+		pass = false;
+	}
+	return { pass, errors };
+}
+
 module.exports.createPost_post = async (req, res) => {
 	try{
 		if(req.headers['content-type'].split(';')[0] === "multipart/form-data"){
 			require.main.upload.single('picture')(req, res, async (err) => {
 				if (err instanceof multer.MulterError) {
 		     	console.error('Multer error', err.stack);
-					res.status(500).render('500', { title: 'Error' });
+					fetchError.sendError(res);
 		    } else if (err) {
 		      console.error('Unknown error', err.stack);
-					res.status(500).render('500', { title: 'Error' });
+					fetchError.sendError(res);
 		    } else {
-		    	try {
-			    	post = await postModel.createPost({
-							user_id: req.userInfo.user_id, 
-							category_id: parseInt(req.body.category), 
-							title: req.body.title, 
-							description: req.body.description, 
-							price: req.body.price, 
-							address: req.body.address,
-							picture_filename: req.file ? req.file.filename : "",
-						});
-						if (post) {
-							res.status(302).redirect(`/post/${post.post_id}`);
-						} else {
-							throw new Error();
-						}
-					} catch {
+		    	check = checkInputsPost(req.body);
+		    	if (!check.pass) {
 						if(req.file) {
 							fileModel.deleteFile(req.file.filename);
 						}
-						throw "Could not create post";
+						res.status(200).json({ errors: check.errors });
+					} else {
+			    	try {
+				    	post = await postModel.createPost({
+								user_id: req.userInfo.user_id, 
+								category_id: parseInt(req.body.category), 
+								title: req.body.title, 
+								description: req.body.description, 
+								price: parseInt(req.body.price), 
+								address: req.body.address,
+								picture_filename: req.file ? req.file.filename : "",
+							});
+							if (post) {
+								res.status(200).json({ redirect: `/post/${post.post_id}` });
+							} else {
+								throw new Error();
+							}
+						} catch {
+							if(req.file) {
+								fileModel.deleteFile(req.file.filename);
+							}
+							throw "Could not create post";
+						}
 					}
 		    }
 		  });
@@ -195,7 +217,7 @@ module.exports.createPost_post = async (req, res) => {
 		}
 	} catch {
 		console.error('Error while creating post', err);
-		res.status(500).render('500', { title: 'Error' });
+		fetchError.sendError(res);
 	}
 }
 
@@ -228,54 +250,62 @@ module.exports.updatePost_post = async (req, res) => {
 			require.main.upload.single('picture')(req, res, async (err) => {
 				if (err instanceof multer.MulterError) {
 		     	console.error('Multer error', err.stack);
-					res.status(500).render('500', { title: 'Error' });
+					fetchError.sendError(res);
 		    } else if (err) {
 		      console.error('Unknown error', err.stack);
-					res.status(500).render('500', { title: 'Error' });
+					fetchError.sendError(res);
 		    } else {
-		    	post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
-		    	if(post && post.user_id === req.userInfo.user_id) {
-				    if (req.file) {
-							fileModel.deletePostPicture(post);
-							try {
-								post = await postModel.updatePostById_pic({
-									category_id: parseInt(req.body.category), 
-									title: req.body.title, 
-									description: req.body.description, 
-									price: req.body.price, 
-									address: req.body.address,
-									picture_filename: req.file.filename,
-									post_id: post.post_id
-								});
+		    	check = checkInputsPost(req.body);
+		    	if (!check.pass) {
+						if(req.file) {
+							fileModel.deleteFile(req.file.filename);
+						}
+						res.status(200).json({ errors: check.errors });
+					} else {
+			    	post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
+			    	if(post && post.user_id === req.userInfo.user_id) {
+					    if (req.file) {
+								fileModel.deletePostPicture(post);
+								try {
+									post = await postModel.updatePostById_pic({
+										category_id: parseInt(req.body.category), 
+										title: req.body.title, 
+										description: req.body.description, 
+										price: parseInt(req.body.price), 
+										address: req.body.address,
+										picture_filename: req.file.filename,
+										post_id: post.post_id
+									});
+									if (post) {
+										res.status(200).json({ redirect: `/post/${post.post_id}` });
+									}
+									else {
+										throw new Error();
+									}
+								} catch {
+									fileModel.deleteFile(req.file.filename);
+									throw "Could not update post";
+								}
+							} else {
+								post = await postModel.updatePostById_nopic({
+										category_id: parseInt(req.body.category), 
+										title: req.body.title, 
+										description: req.body.description, 
+										price: parseInt(req.body.price), 
+										address: req.body.address,
+										post_id: parseInt(req.params.id)
+									});
 								if (post) {
-									res.redirect(`/post/${post.post_id}`);
+									res.status(200).json({ redirect: `/post/${post.post_id}` });
 								}
 								else {
-									throw new Error();
+									throw "Could not update post";
 								}
-							} catch {
-								fileModel.deleteFile(req.file.filename);
-								throw "Could not update post";
-							}
-						} else {
-							post = await postModel.updatePostById_nopic({
-									category_id: parseInt(req.body.category), 
-									title: req.body.title, 
-									description: req.body.description, 
-									price: req.body.price, 
-									address: req.body.address,
-									post_id: parseInt(req.params.id)
-								});
-							if (post) {
-								res.redirect(`/post/${post.post_id}`);
-							}
-							else {
-								throw "Could not update post";
-							}
-				    }
-				  } else {
-				  	res.status(500).render('500', { title: 'Error' });
-				  }
+					    }
+					  } else {
+					  	fetchError.sendError(res);
+					  }
+					}
 			  }
 		  });
 		} else {
@@ -283,7 +313,22 @@ module.exports.updatePost_post = async (req, res) => {
 		}
 	} catch (err) {
 		console.error(err);
-		res.status(500).render('500', { title: 'Error' });
+		fetchError.sendError(res);
+	}
+}
+
+module.exports.deletePicture_delete = async (req, res) => {
+	try {
+		post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
+		if (!post || req.userInfo.user_id !== post.user_id) {
+			throw "no";
+		}
+		fileModel.deletePostPicture(post);
+		post = await postModel.deletePostPictureById({ post_id: parseInt(req.params.id) });
+		res.status(200).json({});
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({});
 	}
 }
 

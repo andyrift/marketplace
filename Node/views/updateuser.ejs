@@ -6,40 +6,60 @@
 <body>
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
+		<form class="forminput" id="createuser" name="createuser" onsubmit="return false">
 
-		<h3>Edit your profile</h3>
+			<h2>Edit profile</h2>
 
-		<form class="forminput" id="createuser" name="createuser" action="/profile/edit" method="POST" enctype="multipart/form-data">
-			<div>
-				<div class="formlabels">
-					<h4>Choose your profile picture:</h4>
-					<h4>Enter your display name:</h4>
-					<h4>Enter your E-mail:</h4>
-					<h4 id="address">Enter your address:</h4>
-				</div>
+			<% if(user.picture_filename && user.picture_filename.length) { %>
 
-				<div class="forminputs">
-					<input type="file" accept=".png" id="picture" name="picture" >
-
-					<div class="forminput">
-					<input type="text" id="displayname" placeholder="Display name" name="displayname" value="<%= user.displayname %>" required>
-					</div>
-					
-					<div class="forminput">
-					<input type="text" id="email" placeholder="E-mail" name="email" value="<%= user.email %>">
-					</div>
-					
-					<div class="forminput" id="address">
-					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= user.address %></textarea>
-					</div>
-				</div>
+			<div id="profilepicture">
+				<img id="preview" src="/<%=user.picture_filename%>"/>
 			</div>
-			<div></div>
-			<button class="forminput">Submit</button>
-			<a href="/profile"><button>Cancel</button></a>
+
+			<div>
+				<button class="delete" id="delete">Delete picture</button>
+			</div>
+
+			<label id="change">Change picture</label>
+			<label id="choose" style="display: none">Choose picture</label>
+
+			<% } else { %>
+
+			<div style="display: none;" id="profilepicture">
+				<img id="preview" src=""/>
+			</div>
+
+			<label id="choose">Choose picture</label>
+
+			<% } %>
+
+			<div>
+				<input type="file" accept=".png" id="picture" name="picture" ><button type="button" style="display: none;" id="clear">Clear</button>
+			</div>
+
+			<label>Display name</label>
+			<div class="forminput" id="displayname">
+				<input type="text" id="displayname" placeholder="Display name" name="displayname" value="<%= user.displayname %>" required>
+			</div>
+
+			<label>E-mail</label>
+			<div class="forminput">
+				<input type="text" id="email" placeholder="E-mail" name="email" value="<%= user.email %>">
+			</div>
+
+			<label>Address</label>
+			<div class="forminput" id="address">
+				<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= user.address %></textarea>
+			</div>
+
+			<div>
+				<button id="submit" type="button">Submit</button>
+				<a href="/profile"><button type="button">Cancel</button></a>
+			</div>
+
 		</form>
 	</div>
 	<%- include('./partials/footer.ejs') %>
-	<script> init(); </script>
+	<script src="/javascript/frontendLogic/updateuser.js"></script>
 </body>
 </html>

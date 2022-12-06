@@ -9,9 +9,22 @@ module.exports.choosePosts = ( { posts, excludePostIds, quantity, string } ) => 
 
 	var resultPosts = [];
 
+	if(string) {
+		string = _.words(_.toLower(string))
+	}
+
 	posts.every(post => {
-		if ((!excludePostIds || !excludePostIds.includes(post.post_id)) && (string ? _.includes(_.lowerCase(post.title), _.lowerCase(string)) : true ) ) {
-			resultPosts.push(post);
+		title = _.toLower(post.title);
+		if (!excludePostIds || !excludePostIds.includes(post.post_id)) {
+			match = true;
+			if(string) {
+				string.forEach(word => {
+					match = match && _.includes(title, word);
+				})
+			}
+			if(match) {
+				resultPosts.push(post);
+			}
 		}
 		if (resultPosts.length == quantity) {
 			return false;
@@ -39,6 +52,18 @@ module.exports.getPostByIdIncrementViews = ({ post_id }, callback) => {
 		query: {
 			text: 
 				'update posts set view_count = view_count + 1 where post_id = $1 and deleted = FALSE returning *', 
+			values: [post_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
+module.exports.deletePostPictureById = ({ post_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				"update posts set picture_filename = \'\' where post_id = $1 returning *", 
 			values: [post_id],
 		}, 
 		single: true,

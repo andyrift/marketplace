@@ -1,51 +1,29 @@
-const select = document.querySelector('select#category');
-
-const selected = select.dataset.cat;
-
-makeOption = (category) => {
-
-	let option;
-
-	if(selected == category.category_id){
-		option = tag('option', { 'value': `${category.category_id}`, 'selected': 'selected' });
-	} else {
-		option = tag('option', { 'value': `${category.category_id}` });
-	}
-	option.innerHTML = `${category.category_name}`;
-	
-	return option;
-}
-
 init(() => {
-	//action="/post/edit/<%= post.post_id %>" method="POST" enctype="multipart/form-data"
-	
-	categories.forEach(category => select.appendChild(makeOption(category)));
 
 	let img = document.querySelector('img#preview');
-	let form = document.querySelector('form#createpost');
+	let imgDiv = document.querySelector('div#profilepicture');
+	let form = document.querySelector('form#createuser');
 	let submitButton = document.querySelector('button#submit');
 	let deleteButton = document.querySelector('button#delete');
 	let clearButton = document.querySelector('button#clear');
 
 	let original = img.src;
 
-	let titleBorder = document.querySelector('div#title');
-	let priceBorder = document.querySelector('div#price');
+	let displaynameBorder = document.querySelector('div#displayname');
 
-	document.querySelector('input#title').addEventListener("input", () => {titleBorder.style.borderColor = null});
-	document.querySelector('input#price').addEventListener("input", () => {priceBorder.style.borderColor = null});
+	document.querySelector('input#displayname').addEventListener("input", () => {displaynameBorder.style.borderColor = null});
 
 	if (deleteButton) {
 		deleteButton.onclick = async () => {
-			if(!confirm('Are you sure you want to delete post picture?')) {
+			if(!confirm('Are you sure you want to delete profile picture?')) {
 	      return;
 	  	}
-			res = await fetch('/post/edit/' + form.dataset.post_id, {
+			res = await fetch('/profile/edit', {
 				method: 'DELETE'
 			});
 			if(res.status === 200) {
 				img.src="";
-				img.style.display = 'none';
+				imgDiv.style.display = 'none';
 				original = "";
 				document.querySelector('label#change').style.display = 'none';
 				document.querySelector('label#choose').style.display = null;
@@ -59,14 +37,14 @@ init(() => {
 			img.src = URL.createObjectURL(form.picture.files[0]);
 		}
 		clearButton.style.display = null;
-		img.style.display = null;
+		imgDiv.style.display = null;
 		if(deleteButton) {
 			deleteButton.style.display = 'none';
 		}
 		if (!form.picture.value.length) {
-			img.style.display = 'none';
+			imgDiv.style.display = 'none';
 			if(deleteButton) {
-				img.style.display = null;
+				imgDiv.style.display = null;
 				img.src = original;
 				deleteButton.style.display = null;
 				clearButton.style.display = 'none';
@@ -85,19 +63,16 @@ init(() => {
 	if(submitButton) {
 		submitButton.style.display = null;
 		submitButton.onclick = async () => {
-			res = await fetch('/post/edit/' + form.dataset.post_id, {
+			res = await fetch('/profile/edit', {
 				method: 'POST',
 				body: new FormData(form),
 			});
 			if(res.status === 200) {
 				data = await res.json();
 				if (data.errors) {
-					if (data.errors.title) {
-						titleBorder.style.borderColor = "red";
+					if (data.errors.displayname) {
+						displaynameBorder.style.borderColor = "red";
 					} 
-					if (data.errors.price) {
-						priceBorder.style.borderColor = "red";
-					}
 				} else if(data.redirect) {
 					window.location.href = data.redirect;
 				} else {

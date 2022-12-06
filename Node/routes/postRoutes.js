@@ -14,6 +14,8 @@ router.get('/edit/:id', auth.requireAuth, postController.updatePost_get);
 
 router.post('/edit/:id', auth.requireAuth, postController.updatePost_post);
 
+router.delete('/edit/:id', auth.requireAuth, postController.deletePicture_delete);
+
 router.get('/:id', postController.post_get);
 
 router.delete('/:id', auth.requireAuth, postController.post_delete);

@@ -7,47 +7,70 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 
-		<h3>Edit post</h3>
+		<form class="forminput" id="createpost" onsubmit="return false" data-post_id='<%= post.post_id  %>'>
 
-		<form class="forminput" id="createpost" action="/post/edit/<%= post.post_id %>" method="POST" enctype="multipart/form-data">
+			<h2>Edit post</h2>
+
+			<% if(post.picture_filename && post.picture_filename.length) { %>
+
 			<div>
-				<div class="formlabels">
-					<h4>Choose picture:</h4>
-					<h4>Enter post title:</h4>
-					<h4>Enter price in USD:</h4>
-					<h4 id="description">Enter post description:</h4>
-					<h4 id="address">Enter address:</h4>
-					<h4>Choose Category:</h4>
-				</div>
-
-				<div class="forminputs">
-					<input type="file" accept=".png" id="picture" name="picture">
-
-					<div class="forminput">
-					<input type="text" id="title" placeholder="Title" name="title" value="<%= post.title %>" required>
-					</div>
-
-					<div class="forminput">
-					<input type="number" min="0" step="1" id="price" placeholder="Price" name="price" value="<%= post.price %>" required>
-					</div>
-
-					<div class="forminput" id="description">
-					<textarea type="text" id="description" placeholder="Description" rows=8 
-					form="createpost" name="description" required><%= post.description %></textarea>
-					</div>
-					
-					<div class="forminput" id="address">
-					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= post.address %></textarea>
-					</div>
-
-					<select id="category" name="category" data-cat="<%= post.category_id %>" required>
-					</select>
-				</div>
+				<img id="preview" style="width: 100%;" src="/<%= post.picture_filename %>"/>
 			</div>
+
+			<div>
+				<button class="delete" id="delete">Delete picture</button>
+			</div>
+
+			<label id="change">Change picture</label>
+			<label id="choose" style="display: none">Choose picture</label>
+
+			<% } else { %>
+
+			<div>
+				<img style="display: none; width: 100%;" id="preview" src=""/>
+			</div>
+
+			<label id="choose">Choose picture</label>
+
+			<% } %>
+
+			<div>
+				<input type="file" accept=".png" id="picture" name="picture"><button type="button" style="display: none;" id="clear">Clear</button>
+			</div>
+
+			<label>Title</label>
+			<div class="forminput" id="title">
+				<input type="text" id="title" placeholder="Title" name="title" value="<%= post.title %>">
+			</div>
+
+			<label>Price</label>
+			<div class="forminput" id="price">
+				<input type="number" min="0" step="1" id="price" placeholder="Price" name="price" value="<%= post.price %>">
+			</div>
+
+			<label>Description</label>
+			<div class="forminput" id="description">
+				<textarea type="text" id="description" placeholder="Description" rows=8 
+				form="createpost" name="description" required><%= post.description %></textarea>
+			</div>
+			
+			<label>Address</label>
+			<div class="forminput" id="address">
+				<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= post.address %></textarea>
+			</div>
+
+			<label>Category</label>
+			<div>
+				<select id="category" name="category" data-cat="<%= post.category_id %>">
+				</select>
+			</div>
+
+			<div>
+				<button id="submit" type="button">Submit</button>
+				<a href="/post/<%= post.post_id %>"><button type="button">Cancel</button></a>
+			</div>
+			
 		</form>
-		<div style="clear: both;"></div>
-		<button form="createpost">Submit</button>
-		<a href="/post/<%= post.post_id %>"><button>Cancel</button></a>
 	</div>
 	<%- include('./partials/footer.ejs') %>
 	<script src="/javascript/frontendLogic/updatepost.js"></script>

@@ -71,6 +71,18 @@ module.exports.createUser = ({username, displayname, password, email, address, p
 	});
 }
 
+module.exports.deleteUserPictureById = ({ user_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				"update users set picture_filename = \'\' where user_id = $1 returning *", 
+			values: [user_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
 module.exports.updateUserByUsername_pic = ({username, displayname, email, address, picture_filename}, callback) => {
 	return makeQuery({
 		query: {

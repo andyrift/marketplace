@@ -45,6 +45,8 @@ module.exports.makeQuery = ({ query, single, callback }) => {
 			} catch (err) {
 				reject(err);
 			}
+		}).catch((err) => {
+			throw(err);
 		});
 	}
 }

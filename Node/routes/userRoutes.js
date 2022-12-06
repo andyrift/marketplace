@@ -10,6 +10,8 @@ router.get('/profile/edit', auth.requireAuth, userController.updateProfile_get);
 
 router.post('/profile/edit', auth.requireAuth, userController.updateProfile_post);
 
+router.delete('/profile/edit/', auth.requireAuth, userController.deletePicture_delete);
+
 router.delete('/profile', auth.requireAuth, userController.profile_delete);
 
 router.get('/user/:username', userController.user_get);

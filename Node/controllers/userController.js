@@ -49,6 +49,18 @@ module.exports.updateProfile_get = async (req, res) => {
 	res.render('updateuser', { title: 'Profile' });
 }
 
+module.exports.deletePicture_delete = async (req, res) => {
+	try {
+		user = await userModel.getUserById(req.userInfo.user_id);
+		fileModel.deleteUserPicture(user);
+		user = await userModel.deleteUserPictureById({ user_id: req.userInfo.user_id });
+		res.status(200).json({});
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({});
+	}
+}
+
 module.exports.profile_delete = async (req, res) => {
 	try {
 		user = await userModel.deleteUserByUsername(req.userInfo.username)
@@ -72,12 +84,17 @@ module.exports.updateProfile_post = async (req, res) => {
 			require.main.upload.single('picture')(req, res, async (err) => {
 				if (err instanceof multer.MulterError) {
 		     	console.error('Multer error', err.stack);
-					res.status(500).render('500', { title: 'Error' });
+					fetchError.sendError(res);
 		    } else if (err) {
 		      console.error('Unknown error', err.stack);
-					res.status(500).render('500', { title: 'Error' });
+					fetchError.sendError(res);
 		    } else {
-					if (req.file) {
+		    	if (!req.body.displayname) {
+						if(req.file) {
+							fileModel.deleteFile(req.file.filename);
+						}
+						res.status(200).json({ errors: { displayname: "Enter a valid displayname" } });
+					} else if (req.file) {
 						user = await userModel.getUserByUsername(req.userInfo.username);
 						if(user) {
 							fileModel.deleteUserPicture(user);
@@ -90,7 +107,7 @@ module.exports.updateProfile_post = async (req, res) => {
 									picture_filename: req.file.filename,
 								});
 								if (user) {
-									res.status(302).redirect(`/profile`);
+									res.status(200).json({ redirect: `/profile` });
 								} else {
 									throw new Error();
 								}
@@ -111,7 +128,7 @@ module.exports.updateProfile_post = async (req, res) => {
 							address: req.body.address,
 						});
 						if (user) {
-							res.status(302).redirect(`/profile`);
+							res.status(200).json({ redirect: `/profile` });
 						} else {
 							throw "Could not update user";
 						}
@@ -123,7 +140,7 @@ module.exports.updateProfile_post = async (req, res) => {
 		}
 	} catch (err) {
 		console.error('Error while deleting user', err);
-		res.status(500).render('500', { title: 'Error' });
+		fetchError.sendError(res);
 	}
 }
 

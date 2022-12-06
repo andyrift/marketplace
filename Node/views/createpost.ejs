@@ -6,46 +6,49 @@
 <body>
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
+		<form class="forminput" id="createpost" onsubmit="return false">
 
-		<h3>Create post</h3>
+			<h2>Create post</h2>
 
-		<form class="forminput" id="createpost" action="/post/create" method="POST" enctype="multipart/form-data">
 			<div>
-				<div class="formlabels">
-					<h4>Choose picture:</h4>
-					<h4>Enter post title:</h4>
-					<h4>Enter price in USD:</h4>
-					<h4 id="description">Enter post description:</h4>
-					<h4 id="address">Enter address:</h4>
-					<h4>Choose Category:</h4>
-				</div>
-
-				<div class="forminputs">
-					<input type="file" accept=".png" id="picture" name="picture">
-
-					<div class="forminput">
-					<input type="text" id="title" placeholder="Title" name="title" required>
-					</div>
-
-					<div class="forminput">
-					<input type="number" min="0" step="1" id="price" placeholder="Price" name="price" required>
-					</div>
-
-					<div class="forminput" id="description">
-					<textarea type="text" id="description" placeholder="Description" rows=8 
-					form="createpost" name="description" required></textarea>
-					</div>
-					
-					<div class="forminput" id="address">
-					<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= user.address %></textarea>
-					</div>
-
-					<select id="category" name="category" required>
-					</select>
-				</div>
+				<img style="display: none; width: 100%;" id="preview" src=""/>
 			</div>
-			<div></div>
-			<input class="forminput" type="submit" value="Submit" style="display: none;">
+
+			<label id="choose">Choose picture</label>
+			<div id="picture">
+				<input type="file" accept=".png" id="picture" name="picture"><button type="button" style="display: none;" id="clear">Clear</button>
+			</div>
+
+			<label>Title</label>
+			<div class="forminput" id="title">
+				<input type="text" id="title" placeholder="Title" name="title">
+			</div>
+
+			<label>Price</label>
+			<div class="forminput" id="price">
+				<input type="number" min="0" step="1" id="price" placeholder="Price" name="price">
+			</div>
+
+			<label>Description</label>
+			<div class="forminput" id="description">
+				<textarea type="text" id="description" placeholder="Description" rows=8 
+				form="createpost" name="description"></textarea>
+			</div>
+			
+			<label>Address</label>
+			<div class="forminput" id="address">
+				<textarea type="text" id="address" placeholder="Address" rows=3 name="address"><%= user.address %></textarea>
+			</div>
+
+			<label>Category</label>
+			<div>
+				<select id="category" name="category"></select>
+			</div>
+
+			<div>
+				<button id="submit" type="button">Submit</button>
+			</div>
+			
 		</form>
 	</div>
 	<%- include('./partials/footer.ejs') %>

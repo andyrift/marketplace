@@ -75,6 +75,18 @@ init = (callback) => {
 
     document.querySelector('form#search').search.value = new URLSearchParams(window.location.search).get("string");
 
+    document.querySelector('button#cross').onclick = () => {
+      const form = document.querySelector('form#search');
+      if ('URLSearchParams' in window) {
+        var searchParams = new URLSearchParams(window.location.search);
+        form.search.value = "";
+        if(searchParams.get("string")) {
+          searchParams.delete("string");
+          window.location = "/?" + searchParams.toString();
+        }
+      }
+    }
+
     if(typeof favoritePostsSide !== "undefined") {
       favoritePostsSide.start();
     }

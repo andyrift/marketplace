@@ -167,13 +167,28 @@ button#searchbutton {
   border-radius: 0px var(--as-radius) var(--as-radius) 0px;
 }
 
+button#cross {
+  background-color: transparent;
+  border: none;
+  background-image: url(/img/cross.svg);
+  height: calc(var(--as-button-height)/3);
+  width: calc(var(--as-button-height)/3);
+  /*height: 28px;
+  width: 28px;*/
+  border-radius: 0;
+  padding: 0;
+  margin: calc(var(--as-button-height)/3 - 2px);
+  float: none;
+  flex-grow: 0;
+}
+
 .control input[type=text], .control form {
   flex-grow: 1;
   padding: 0px;
   border: none;
   font-size: var(--as-fontsize);
   color: var(--as-darkgrey);
-  line-height: 28px;
+  line-height: calc(var(--as-button-height)-2*2px);
   border-width:0px;
   border:none;
   box-shadow: none;
@@ -218,6 +233,7 @@ button#searchbutton {
 }
 
 .footer {
+  width: 100%;
   margin-top: 40px;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -354,7 +370,7 @@ button#searchbutton {
   margin: auto;
 }
 
-#profilepicture {
+div#profilepicture {
   height: 150px; 
   width: 150px; 
   border-radius: var(--as-radius);
@@ -433,132 +449,6 @@ button#searchbutton {
   margin-bottom: 5px;
   border: 1px solid lightgrey;
   border-radius: var(--as-radius);
-}
-
-.forminput input, .forminput textarea, .messageinput input{
-  padding: 0px;
-  border: none;
-  width: 100%;
-  font-size: var(--as-fontsize);
-  line-height: 28px;
-  border-width:0px;
-  border:none;
-  box-shadow: none;
-  outline: none;
-  -moz-appearance: textfield;
-}
-
-.forminput textarea {
-  resize: none;
-}
-
-.forminput input[type=file]{
-  width: auto;
-  cursor: pointer;
-}
-
-.forminput input[type=file]#picture{
-  margin-top: 2px;
-  margin-bottom: 20px;
-}
-
-.forminput input[type=submit]{
-  width: auto;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-top: 20px;
-}
-
-div.forminput {
-  height: var(--as-button-height);
-  line-height: 28px;
-  border: 2px solid var(--as-orange);
-  border-radius: var(--as-radius);
-  box-sizing: border-box;
-  font-size: inherit;
-  padding-left: 12px;
-  padding-right: 12px;
-  color: var(--as-midgrey);
-  background-color: white;
-  margin-top: 2px;
-  margin-bottom: 20px;
-}
-
-div.messageinput {
-  height: var(--as-button-height);
-  line-height: 28px;
-  border: 2px solid var(--as-orange);
-  border-radius: var(--as-radius);
-  box-sizing: border-box;
-  font-size: inherit;
-  padding-left: 12px;
-  padding-right: 12px;
-  color: var(--as-midgrey);
-  background-color: white;
-}
-
-form.forminput {
-  padding-top: 40px;
-  width: auto;
-  float:  left;
-}
-
-div.formlabels {
-  width: fit-content;
-  float:  left;
-  clear: both;
-}
-
-div.forminputs {
-  width: fit-content;
-  float:  left;
-}
-
-.forminputs select {
-  height: var(--as-button-height);
-  line-height: 28px;
-  border: 2px solid var(--as-orange);
-  border-radius: var(--as-radius);
-  box-sizing: border-box;
-  font-size: inherit;
-  padding-left: 12px;
-  padding-right: 12px;
-  color: var(--as-darkgrey);
-  background-color: white;
-  box-shadow: none;
-  outline: none;
-  -moz-appearance: textfield;
-}
-
-.forminputs div#address {
-  height: 96px;
-}
-
-.forminputs div#description {
-  height: 256px;
-}
-
-.formlabels h4 {
-  height: 32px;
-  padding-top: 8px;
-  padding-right: 20px;
-  margin-top: 2px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
-
-.formlabels h4#address {
-  height: 96px;
-}
-
-.formlabels h4#description {
-  height: 256px;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 .postpage {
@@ -664,4 +554,106 @@ button.delete {
 
 button:hover.delete {
   background-color: var(--as-red-hover);
+}
+
+.forminput input, .forminput textarea, .messageinput input{
+  padding: 0px;
+  border: none;
+  width: 100%;
+  font-size: var(--as-fontsize);
+  line-height: 28px;
+  border-width:0px;
+  border:none;
+  box-shadow: none;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.forminput textarea {
+  resize: none;
+}
+
+.forminput input[type=file]{
+  width: auto;
+  cursor: pointer;
+}
+
+.forminput input[type=submit]{
+  width: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-top: 20px;
+}
+
+div.forminput {
+  height: var(--as-button-height);
+  line-height: 28px;
+  border: 2px solid var(--as-orange);
+  border-radius: var(--as-radius);
+  box-sizing: border-box;
+  font-size: inherit;
+  padding-left: 12px;
+  padding-right: 12px;
+  color: var(--as-midgrey);
+  background-color: white;
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+
+form.forminput div {
+  margin-top: 2px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+form.forminput {
+  width: 400px;
+  margin: auto;
+}
+
+form.forminput#loginuser {
+  width: 250px;
+}
+
+form.forminput select {
+  height: var(--as-button-height);
+  line-height: 28px;
+  border: 2px solid var(--as-orange);
+  border-radius: var(--as-radius);
+  box-sizing: border-box;
+  font-size: inherit;
+  padding-left: 12px;
+  padding-right: 12px;
+  color: var(--as-darkgrey);
+  background-color: white;
+  box-shadow: none;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+form.forminput div#address {
+  height: 96px;
+}
+
+form.forminput div#description {
+  height: 256px;
+}
+
+form.forminput h2 {
+  margin-bottom: 40px;
+}
+
+form.forminput div#profilepicture {
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+
+form.forminput label {
+  color: var(--as-darkgrey);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
