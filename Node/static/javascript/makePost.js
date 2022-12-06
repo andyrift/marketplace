@@ -14,7 +14,7 @@ makePost = (post) => {
 	var img = tag('div', { 'id': 'image' });
 	a.appendChild(img);
 
-	img.innerHTML = `<img src="/${post.picture_filename}" alt="" onerror="this.style.display='none'">`; 
+	img.innerHTML = `<img src="/${post.picture_filename}"  alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">`; 
 
 	var content = tag('div', { 'id': 'content' });
 	a.appendChild(content);

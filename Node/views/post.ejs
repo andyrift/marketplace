@@ -75,7 +75,7 @@
 				<div>
 					<a href="/user/<%= owner.username %>">
 						<div id="profilepicture">
-							<img src="/<%= owner.picture_filename %>" alt="">
+							<img src="/<%= owner.picture_filename %>"  alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">
 						</div>
 					</a>
 				</div>
