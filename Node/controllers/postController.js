@@ -46,7 +46,7 @@ getPosts = async (req, res) => {
 			}));
 		}
 	} else if (!req.body.category_id) {
-		user = await userModel.getUserByUsername(req.body.username);
+		user = await userModel.getUserByUsername({ username: req.body.username });
 		if (!user) {
 			res.status(200).json({ posts: [] });
 			return;
@@ -63,7 +63,7 @@ getPosts = async (req, res) => {
 			}));
 		}
 	} else {
-		user = await userModel.getUserByUsername(req.body.username);
+		user = await userModel.getUserByUsername({ username: req.body.username });
 		if (!user) {
 			res.status(200).json({ posts: [] });
 			return;
@@ -184,7 +184,7 @@ module.exports.createPost_post = async (req, res) => {
 		    	check = checkInputsPost(req.body);
 		    	if (!check.pass) {
 						if(req.file) {
-							fileModel.deleteFile(req.file.filename);
+							await fileModel.deleteFile(req.file.filename);
 						}
 						res.status(200).json({ errors: check.errors });
 					} else {
@@ -205,7 +205,7 @@ module.exports.createPost_post = async (req, res) => {
 							}
 						} catch {
 							if(req.file) {
-								fileModel.deleteFile(req.file.filename);
+								await fileModel.deleteFile(req.file.filename);
 							}
 							throw "Could not create post";
 						}
@@ -258,7 +258,7 @@ module.exports.updatePost_post = async (req, res) => {
 		    	check = checkInputsPost(req.body);
 		    	if (!check.pass) {
 						if(req.file) {
-							fileModel.deleteFile(req.file.filename);
+							await fileModel.deleteFile(req.file.filename);
 						}
 						res.status(200).json({ errors: check.errors });
 					} else {
@@ -283,7 +283,7 @@ module.exports.updatePost_post = async (req, res) => {
 										throw new Error();
 									}
 								} catch {
-									fileModel.deleteFile(req.file.filename);
+									await fileModel.deleteFile(req.file.filename);
 									throw "Could not update post";
 								}
 							} else {
@@ -323,7 +323,7 @@ module.exports.deletePicture_delete = async (req, res) => {
 		if (!post || req.userInfo.user_id !== post.user_id) {
 			throw "no";
 		}
-		fileModel.deletePostPicture(post);
+		await fileModel.deletePostPicture(post);
 		post = await postModel.deletePostPictureById({ post_id: parseInt(req.params.id) });
 		res.status(200).json({});
 	} catch (err) {
@@ -343,12 +343,12 @@ module.exports.post_get = async (req, res) => {
 				return;
 			}
 			await postModel.updatePostFavoritesById({ post_id: post.post_id });
-			owner = await userModel.getUserById(post.user_id);
+			owner = await userModel.getUserById({ user_id: post.user_id });
 			if (!owner) {
 				res.status(500).render('500', { title: 'Error' });
 				return;
 			}
-			category = await postModel.getCategoryById(post.category_id);
+			category = await postModel.getCategoryById({ category_id: post.category_id });
 			if (!category) {
 				res.status(500).render('500', { title: 'Error' });
 				return;
@@ -365,6 +365,13 @@ module.exports.post_get = async (req, res) => {
 	}
 }
 
+deletePost = async (post) => {
+	await fileModel.deletePostPicture(post);
+	post = await postModel.deletePostById({ post_id: post.post_id });
+	await favoritesModel.deleteFavoritesByPostId({ post_id: post.post_id });
+	return post;
+}
+
 module.exports.post_delete = async (req, res) => {
 	if (!_.isInteger(parseInt(req.params.id)) ) {
 	  fetchError.sendError(res);
@@ -372,9 +379,7 @@ module.exports.post_delete = async (req, res) => {
 		try {
 			post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
 			if(post && req.userInfo.user_id === post.user_id) {
-				await postModel.deletePostById({ post_id: post.post_id });
-				await favoritesModel.deleteFavoritesByPostId(post.post_id);
-				fileModel.deletePostPicture(post);
+				await deletePost(post);
 				res.json({ redirect: '/' });
 			} else {
 				throw "could not delete post";
@@ -383,6 +388,23 @@ module.exports.post_delete = async (req, res) => {
 			console.error('Error deleting post', err);
 			fetchError.sendError(res);
 		}
+	}
+}
+
+module.exports.blockPost_post = async (req, res) => {
+	if (!_.isInteger(parseInt(req.params.id)) ) {
+	  fetchError.sendError(res);
+	} else if (user.role_id === 2) {
+		try {
+			post = await postModel.getPostById({ post_id: parseInt(req.params.id) });
+			await deletePost(post);
+			res.status(200).json({ redirect: '/' });
+		} catch(err) {
+			console.error('Error while deleting user', err);
+			fetchError.sendError(res);
+		}
+	} else {
+		res.ststus(200).json({error: "You can't do that"})
 	}
 }
 
@@ -397,38 +419,48 @@ module.exports.allCategories_get = (req, res) => {
 	});
 }
 
-/*
-deleteAllPosts = () => {
-	console.log('deleting all posts');
-	postModel.getAllPosts((qerr, posts) => {
-		if (qerr) {
-			console.error('Error executing query', qerr.stack);
-		} else {
-			posts.forEach(post => {
-				postModel.deletePostById(post.post_id, (qerr, post) => {
-					if (qerr) {
-						console.error('Error executing query', qerr.stack);
-					}
-				});
-			})
-		}
-	});
+module.exports.doStuff = async (req, res) => {
+	//createPosts();
+	//deleteAllPosts();
+	//console.log('done');
+	//closeSomePosts();
+	res.redirect('/');
 }
+
+closeSomePosts = async () => {
+	posts = await postModel.getAllPostsAny();
+	for(const post of posts) {
+		postModel.setPostClosedById({ post_id: post.post_id, closed: !!_.random(0, 2)})
+	}
+}
+
+deleteAllPosts = async () => {
+	console.log('deleting all posts');
+	posts = await postModel.getAllPostsAny();
+	for(const post of posts) {
+		deletePost(post);
+	}
+}
+
+var fs = require('fs');
+var md5 = require('md5');
 
 createPosts = () => {
 	console.log('creating posts');
-
-	userModel.getAllUsers(({ qerr, users }) => {
-		if (qerr) {
-			console.error('Error executing query', qerr.stack);
+	
+	var files = fs.readdirSync('./pictures');
+	
+	userModel.getAllUsers((err, users) => {
+		if (err) {
+			console.error('Error executing query', err.stack);
 		} else {
 			var allUserIds = [];
 			users.forEach(user => {
-				allUserIds.push(user.user_id);
+				allUserIds.push({ user_id: user.user_id, username: user.username });
 			});
 
-			for (let i = 0; i < 500; i++) {
-				var myuser_id = _.sample(allUserIds)
+			for (let i = 0; i < 1000; i++) {
+				var myuser = _.sample(allUserIds)
 
 				var w = _.random(0, 7);
 				var mytitle = _.capitalize(_.sample(require.main.words));
@@ -449,21 +481,43 @@ createPosts = () => {
 						mydescr = mydescr + " " + _.capitalize(_.sample(require.main.words));
 					}
 				}
-				postModel.createPost({
-					user_id: myuser_id, 
-					category_id: _.random(1, 12),
-					title: mytitle, 
-					description: mydescr, 
-					price: `${_.random(0, 9999)}`,
-					address: users.find(user => {return (user.user_id === myuser_id)}).address,
-				}, ({ qerr, post}) => {
-					if (qerr) {
-						console.error('Error executing query', qerr.stack);
-					}
-					console.log(post);
-				});
+
+				if (_.random(0, 100) > 10) {
+
+					file = _.sample(files);
+
+					filedir1 = `./pictures/${file}`;
+
+					let ext = file.split('.')[file.split('.').length - 1];
+
+					file = `${md5((Math.random().toString(36)+'00000000000000000').slice(2, 18))}-${Date.now()}.${ext}`;
+
+					filedir2 = './uploads/' + file;
+
+					fs.copyFileSync(filedir1, filedir2);
+
+					postModel.createPost({
+						user_id: myuser.user_id, 
+						category_id: _.random(1, 12), 
+						title: mytitle, 
+						description: mydescr, 
+						price: _.random(0, 9999), 
+						address: users.find(user => {return (user.user_id === myuser.user_id)}).address,
+						picture_filename: file,
+					});
+				} else {
+					postModel.createPost({
+						user_id: myuser.user_id, 
+						category_id: _.random(1, 12), 
+						title: mytitle, 
+						description: mydescr, 
+						price: _.random(0, 9999), 
+						address: users.find(user => {return (user.user_id === myuser.user_id)}).address,
+						picture_filename: "",
+					});
+				}
 			}
 		}
 	});
+	
 }
-*/

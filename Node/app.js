@@ -47,14 +47,14 @@ const postRoutes = require("./routes/postRoutes.js");
 const favoritesRoutes = require("./routes/favoritesRoutes.js");
 const postController = require("./controllers/postController.js");
 
-/*
+
 // dictionary for text generator 
 
 fs.readFile('./static/words_dictionary.json', (err, data) => {
     if (err) throw err;
     require.main.words = Object.keys(JSON.parse(data));
 });
-*/
+
 
 // static files
 
@@ -69,7 +69,6 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 
 app.use(auth.checkAuth);
-app.use(auth.checkUser);
 
 // routes
 

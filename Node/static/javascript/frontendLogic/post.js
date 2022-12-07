@@ -1,8 +1,9 @@
-const deleteButton = document.querySelector('a.delete');
-const favoriteButton = document.querySelector('a#favorite');
-const closeButton = document.querySelector('a#close');
-
 init(() => {
+
+	let deleteButton = document.querySelector('a.delete');
+	let favoriteButton = document.querySelector('a#favorite');
+	let closeButton = document.querySelector('a#close');
+
 	if (deleteButton) {
 		deleteButton.addEventListener('click', (e) => {
 			if(!confirm('Are you sure you want to delete the post?')) {
@@ -31,7 +32,7 @@ init(() => {
 
 
 	if(favoriteButton) {
-		const favoriteButtonElement = document.querySelector('button#favorite');
+		let favoriteButtonElement = document.querySelector('button#favorite');
 		favoriteButton.addEventListener('click', async (e) => {
 			const endpoint = '/favorites/';
 
@@ -58,8 +59,9 @@ init(() => {
 	}
 
 	if (closeButton) {
-		const postPage = document.querySelector('div.postpage');
-		const closeButtonElement = document.querySelector('button#close');
+		let postPage = document.querySelector('div.postpage');
+		let closeButtonElement = document.querySelector('button#close');
+		let closedAlert = document.querySelector('#closed-alert');
 		closeButton.addEventListener('click', async (e) => {
 			const endpoint = '/post/';
 
@@ -75,18 +77,44 @@ init(() => {
 				if (data.closed) {
 					closeButtonElement.innerHTML = "Open";
 					postPage.classList.add("closed");
-					document.querySelector('#closed-alert').style.display=null;
+					closedAlert.style.display=null;
 				} else {
 					closeButtonElement.innerHTML = "Close";
 					postPage.classList.remove("closed");
-					document.querySelector('#closed-alert').style.display="none";
+					closedAlert.style.display="none";
 				}
 			} else {
 				document.write(data.body);
 			}
-			
 		});
 	}
+
+	let blockButton = document.querySelector('button#block');
+	if(blockButton){
+		blockButton.onclick = () => {
+			if(!confirm('Are you sure you want to delete this post?')) {
+		      return;
+		  }
+
+			const endpoint = `/post/block/` + blockButton.dataset.id;
+
+			fetch(endpoint, {
+				method: 'POST'
+			})
+			.then(res => {
+				res.json()
+				.then(data => {
+					if(res.status < 400){
+						window.location.href = data.redirect;
+					} else {
+						document.write(data.body);
+					}
+				})
+			})
+			.catch(err => console.log(err));
+		}
+	}
+
 })
 
 

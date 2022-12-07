@@ -1,4 +1,4 @@
-avgrating = parseFloat(document.querySelector("#average").dataset.rating);
+let avgrating = parseFloat(document.querySelector("#average").dataset.rating);
 document.querySelector("span.average").textContent = avgrating.toFixed(1);
 
 var avgRating = starRating( {

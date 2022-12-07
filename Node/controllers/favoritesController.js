@@ -28,9 +28,9 @@ getFavorites = async (req, res) => {
 	let {cursor, client} = {};
 
 	if(req.body.shuffle) {
-		({cursor, client} = await favoritesModel.getFavoritesByUserIdCursorShuffle(req.userInfo.user_id));
+		({cursor, client} = await favoritesModel.getFavoritesByUserIdCursorShuffle({ user_id: req.userInfo.user_id }));
 	} else {
-		({cursor, client} = await favoritesModel.getFavoritesByUserIdCursor(req.userInfo.user_id));
+		({cursor, client} = await favoritesModel.getFavoritesByUserIdCursor({ user_id: req.userInfo.user_id }));
 	}
 
 	if(!cursor) {

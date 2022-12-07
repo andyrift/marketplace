@@ -51,9 +51,9 @@
 
 				<a href="/favorites" style="margin-left: 10px;">All favorites</a>
 
-				<% if (owner.user_id === user.user_id) { %>
-				
 				<div class="postcontrol" style="float: right;">
+
+				<% if (owner.user_id === user.user_id) { %>
 					<a id="close" data-doc="<%= post.post_id %>"><button id="close">
 					<% if (post.closed) { %>
 					Open
@@ -63,8 +63,11 @@
 					</button></a>
 					<a href="/post/edit/<%= post.post_id %>"><button>Edit</button></a>
 					<a class="delete" data-doc="<%= post.post_id %>"><button class="delete">Delete</button></a>
-				</div>
+				<% } else if (user.role_id === 2) { %>
+					<button data-id="<%= post.post_id %>" class="delete" id="block">Block</button>
 				<% } %>
+
+				</div>
 
 				<% } %>
 			</div>

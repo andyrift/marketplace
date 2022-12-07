@@ -17,8 +17,6 @@ makeOption = (category) => {
 }
 
 init(() => {
-	//action="/post/edit/<%= post.post_id %>" method="POST" enctype="multipart/form-data"
-	
 	categories.forEach(category => select.appendChild(makeOption(category)));
 
 	let img = document.querySelector('img#preview');
@@ -32,8 +30,8 @@ init(() => {
 	let titleBorder = document.querySelector('div#title');
 	let priceBorder = document.querySelector('div#price');
 
-	document.querySelector('input#title').addEventListener("input", () => {titleBorder.style.borderColor = null});
-	document.querySelector('input#price').addEventListener("input", () => {priceBorder.style.borderColor = null});
+	form.title.addEventListener("input", () => {titleBorder.style.borderColor = null});
+	form.price.addEventListener("input", () => {priceBorder.style.borderColor = null});
 
 	if (deleteButton) {
 		deleteButton.onclick = async () => {

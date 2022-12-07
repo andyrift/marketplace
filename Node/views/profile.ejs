@@ -26,13 +26,13 @@
 					<% } %>
 					<p>Joined: <%= user.joined_timestamp %></p>
 				</div>
-				<div class="rating" style="flex-basis: 100%">
+				<div class="rating">
 					<span><div data-rating="<%= user.rating %>" id="average">
 					</div>(<span class="average"></span>)</span>
 				</div>
 				<div>
 					<a href="/profile/edit"><button>Edit</button></a>
-					<a class="delete"><button class="delete">Delete</button></a>
+					<button class="delete">Delete</button>
 				</div>
 			</div>
 

@@ -9,11 +9,24 @@ fileModel = require("../models/fileModel");
 const _ = require('lodash');
 const multer  = require('multer');
 
+deleteUser = async (user) => {
+	await fileModel.deleteUserPicture(user);
+	user = await userModel.deleteUserByUsername({ username: user.username });
+	await favoritesModel.deleteFavoritesByUserId({ user_id: user.user_id });
+	await userModel.clearRating({ reciever_id: user.user_id });
+	posts = await postModel.deletePostsByUserId({ user_id: user.user_id });
+	for(const post of posts) {
+		await fileModel.deletePostPicture(post);
+		favoritesModel.deleteFavoritesByPostId({ post_id: post.post_id })
+	}
+	return user;
+}
+
 module.exports.user_get = (req, res) => {
 	if (req.userInfo && req.params.username == req.userInfo.username) {
 		res.redirect('/profile');
 	} else {
-		userModel.getUserByUsername(req.params.username)
+		userModel.getUserByUsername({ username: req.params.username })
 		.then(async (user) => {
 			try {
 				if (user) {
@@ -51,8 +64,8 @@ module.exports.updateProfile_get = async (req, res) => {
 
 module.exports.deletePicture_delete = async (req, res) => {
 	try {
-		user = await userModel.getUserById(req.userInfo.user_id);
-		fileModel.deleteUserPicture(user);
+		user = await userModel.getUserById({ user_id: req.userInfo.user_id });
+		console.log(await fileModel.deleteUserPicture(user));
 		user = await userModel.deleteUserPictureById({ user_id: req.userInfo.user_id });
 		res.status(200).json({});
 	} catch (err) {
@@ -63,18 +76,28 @@ module.exports.deletePicture_delete = async (req, res) => {
 
 module.exports.profile_delete = async (req, res) => {
 	try {
-		user = await userModel.deleteUserByUsername(req.userInfo.username)
-		fileModel.deleteUserPicture(user);
-		await favoritesModel.deleteFavoritesByUserId(user.user_id);
-		await userModel.clearRating({reciever_id: user.user_id});
-		posts = await postModel.deletePostsByUserId(user.user_id);
-		posts.forEach(post => {
-			postModel.deletePostPicture(post);
-		})
+		user = await userModel.getUserById({ user_id: req.userInfo.user_id })
+		user = await deleteUser(user);
 		res.status(200).json({ redirect: '/logout' });
 	} catch(err) {
 		console.error('Error while deleting user', err);
 		fetchError.sendError(res);
+	}
+}
+
+module.exports.blockUser_post = async (req, res) => {
+	user = await userModel.getUserById({ user_id: req.userInfo.user_id });
+	if (user.role_id === 2) {
+		try {
+			user = await userModel.getUserByUsername({ username: req.params.username })
+			user = await deleteUser(user);
+			res.status(200).json({ redirect: '/' });
+		} catch(err) {
+			console.error('Error while deleting user', err);
+			fetchError.sendError(res);
+		}
+	} else {
+		res.ststus(200).json({error: "You can't do that"})
 	}
 }
 
@@ -91,13 +114,13 @@ module.exports.updateProfile_post = async (req, res) => {
 		    } else {
 		    	if (!req.body.displayname) {
 						if(req.file) {
-							fileModel.deleteFile(req.file.filename);
+							await fileModel.deleteFile(req.file.filename);
 						}
 						res.status(200).json({ errors: { displayname: "Enter a valid displayname" } });
 					} else if (req.file) {
-						user = await userModel.getUserByUsername(req.userInfo.username);
+						user = await userModel.getUserByUsername({ username: req.userInfo.username });
 						if(user) {
-							fileModel.deleteUserPicture(user);
+							await fileModel.deleteUserPicture(user);
 							try {
 								user = await userModel.updateUserByUsername_pic({
 									username: user.username,
@@ -113,7 +136,7 @@ module.exports.updateProfile_post = async (req, res) => {
 								}
 							} catch (err) {
 								if(req.file) {
-									fileModel.deleteFile(req.file.filename);
+									await fileModel.deleteFile(req.file.filename);
 								}
 								throw "Could not create user";
 							}
@@ -163,20 +186,106 @@ module.exports.user_post = async (req, res) => {
 	}
 }
 
-/*
-createUsers = () => {
-	for (let i = 0; i < 100; i++) {
-		userModel.createUser({
-			username: (_.sample(require.main.words)), 
-			displayname: _.startCase(_.sample(require.main.words) + " " + _.sample(require.main.words)), 
-			password: Math.random().toString(36).slice(2), 
-			email: _.sample(require.main.words) + "@gmail.com", 
-			address: _.capitalize(_.sample(require.main.words)) + " City, " + _.capitalize(_.sample(require.main.words)) + " Street, " + _.random(0, 9999).toString(),
-		}, (qerr, user) => {
-			if (qerr) {
-				console.error('Error executing query', qerr.stack);
+module.exports.doStuff = async (req, res) => {
+	//await createUsers();
+	//updateRatings();
+	//makeUpFavorites();
+	//updateFavorites();
+	res.redirect('/');
+}
+
+var fs = require('fs');
+var md5 = require('md5');
+
+updateFavorites = async () => {
+	posts = await postModel.getAllPostsAny();
+	posts.forEach(post => {
+		postModel.updatePostFavoritesById({ post_id: post.post_id });
+	});
+}
+
+makeUpFavorites = async () => {
+	posts = await postModel.getAllPostsAny();
+	console.log(posts);
+	userModel.getAllUsers(async (err, users) => {
+		for(const user of users) {
+			if(_.random(0, 9) > 3) {
+				for (let i = 0; i < _.random(0, 100); i++) {
+					post_id = (_.sample(posts)).post_id;
+					fav = await favoritesModel.getFavorite({ user_id: user.user_id, post_id: post_id});
+					if(!fav) {
+						await favoritesModel.addFavorite({ user_id: user.user_id, post_id: post_id});
+					}
+				}
+			}
+		}
+	});
+}
+
+updateRatings = async () => {
+	userModel.getAllUsers((err, users) => {
+		users.forEach(async user => {
+			rating = await userModel.calculateUserRating({
+				reciever_id: parseInt(user.user_id),
+			})
+			await userModel.updateUserRating({ user_id: user.user_id, rating: rating.avg });
+		});
+	});
+}
+
+makeRatings = async () => {
+	userModel.getAllUsers((err, users) => {
+		users.forEach(sender => {
+			if(_.random(0, 9) > 3) {
+				for (let i = 0; i < _.random(0, 20); i++) {
+					userModel.setRating({
+						sender_id: sender.user_id,
+						reciever_id: _.sample(_.filter( users, (o) => { return o !== user; })).user_id,
+						rating: _.random(1, 5),
+					})
+				}
 			}
 		});
-	}
+	});
 }
-*/
+
+createUsers = async () => {
+
+	var files = fs.readdirSync('./pictures');
+
+	for (let i = 0; i < 100; i++) {
+		if (_.random(0, 100) > 40) {
+
+			file = _.sample(files);
+
+			filedir1 = `./pictures/${file}`;
+
+			let ext = file.split('.')[file.split('.').length - 1];
+
+			file = `${md5((Math.random().toString(36)+'00000000000000000').slice(2, 18))}-${Date.now()}.${ext}`;
+
+			filedir2 = './uploads/' + file;
+
+			fs.copyFileSync(filedir1, filedir2);
+
+			userModel.createUser({
+				username: (_.sample(require.main.words)), 
+				displayname: _.startCase(_.sample(require.main.words) + " " + _.sample(require.main.words)), 
+				password: '$2b$10$h7TWh0rJKLNhcWLRnCMGAug1OSCL8S9YGQys8mHslpNTX1tWpXy.G', 
+				email: _.sample(require.main.words) + "@gmail.com", 
+				address: _.capitalize(_.sample(require.main.words)) + " City, " + _.capitalize(_.sample(require.main.words)) + " Street, " + _.random(0, 9999).toString(),
+				picture_filename: file,
+			});
+		} else {
+			userModel.createUser({
+				username: (_.sample(require.main.words)), 
+				displayname: _.startCase(_.sample(require.main.words) + " " + _.sample(require.main.words)), 
+				password: '$2b$10$h7TWh0rJKLNhcWLRnCMGAug1OSCL8S9YGQys8mHslpNTX1tWpXy.G', 
+				email: _.sample(require.main.words) + "@gmail.com", 
+				address: _.capitalize(_.sample(require.main.words)) + " City, " + _.capitalize(_.sample(require.main.words)) + " Street, " + _.random(0, 9999).toString(),
+				picture_filename: "",
+			});
+		}
+	}
+	return true;
+}

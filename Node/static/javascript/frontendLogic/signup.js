@@ -1,23 +1,12 @@
-/*
-// check file type
-if (!['image/jpeg', 'image/gif', 'image/png', 'image/svg+xml'].includes(file.type)) {
-  console.log('Only images are allowed.')
-  return
-}
-
-// check file size (< 2MB)
-if (file.size > 2 * 1024 * 1024) {
-  console.log('File must be less than 2MB.')
-  return
-}
-*/
-
 init(() => {
 
-	const form = document.querySelector('form#createuser');
-	const usernameBorder = document.querySelector('div#username');
-	const displaynameBorder = document.querySelector('div#displayname');
-	const passwordBorder = document.querySelector('div#password');
+	let form = document.querySelector('form#createuser');
+	let usernameBorder = document.querySelector('div#username');
+	let displaynameBorder = document.querySelector('div#displayname');
+	let passwordBorder = document.querySelector('div#password');
+	let img = document.querySelector('img#preview');
+	let imgDiv = document.querySelector('div#profilepicture');
+	let clearButton = document.querySelector('button#clear');
 
 	submitEvent = async () => {
 		var formData = new FormData(form);
@@ -51,17 +40,6 @@ init(() => {
 		};
 	}
 
-	let img = document.querySelector('img#preview');
-
-	let imgDiv = document.querySelector('div#profilepicture');
-
-	let clearButton = document.querySelector('button#clear');
-
-	document.querySelector('input#username').addEventListener("input", () => {usernameBorder.style.borderColor = null});
-	document.querySelector('input#displayname').addEventListener("input", () => {displaynameBorder.style.borderColor = null});
-	document.querySelector('input#password').addEventListener("input", () => {passwordBorder.style.borderColor = null});
-	document.querySelector('button.forminput').onclick = submitEvent;
-
 	onFileChange = () => {
 		if(form.picture.files[0]) {
 			img.src = URL.createObjectURL(form.picture.files[0]);
@@ -81,6 +59,11 @@ init(() => {
 			clearButton.style.display = 'none';
 		}
 	}
+
+	form.username.addEventListener("input", () => {usernameBorder.style.borderColor = null});
+	form.displayname.addEventListener("input", () => {displaynameBorder.style.borderColor = null});
+	form.password.addEventListener("input", () => {passwordBorder.style.borderColor = null});
+	document.querySelector('button.forminput').onclick = submitEvent;
 
 	form.picture.onchange = onFileChange;
 

@@ -169,6 +169,17 @@ module.exports.deletePostsByUserId = ({user_id}, callback) => {
 	});
 }
 
+module.exports.getAllPostsAny = (callback) => {
+	return makeQuery({
+		query: {
+			text: 'select * from posts where deleted = FALSE order by publication_timestamp desc', 
+			values: [],
+		}, 
+		single: false,
+		callback: callback
+	});
+}
+
 module.exports.getAllPosts = ({closed}, callback) => {
 	return makeQuery({
 		query: {
@@ -285,11 +296,11 @@ module.exports.getPostsByUserIdAndCategoryCursorShuffle = ({user_id, category_id
 	});
 }
 
-module.exports.getCategoryById = (id, callback) => {
+module.exports.getCategoryById = ({ category_id }, callback) => {
 	return makeQuery({
 		query: {
 			text: 'select * from categories where category_id = $1', 
-			values: [id],
+			values: [category_id],
 		}, 
 		single: true,
 		callback: callback

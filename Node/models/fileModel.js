@@ -1,23 +1,35 @@
 const fs = require('fs');
 
 module.exports.deleteFile = (filename) => {
-	fs.unlink(`./uploads/${filename}`, (err) => {
+	try {
+		fs.unlinkSync(`./uploads/${filename}`);
+	} catch(err) {
 		console.log(err);
-	});
+		return false;
+	}
+	return true;
 }
 
 module.exports.deleteUserPicture = (user) => {
-	if(user && user.picture_filename.length > 0) {
-		fs.unlink(`./uploads/${user.picture_filename}`, (err) => {
-			console.log(err);
-		});
+	try {
+		if(user && user.picture_filename.length) {
+			fs.unlinkSync(`./uploads/${user.picture_filename}`);
+		}
+	} catch(err) {
+		console.log(err);
+		return false;
 	}
+	return true;
 }
 
 module.exports.deletePostPicture = (post) => {
-	if(post && post.picture_filename.length > 0) {
-		fs.unlink(`./uploads/${post.picture_filename}`, (err) => {
-			console.log(err);
-		});
+	try {
+		if(post && post.picture_filename.length) {
+			fs.unlinkSync(`./uploads/${post.picture_filename}`);
+		}
+	} catch(err) {
+		console.log(err);
+		return false;
 	}
+	return true;
 }

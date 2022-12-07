@@ -1,7 +1,6 @@
-const deleteButton = document.querySelector('a.delete');
-
 init(() => {
-	deleteButton.addEventListener('click', (e) => {
+	let deleteButton = document.querySelector('button.delete');
+	deleteButton.onclick = () => {
 		if(!confirm('Are you sure you want to delete your profile?')) {
 	      return;
 	  }
@@ -22,7 +21,7 @@ init(() => {
 			})
 		})
 		.catch(err => console.log(err));
-	});
+	}
 
 	profilePostsInit();
 

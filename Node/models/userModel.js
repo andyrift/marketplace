@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 
 const { makeQuery } = require('./queries.js');
 
-module.exports.getUserById = (user_id, callback) => {
+module.exports.getUserById = ({ user_id }, callback) => {
 	return makeQuery({
 		query: {
 			text: 'select * from users where user_id = $1 and deleted = FALSE', 
@@ -13,7 +13,7 @@ module.exports.getUserById = (user_id, callback) => {
 	});
 }
 
-module.exports.getUserByUsername = (username, callback) => {
+module.exports.getUserByUsername = ({ username }, callback) => {
 	return makeQuery({
 		query: {
 			text: 'select * from users where username = $1 and deleted = FALSE', 
@@ -24,7 +24,7 @@ module.exports.getUserByUsername = (username, callback) => {
 	});
 }
 
-module.exports.getUserByUsernameAny = (username, callback) => {
+module.exports.getUserByUsernameAny = ({ username }, callback) => {
 	return makeQuery({
 		query: {
 			text: 'select * from users where username = $1', 
@@ -105,7 +105,7 @@ module.exports.updateUserByUsername_nopic = ({username, displayname, email, addr
 	});
 }
 
-module.exports.deleteUserByUsername = (username, callback) => {
+module.exports.deleteUserByUsername = ({ username }, callback) => {
 	return makeQuery({
 		query: {
 			text: 'update users set deleted=TRUE, username=NULL where username = $1 returning *', 

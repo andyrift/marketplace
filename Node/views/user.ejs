@@ -11,7 +11,7 @@
 				<div>
 					<a href="/user/<%= owner.username %>">
 						<div id="profilepicture">
-							<img src="/<%= owner.picture_filename %>" alt="Profile Picture">
+							<img src="/<%= owner.picture_filename %>" alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">
 						</div>
 					</a>
 				</div>
@@ -33,6 +33,11 @@
 						<span><div data-rating="<%= rating %>" id="stars"></div></span>
 					<% } %>
 				</div>
+				<% if (typeof user !== 'undefined' && user && user.role_id === 2) { %>
+				<div>
+					<button class="delete" id="block">Block</button>
+				</div>
+				<% } %>
 			</div>
 
 			<h3 style="margin-bottom: 10px;"><%= owner.displayname %>'s posts</h3>

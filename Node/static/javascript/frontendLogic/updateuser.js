@@ -11,7 +11,7 @@ init(() => {
 
 	let displaynameBorder = document.querySelector('div#displayname');
 
-	document.querySelector('input#displayname').addEventListener("input", () => {displaynameBorder.style.borderColor = null});
+	form.displayname.addEventListener("input", () => {displaynameBorder.style.borderColor = null});
 
 	if (deleteButton) {
 		deleteButton.onclick = async () => {

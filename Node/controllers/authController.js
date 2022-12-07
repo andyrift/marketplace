@@ -59,11 +59,11 @@ module.exports.signup_post = async (req, res) => {
 		      console.error('Unknown error', err);
 					fetchError.sendError(res);
 		    } else {
-		    	user = await userModel.getUserByUsernameAny(req.body.username);
+		    	user = await userModel.getUserByUsernameAny({ username: req.body.username });
 		    	check = checkInputsSignUp(req.body, !!user);
 					if (user || !check.pass) {
 						if(req.file) {
-							fileModel.deleteFile(req.file.filename);
+							await fileModel.deleteFile(req.file.filename);
 						}
 						res.status(200).json({ errors: check.errors });
 					} else {
@@ -82,7 +82,7 @@ module.exports.signup_post = async (req, res) => {
 							res.status(201).json({ redirect: `/profile` });
 						} catch {
 							if(req.file) {
-								fileModel.deleteFile(req.file.filename);
+								await fileModel.deleteFile(req.file.filename);
 							}
 							throw "Could not create user";
 						}
@@ -101,7 +101,7 @@ module.exports.signup_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
 	let errors = { username: undefined, password: undefined };
 	try {
-		user = await userModel.getUserByUsername(req.body.username);
+		user = await userModel.getUserByUsername({ username: req.body.username });
 		if(user) {
 			if (req.body.password && user.password) {
 				auth = await bcrypt.compare(req.body.password, user.password);
