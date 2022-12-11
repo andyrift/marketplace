@@ -31,9 +31,15 @@ module.exports.checkAuth = (req, res, next) => {
 				next();
 			} else {
 				user = await userModel.getUserById({ user_id: tokenDecoded.user_id })
-				res.locals.user = user;
-				req.userInfo = { user_id: user.user_id, username: user.username };
-				next();
+				if (!user) {
+					res.locals.user = null;
+					req.userInfo = null;
+					next();
+				} else {
+					res.locals.user = user;
+					req.userInfo = { user_id: user.user_id, username: user.username };
+					next();
+				}
 			}
 		});
 	} else {

@@ -169,7 +169,20 @@ sendMessage = async (req, res) => {
 			post_id: parseInt(req.body.post_id)
 		});
 
+
 		if(!dialogue) {
+			post = await postModel.getPostById({ post_id: parseInt(req.body.post_id) })
+			if (post.closed) {
+				res.status(200).json({ closed: true });
+				return;
+			}
+			if (await messagesModel.checkBlacklist({
+				user_id: post.user_id,
+				blacklisted_id: req.userInfo.user_id
+			})) {
+				res.status(200).json({ blacklisted: true });
+				return;
+			}
 			dialogue = await messagesModel.createDialogue({
 				user_id: req.userInfo.user_id,
 				post_id: parseInt(req.body.post_id)
@@ -362,22 +375,29 @@ module.exports.chat_get = async (req, res) => {
 	})
 
 	if(user.user_id === req.userInfo.user_id) {
-		user = await userModel.getUserById({ user_id: dialogue.customer_user_id });
+		user = await userModel.getUserByIdAny({ user_id: dialogue.customer_user_id });
 	} else {
-		user = await userModel.getUserById({ user_id: user.user_id });
+		user = await userModel.getUserByIdAny({ user_id: user.user_id });
 	}
 
-	let post = await postModel.getPostById({ post_id: dialogue.post_id });
+	let post = await postModel.getPostByIdAny({ post_id: dialogue.post_id });
 
-	let blacklisted = await messagesModel.checkBlacklist({
-		user_id: user.user_id,
-		blacklisted_id: req.userInfo.user_id,
-	});
+	let blacklisted = false;
+	let blacklisting = false;
 
-	let blacklisting = await messagesModel.checkBlacklist({
-		user_id: req.userInfo.user_id,
-		blacklisted_id: user.user_id,
-	})
+	if (user) {
+		blacklisted = await messagesModel.checkBlacklist({
+			user_id: user.user_id,
+			blacklisted_id: req.userInfo.user_id,
+		});
+
+		blacklisting = await messagesModel.checkBlacklist({
+			user_id: req.userInfo.user_id,
+			blacklisted_id: user.user_id,
+		})
+	}
+
+	
 
 	res.render('chat', { title: 'Chat', participant: user, post, blacklisted, blacklisting });
 }

@@ -735,7 +735,6 @@ input::-webkit-inner-spin-button {
 } 
 
 .container button {
-  margin: calc((100px - var(--as-button-height)) / 2);
 }
 
 .chat {
@@ -821,17 +820,17 @@ div.chat-messages {
 }
 
 .chat h3.name {
+  margin-top: 0px;
   margin-left: 10px;
-  max-width: calc(100% - 160px);
+  width: calc(100% - 135px);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .chat h4.title {
-  margin-left: 20px;
+  margin-left: 10px;
   float: left;
-  margin-top: 12px;
   margin-bottom: 2px;
 }
 

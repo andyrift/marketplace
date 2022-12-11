@@ -13,6 +13,17 @@ module.exports.getUserById = ({ user_id }, callback) => {
 	});
 }
 
+module.exports.getUserByIdAny = ({ user_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 'select * from users where user_id = $1', 
+			values: [user_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
 module.exports.getUserByUsername = ({ username }, callback) => {
 	return makeQuery({
 		query: {

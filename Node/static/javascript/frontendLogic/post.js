@@ -177,6 +177,10 @@ init(() => {
 				if(res.status === 200){
 					if (data.redirect) {
 						window.location.href = data.redirect;
+					} else if(data.blacklisted) {
+						alert('you are in this person\'s blacklist');
+					} else if(data.closed) {
+						alert('this post is closed');
 					}
 				} else {
 					//error

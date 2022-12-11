@@ -93,7 +93,7 @@
 					</div>(<span class="average"></span>)</span>
 				</div>
 			</div>
-			<% if (typeof user !== 'undefined' && user && user.user_id !== owner.user_id) { %>
+			<% if (typeof user !== 'undefined' && user && user.user_id !== owner.user_id && !post.closed) { %>
 			<button id="write" data-post_id="<%= post.post_id %>">Write to owner</button>
 			<% } %>
 			
