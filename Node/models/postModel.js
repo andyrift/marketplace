@@ -31,7 +31,6 @@ module.exports.choosePosts = ( { posts, excludePostIds, quantity, string } ) => 
 		}
 		return true;
 	});
-
 	return resultPosts;
 }
 
@@ -40,6 +39,18 @@ module.exports.getPostById = ({ post_id }, callback) => {
 		query: {
 			text: 
 				'select * from posts where post_id = $1 and deleted = FALSE', 
+			values: [post_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}
+
+module.exports.getPostByIdAny = ({ post_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				'select * from posts where post_id = $1', 
 			values: [post_id],
 		}, 
 		single: true,
@@ -314,6 +325,18 @@ module.exports.getAllCategories = (callback) => {
 			values: [],
 		}, 
 		single: false,
+		callback: callback
+	});
+}
+
+module.exports.clearPicture = ({ post_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				"update posts set picture_filename = \'\' where post_id = $1 ", 
+			values: [post_id],
+		}, 
+		single: true,
 		callback: callback
 	});
 }

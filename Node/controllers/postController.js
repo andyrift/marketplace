@@ -10,7 +10,7 @@ const _ = require('lodash');
 const multer  = require('multer');
 
 getPosts = async (req, res) => {
-	let readSize = 2;
+	let readSize = 20;
 	let {cursor, client} = {};
 	if (req.query.category_id || req.query.string) {
 		if(parseInt(req.query.category_id)) {
@@ -91,26 +91,26 @@ getPosts = async (req, res) => {
 		return;
 	}
 
-	posts = [];
+	result = [];
 
 	if (!req.body.quantity){
 		await cursor.close();
 		await client.release();
-		res.status(200).json({ posts });
+		res.status(200).json({ result });
 		return;
 	}
 
 	rows = await cursor.read(readSize);
 	while (rows.length) {
-		if(posts.length < req.body.quantity) {
+		if(result.length < req.body.quantity) {
 
 			postModel.choosePosts({ 
 				posts: rows, 
 				excludePostIds: req.body.excludePostIds, 
-				quantity: req.body.quantity - posts.length,
+				quantity: req.body.quantity - result.length,
 				string: req.query.string
 			}).forEach(post => {
-				posts.push(post);
+				result.push(post);
 			});
 
 			rows = await cursor.read(readSize);
@@ -120,8 +120,7 @@ getPosts = async (req, res) => {
 		}
 	}
 	await client.release();
-	
-	res.status(200).json({ posts });
+	res.status(200).json({ result });
 }
 
 changeClosed = async (req, res) => {
@@ -368,6 +367,7 @@ module.exports.post_get = async (req, res) => {
 deletePost = async (post) => {
 	await fileModel.deletePostPicture(post);
 	post = await postModel.deletePostById({ post_id: post.post_id });
+	await postModel.clearPicture({ post_id: post.post_id });
 	await favoritesModel.deleteFavoritesByPostId({ post_id: post.post_id });
 	return post;
 }

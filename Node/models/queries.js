@@ -21,26 +21,18 @@ module.exports.makeQuery = ({ query, single, callback }) => {
 	} else {
 		return new Promise(async (resolve, reject) => {
 			try {
-				client = await pool.connect();
+				const client = await pool.connect();
 				try {
-					if (client) {
-						res = await client.query(query);
-						client.release();
-						client = undefined;
-						if(single) {
-							resolve(res.rows[0]);
-						} else {
-							resolve(res.rows);
-						}
+					const res = await client.query(query);
+					if(single) {
+						resolve(res.rows[0]);
 					} else {
-						console.log(query);
-						throw "err";
+						resolve(res.rows);
 					}
 				} catch (err) {
-					if(client) {
-						client.release();
-					}
 					throw (err);
+				} finally {
+					client.release();
 				}
 			} catch (err) {
 				reject(err);

@@ -9,9 +9,9 @@
 		<div class="main">
 
 			<% if (post.closed) { %>
-			<div id="closed-alert"> 
+			<div class="alert" id="closed-alert"> 
 			<% } else { %>
-			<div id="closed-alert" style="display: none;">
+			<div class="alert" id="closed-alert" style="display: none;">
 			<% } %>
 
 			<h2>This post has been closed</h2></div>
@@ -93,11 +93,20 @@
 					</div>(<span class="average"></span>)</span>
 				</div>
 			</div>
-			<!--
-			<button id="write">Write to owner</button>
-			-->
+			<% if (typeof user !== 'undefined' && user && user.user_id !== owner.user_id) { %>
+			<button id="write" data-post_id="<%= post.post_id %>">Write to owner</button>
+			<% } %>
 			
 		</div>
+	</div>
+	<div class="postmessage" style="display: none;">
+		<div id="sendmessage">
+			<form id="sendform" onsubmit="return false" autocomplete="off">
+				<input type="text" id="input" name="message" placeholder="...">
+				<button id="sendbutton" data-post_id="<%= post.post_id %>">Send</button>
+			</form>
+		</div>
+		<button id="cancel">Cancel</button>
 	</div>
 	<%- include('./partials/footer.ejs') %>
 	<script src="/javascript/starRating.js"></script>

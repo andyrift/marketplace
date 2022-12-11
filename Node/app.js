@@ -31,13 +31,15 @@ require.main.upload = multer({ storage: multerStorage });
 // uses environment variables for connection information
 const { Pool } = require('pg');
 require.main.pool = new Pool({
-	max: 1
+	max: 10
 });
 // the pool will emit an error on behalf of any idle clients it contains if a backend error or network partition happens
 require.main.pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client', err);
   process.exit(-1);
 });
+var types = require('pg').types
+types.setTypeParser(types.builtins.TIMESTAMPTZ, (val) => {return new Date(val)});
 
 
 //components
@@ -45,16 +47,17 @@ const authRoutes = require("./routes/authRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 const postRoutes = require("./routes/postRoutes.js");
 const favoritesRoutes = require("./routes/favoritesRoutes.js");
+const messagesRoutes = require("./routes/messagesRoutes.js");
 const postController = require("./controllers/postController.js");
 
 
 // dictionary for text generator 
-
+/*
 fs.readFile('./static/words_dictionary.json', (err, data) => {
     if (err) throw err;
     require.main.words = Object.keys(JSON.parse(data));
 });
-
+*/
 
 // static files
 
@@ -76,29 +79,15 @@ app.get('/', (req, res) => {
 	res.render('index', { title: 'Home' });
 });
 
-
 app.get('/categories', postController.allCategories_get);
 
 app.get('/help', (req, res) => {
 	res.render('help', { title: 'Help' });
 });
 
-/*
-
-app.get('/messages', auth.requireAuth, (req, res) => {
-	res.render('messages', { title: 'Messages' });
-});
-app.get('/dialogue', auth.requireAuth, (req, res) => {
-	res.render('dialogue', { title: 'Chat' });
-});
-app.get('/blacklist', auth.requireAuth, (req, res) => {
-	res.render('blacklist', { title: 'Blacklist' });
-});
-
-*/
-
 app.use('/favorites', favoritesRoutes);
 app.use('/post', postRoutes);
+app.use(messagesRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
 
@@ -114,7 +103,6 @@ pool.end(() => {
   console.log('pool has ended')
 })
 */
-
 
 // listen
 const port = 80

@@ -3,6 +3,7 @@ pool = require.main.pool;
 userModel = require("../models/userModel");
 postModel = require("../models/postModel");
 favoritesModel = require("../models/favoritesModel");
+messagesModel = require("../models/messagesModel");
 fetchError = require("./fetchError");
 fileModel = require("../models/fileModel");
 
@@ -14,10 +15,13 @@ deleteUser = async (user) => {
 	user = await userModel.deleteUserByUsername({ username: user.username });
 	await favoritesModel.deleteFavoritesByUserId({ user_id: user.user_id });
 	await userModel.clearRating({ reciever_id: user.user_id });
+	await userModel.clearPicture({ user_id: user.user_id });
+	await messagesModel.clearBlacklist({ user_id: user.user_id })
 	posts = await postModel.deletePostsByUserId({ user_id: user.user_id });
 	for(const post of posts) {
 		await fileModel.deletePostPicture(post);
-		favoritesModel.deleteFavoritesByPostId({ post_id: post.post_id })
+		await postModel.clearPicture({ post_id: post.post_id });
+		favoritesModel.deleteFavoritesByPostId({ post_id: post.post_id });
 	}
 	return user;
 }
@@ -35,9 +39,10 @@ module.exports.user_get = (req, res) => {
 						if(rating) {
 							rating = rating.rating;
 						}
-						res.render('user', { title: 'User', owner: user, rating });
+						blacklisted = !! await messagesModel.checkBlacklist({ user_id: req.userInfo.user_id, blacklisted_id: user.user_id });
+						res.render('user', { title: 'User', owner: user, rating, blacklisted});
 					} else {
-						res.render('user', { title: 'User', owner: user, rating: undefined });
+						res.render('user', { title: 'User', owner: user, rating: undefined, blacklisted: undefined });
 					}
 				} else {
 					res.status(404).render('404', { title: 'User Not Found' });

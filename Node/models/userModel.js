@@ -176,3 +176,15 @@ module.exports.clearRating = ({ reciever_id }, callback) => {
 		callback: callback
 	});
 }
+
+module.exports.clearPicture = ({ user_id }, callback) => {
+	return makeQuery({
+		query: {
+			text: 
+				"update users set picture_filename = \'\' where user_id = $1 ", 
+			values: [user_id],
+		}, 
+		single: true,
+		callback: callback
+	});
+}

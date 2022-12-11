@@ -1,11 +1,11 @@
-const favoritePosts = new postGetter({ 
-	postContainer: document.querySelector('div.posts'), 
-	postParams: { 
+const favoritePosts = new getter({ 
+	container: document.querySelector('div.posts'), 
+	params: { 
 		quantity: 12,
 		exclude: true,
 	},
-	getPostsMethod: getFavoritePosts, 
-	makePostMethod: makePost,
+	getMethod: getFavoritePosts, 
+	makeMethod: makePost,
 	onEmpty: () => {
 		document.querySelector('div.posts').querySelector("div.empty").style.display = null;
 	}

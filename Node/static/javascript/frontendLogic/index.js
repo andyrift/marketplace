@@ -1,12 +1,12 @@
-const indexPosts = new postGetter({ 
-	postContainer: document.querySelector('.main div.posts'), 
-	postParams: { 
+const indexPosts = new getter({ 
+	container: document.querySelector('.main div.posts'), 
+	params: { 
 		quantity: 6,
 		exclude: true,
 		shuffle: true
 	},
-	getPostsMethod: getPosts, 
-	makePostMethod: makePost,
+	getMethod: getPosts, 
+	makeMethod: makePost,
 	onEmpty: () => {
 		document.querySelector('.main div.posts').querySelector("div.empty").style.display = null;
 	}

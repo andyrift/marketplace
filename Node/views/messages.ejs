@@ -9,26 +9,31 @@
 		<div class="main"> 
 			<h3>Your dialogues</h3>
 			<div class="dialogues">
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
+				<div class="empty" style="display: none;"><h3>Empty</h3></div>
+
 			</div>
 		</div>
 		<div class="sidebar">
-			<%- include('./partials/profile.ejs') %>
+			<div class="profile">
+				<div>
+					<a href="/profile %>">
+						<div id="profilepicture">
+							<img src="/<%= user.picture_filename %>"  alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">
+						</div>
+					</a>
+				</div>
+				<a href="/user/<%= user.username %>">
+					<h3 id="name"><%= user.displayname %></h3>
+				</a>
+				<div class="profileinfo">
+					<p><%= user.email %></p>
+				</div>
+			</div>
 			<a href="blacklist"><button>User blacklist</button></a>
 		</div>
 	</div>
 	<%- include('./partials/footer.ejs') %>
-	<script src="/javascript/makePost.js"></script>
-	<script src="/javascript/getPosts.js"></script>
-	<script src="/javascript/favoritePostsSide.js"></script>
-	<script> init(); </script>
+	<script src="/javascript/getter.js"></script>
+	<script src="/javascript/frontendLogic/messages.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 :root {
   --as-body-color: #f8f8f8;
   --as-lightgrey: #EEEEEE;
+  --as-lightblue: #CFDFFF;
   --as-midgrey: #999999;
   --as-midgrey-hover: #A0A0A0;
   --as-darkgrey: #333333;
@@ -108,7 +109,7 @@ img#logo {
   float: left;
 }
 
-div#searchbar, button, input::file-selector-button, input[type=submit] {
+div#searchbar, div#sendmessage, button, input::file-selector-button, input[type=submit] {
   height: var(--as-button-height);
   line-height: 28px;
   border: 2px solid var(--as-orange);
@@ -125,6 +126,17 @@ div#searchbar {
   background-color: white;
   float: right;
   margin-top: 12px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+}
+
+div#sendmessage {
+  overflow:  visible;
+  width: 100%;
+  padding-left: 12px;
+  color: var(--as-midgrey);
+  background-color: white;
   display: flex;
   align-items: stretch;
   flex-direction: row;
@@ -174,7 +186,7 @@ button:hover.tab.active {
   background-color: var(--as-orange-hover);
 }
 
-button#searchbutton {
+button#searchbutton, button#sendbutton {
   width: auto;
   margin: -2px -2px 0px 0px;
   border-radius: 0px var(--as-radius) var(--as-radius) 0px;
@@ -195,7 +207,7 @@ button#cross {
   flex-grow: 0;
 }
 
-.control input[type=text], .control form {
+.control input[type=text], #sendmessage input[type=text], .control form , #sendmessage form {
   flex-grow: 1;
   padding: 0px;
   border: none;
@@ -208,7 +220,7 @@ button#cross {
   outline: none;
 }
 
-.control form {
+.control form, #sendmessage form {
   display: flex;
 }
 
@@ -420,8 +432,8 @@ div#profilepicture {
   border-radius: 50%;
 }
 
-.sidebar .profile #profilepicture img {
-  border-radius: 50%;
+#profilepicture img {
+  border-radius: inherit;
 }
 
 .profileinfo {
@@ -450,20 +462,6 @@ div#profilepicture {
   margin-top: 0px;
   float:  left;
   text-align: center;
-}
-
-.dialogues {
-  width: 100%;
-  margin: auto;
-  padding-top: 10px;
-}
-
-.dialogue {
-  height: 100px;
-  margin: auto;
-  margin-bottom: 5px;
-  border: 1px solid lightgrey;
-  border-radius: var(--as-radius);
 }
 
 .postpage {
@@ -547,7 +545,7 @@ div.post {
   cursor: wait;
 }
 
-#closed-alert {
+.alert {
   width: 100%;
   height: 60px;
   display: flex;
@@ -558,7 +556,7 @@ div.post {
   color: white;
 }
 
-#closed-alert h2 {
+.alert h2 {
   color: var(--as-darkgrey);
 }
 
@@ -675,4 +673,179 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.dialogues {
+  width: 100%;
+  margin: auto;
+  padding-top: 10px;
+}
+
+.container {
+  height: 100px;
+  margin: auto;
+  margin-bottom: 5px;
+  border: 1px solid lightgrey;
+  border-radius: var(--as-radius);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.container h3 {
+  float: left;
+  max-width: 60%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+} 
+
+.container h4 {
+  margin: 12px 0px 0px 20px;
+  width: calc(40% - 20px);
+  float: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+} 
+
+.container p {
+  clear: both;
+  color: var(--as-midgrey);
+  text-overflow: ellipsis;
+  overflow: hidden;
+} 
+
+.container #profilepicture {
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+}
+
+.container .left {
+  float: left;
+  width: calc(100% - 100px);
+  padding: 5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+} 
+
+.container .right {
+  float: right;
+  padding: 5px;
+  text-overflow: ellipsis;
+} 
+
+.container button {
+  margin: calc((100px - var(--as-button-height)) / 2);
+}
+
+.chat {
+  background-color: white;
+  border-radius: var(--as-radius);
+  padding: 10px;
+}
+
+.chat #profilepicture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  float: left;
+}
+
+.chat h3 {
+  float: left;
+}
+
+div.chat-messages {
+  clear: both;
+  height: calc(100vh - 148px - 62px - 80px);
+  box-sizing: border-box;
+  overflow-y:auto
+}
+
+.chat .forminput {
+  margin: 0;
+}
+
+.chat .message {
+  margin: 10px;
+  margin-top: 0px;
+  min-width: 40%;
+  max-width: 80%;
+  border-radius: var(--as-radius);
+  clear: both;
+  bottom: 0px;
+  position: relative;
+}
+
+.chat .message.left {
+  background-color: var(--as-lightblue);
+  float: left;
+}
+
+.chat .message.right {
+  background-color: var(--as-lightgrey);
+  float: right;
+}
+
+.chat .message #profilepicture {
+  top: 10px;
+  left: 10px;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  float: left;
+}
+
+.chat .message .name {
+  float: left;
+  margin-top: 5px;
+  margin-left: 70px;
+  margin-bottom: 5px;
+}
+
+.chat .message .time {
+  float: right;
+  margin-left: 10px;
+  margin-top: 8px;
+  margin-right: 10px;
+  max-width: 70px;
+}
+
+.chat .message .body {
+  clear: both;
+  word-wrap: break-word;
+  padding-bottom: 10px;
+  margin-left: 70px;
+  padding-right: 10px;
+}
+
+.chat h3.name {
+  margin-left: 10px;
+  max-width: calc(100% - 160px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat h4.title {
+  margin-left: 20px;
+  float: left;
+  margin-top: 12px;
+  margin-bottom: 2px;
+}
+
+.postmessage {
+  position: fixed; 
+  bottom: 0px; 
+  right:calc((100% - 960px)/2); 
+  width:960px; 
+  height:74px;
+  background-color: var(--as-body-color);
+  border-radius: var(--as-radius) var(--as-radius) 0 0;
+}
+
+.postmessage button {
+  margin: 5px 0 5px 0;
+  float: right;
 }

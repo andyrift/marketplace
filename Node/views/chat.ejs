@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('./partials/head.ejs') %>
+</head>
+<body>
+	<%- include('./partials/topbar.ejs') %>
+	<div class="content">
+		<div class="chat">
+			<div>
+				<a href="/user/<%= participant.username %>">
+					<div id="profilepicture">
+						<% if (participant.picture_filename && participant.picture_filename.length) { %>
+						<img src="/<%= participant.picture_filename %>" alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">
+						<% } else { %>
+						<img src="/img/default.jpg" alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">
+						<% } %>
+					</div>
+					<h3 class="name"> <%= participant.displayname %> </h3>
+				</a>
+				<a href="/post/<%= post.post_id %>">
+					<h4 class="title"> <%= post.title %> </h4>
+				</a>
+			</div>
+			<div class="chat-messages" data-user_id="<%=user.user_id%>">
+
+			</div>
+			<% if (blacklisted) { %>
+				<div class="alert"> 
+					<h2>You are in this persons' blacklist</h2>
+				</div>
+			<% } else if (blacklisting) { %>
+				<div class="alert"> 
+					<h2>This person is in your blacklist</h2>
+				</div>
+			<% } else { %>
+			<div id="sendmessage">
+				<form id="sendform" onsubmit="return false" autocomplete="off">
+					<input type="text" id="input" name="message" placeholder="...">
+					<button id="sendbutton">Send</button>
+				</form>
+			</div>
+			<% } %>
+		</div>
+	</div>
+	<%- include('./partials/footer.ejs') %>
+	<script src="/javascript/frontendLogic/chat.js"></script>
+</body>
+</html>

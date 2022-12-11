@@ -67,6 +67,32 @@ init(() => {
 			.catch(err => console.log(err));
 		}
 	}
+
+	let blacklistButton = document.querySelector('button#blacklist');
+	if(blacklistButton){
+		blacklistButton.onclick = async () => {
+
+			const endpoint = '/blacklist/';
+
+			res = await fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ username: document.querySelector('div.profile').dataset.username, change: true }),
+			});
+			data = await res.json();
+			if(res.status === 200){
+				if (data.blacklisted) {
+					blacklistButton.innerHTML = "Remove from blacklist";
+				} else {
+					blacklistButton.innerHTML = "Add to blacklist";
+				}
+			} else {
+				document.write(data.body);
+			}
+		}
+	}
 	
 	profilePostsInit();
 	

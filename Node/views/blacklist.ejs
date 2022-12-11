@@ -7,25 +7,33 @@
 	<%- include('./partials/topbar.ejs') %>
 	<div class="content">
 		<div class="main"> 
-			<%- include('./partials/profile.ejs') %>
 			<h3>Blacklist</h3>
-			<div class="dialogues">
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
-				<div class="dialogue"></div>
+			<div class="blacklist">
+					<div class="empty" style="display: none;"><h3>Empty</h3></div>
+					
 			</div>
 		</div>
 		<div class="sidebar">
-			<%- include('./partials/sidebarfavorites.ejs') %>
+			<div class="profile">
+				<div>
+					<a href="/profile %>">
+						<div id="profilepicture">
+							<img src="/<%= user.picture_filename %>"  alt="" onerror="this.src='/img/default.jpg'; this.onerror = () => {}">
+						</div>
+					</a>
+				</div>
+				<a href="/user/<%= user.username %>">
+					<h3 id="name"><%= user.displayname %></h3>
+				</a>
+				<div class="profileinfo">
+					<p><%= user.email %></p>
+				</div>
+			</div>
 		</div>
 	</div>
+	</div>
 	<%- include('./partials/footer.ejs') %>
-	<script> init(); </script>
+	<script src="/javascript/getter.js"></script>
+	<script src="/javascript/frontendLogic/blacklist.js"></script>
 </body>
 </html>
