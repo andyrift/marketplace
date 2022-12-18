@@ -1,5 +1,20 @@
 # AppleSause
 
+##Запуск
+usernames:
+presold (moderator)
+raphidoidea (moderator)
+elmy (moderator)
+whitewood (moderator)
+accelerated
+harperess
+alcarraza
+colocynthin
+smudder
+stalactitical
+password: password
+
+
 ## Описание
 Торговая площадка по типу Юлы или Авито упрощенном исполнении.
 
