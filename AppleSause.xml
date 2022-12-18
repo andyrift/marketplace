@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<APPLESAUSE>
+  <DATABASE>
+    <TABLE name="users">
+      <COLUMNS>
+        <COLUMN type="integer">role_id</COLUMN>
+        <COLUMN type="integer">user_id</COLUMN>
+        <COLUMN type="text">displayname</COLUMN>
+        <COLUMN type="text">username</COLUMN>
+        <COLUMN type="text">password</COLUMN>
+        <COLUMN type="text">email</COLUMN>
+        <COLUMN type="text">picture_filename</COLUMN>
+        <COLUMN type="text">address</COLUMN>
+        <COLUMN type="boolean">deleted</COLUMN>
+        <COLUMN type="timestamp with time zone">joined_timestamp</COLUMN>
+        <COLUMN type="real">rating</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>user_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="UNIQUE">
+          <COLUMN>username</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>role_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="roles">
+      <COLUMNS>
+        <COLUMN type="integer">role_id</COLUMN>
+        <COLUMN type="text">role_name</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>role_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="ratings">
+      <COLUMNS>
+        <COLUMN type="integer">reciever_id</COLUMN>
+        <COLUMN type="integer">sender_id</COLUMN>
+        <COLUMN type="integer">rating</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>reciever_id</COLUMN>
+          <COLUMN>sender_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>reciever_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>sender_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="CHECK">
+          <VALUE>
+            rating &gt;= 0 AND rating &lt;= 5
+          </VALUE>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="posts">
+      <COLUMNS>
+        <COLUMN type="integer">user_id</COLUMN>
+        <COLUMN type="integer">category_id</COLUMN>
+        <COLUMN type="integer">post_id</COLUMN>
+        <COLUMN type="text">picture_filename</COLUMN>
+        <COLUMN type="integer">price</COLUMN>
+        <COLUMN type="text">title</COLUMN>
+        <COLUMN type="text">description</COLUMN>
+        <COLUMN type="text">address</COLUMN>
+        <COLUMN type="timestamp with time zone">publication_timestamp</COLUMN>
+        <COLUMN type="integer">favotite_count</COLUMN>
+        <COLUMN type="integer">view_count</COLUMN>
+        <COLUMN type="boolean">closed</COLUMN>
+        <COLUMN type="boolean">deleted</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>post_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>user_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>category_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="messages">
+      <COLUMNS>
+        <COLUMN type="integer">dialogue_id</COLUMN>
+        <COLUMN type="integer">sender_id</COLUMN>
+        <COLUMN type="integer">message_id</COLUMN>
+        <COLUMN type="timestamp with time zone">send_timestamp</COLUMN>
+        <COLUMN type="text">message_body</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRINARY KEY">
+          <COLUMN>message_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>dialogue_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>sender_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="favorites">
+      <COLUMNS>
+        <COLUMN type="integer">user_id</COLUMN>
+        <COLUMN type="integer">post_id</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>user_id</COLUMN>
+          <COLUMN>post_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>user_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>post_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="dialogues">
+      <COLUMNS>
+        <COLUMN type="integer">post_id</COLUMN>
+        <COLUMN type="integer">customer_user_id</COLUMN>
+        <COLUMN type="integer">dialogue_id</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>dialogue_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="UNIQUE">
+          <COLUMN>post_id</COLUMN>
+          <COLUMN>customer_user_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>post_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>customer_user_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="categories">
+      <COLUMNS>
+        <COLUMN type="integer">category_id</COLUMN>
+        <COLUMN type="text">category_name</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>category_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+    <TABLE name="blacklist">
+      <COLUMNS>
+        <COLUMN type="integer">blacklisting_user_id</COLUMN>
+        <COLUMN type="integer">blacklisted_user_id</COLUMN>
+      </COLUMNS>
+      <CONSTRAINTS>
+        <CONSTRAINT type="PRIMARY KEY">
+          <COLUMN>blacklisting_user_id</COLUMN>
+          <COLUMN>blacklisted_user_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>blacklisting_user_id</COLUMN>
+        </CONSTRAINT>
+        <CONSTRAINT type="FOREIGN KEY">
+          <COLUMN>blacklisted_user_id</COLUMN>
+        </CONSTRAINT>
+      </CONSTRAINTS>
+    </TABLE>
+  </DATABASE>
+  <DESCRIPTION>
+    <TITLE>AppleSause</TITLE>
+    <SECTION name="Описание">
+      <ELEMENT>Торговая площадка по типу Юлы или Авито упрощенном исполнении.</ELEMENT>
+      <ELEMENT>Храмцов Андрей Игоревич 20.Б11-пу.</ELEMENT>
+    </SECTION>
+    <SECTION name="Предметная область">
+      <ELEMENT>Любые товары или услуги, которые разместят пользователи.</ELEMENT>
+    </SECTION>
+    <SECTION name="Данные">
+      <ELEMENT name="users">Пользователи</ELEMENT>
+      <ELEMENT name="roles">Роли пользователей</ELEMENT>
+      <ELEMENT name="ratings">Рейтинги (оценки) которые пользователи оставляют на страницах других пользователей (Объяснения: rating)</ELEMENT>
+      <ELEMENT name="messages">Личные сообщения</ELEMENT>
+      <ELEMENT name="dialogues">Диалог по объявлению</ELEMENT>
+      <ELEMENT name="posts">Объявления</ELEMENT>
+      <ELEMENT name="cateories">Категории объявлений</ELEMENT>
+      <ELEMENT name="favorites">Избранные объявления</ELEMENT>
+      <ELEMENT name="blacklist">Записи о добавленных пользователями других пользователей в черный список</ELEMENT>
+    </SECTION>
+    <SECTION name="Общие ограничения целостности">
+      <ELEMENT>Категории возможно редактировать только напрямую в базе данных</ELEMENT>
+      <ELEMENT>Личные сообщения между двумя пользователями доступны только этим двум пользователям</ELEMENT>
+    </SECTION>
+    <SECTION name="Пользовательские роли">
+      <SUBSECTION name="guest">
+        <ELEMENT>может просматривать объявления, размещенные на сайте</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="user">
+        <ELEMENT>может просматривать объявления, размещенные на сайте</ELEMENT>
+        <ELEMENT>может добавлять любые открытые объявления на сайте в избранное</ELEMENT>
+        <ELEMENT>может публиковать объявления</ELEMENT>
+        <ELEMENT>может снимать свои ранее опубликованные объявления с публикации (Объяснения: post deleting)</ELEMENT>
+        <ELEMENT>может помечать свои ранее опубликованные объявления как завершенные (Объяснения: post closing)</ELEMENT>
+        <ELEMENT>может писать и получать личные сообщения по поводу конкретного объявления (Объяснения: private messaging)</ELEMENT>
+        <ELEMENT>может добавлять других пользователей в черный список (Объяснения: blacklisting)</ELEMENT>
+        <ELEMENT>может оставлять оценки на страницах других пользователей (Объяснения: rating)</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="moderator">
+        <ELEMENT>может всё что может user</ELEMENT>
+        <ELEMENT>может блокировать чужие объявления (Объяснения: post blocking)</ELEMENT>
+        <ELEMENT>может блокировать пользователей (Объяснения: user blocking)</ELEMENT>
+      </SUBSECTION>
+    </SECTION>
+    <SECTION name="Объяснения">
+      <SUBSECTION name="private messaging">
+        <ELEMENT>При просмотре объявления, размещенным пользователем (1), у пользователя (2) есть возможность написать пользователю (1) личное сообщение.</ELEMENT>
+        <ELEMENT>Сообщение отправленное со страницы объявления будет расположено в соответствующем диалоге (если его нет то он будет создан).</ELEMENT>
+        <ELEMENT>Сообщения отправленные в конкретном диалоге будут располагаться в этом конкретном диалоге.</ELEMENT>
+        <ELEMENT>Сообщения возможно отправлять только в рамках диалогов, связанных с объявлениями.</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="blacklisting">
+        <ELEMENT>Если пользователь (1) добавит пользователя (2) в черный список то они больше не смогут писать друг другу личные сообщения пока пользователь (1) не уберет пользователя (2) из черного списка.</ELEMENT>
+        <ELEMENT>Добавление пользователем (1) пользователя (2) в черный список не избавляет пользователя (2) от возможности добавить пользователя (1) в черный список.</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="rating">
+        <ELEMENT>У пользователя (1) есть возможность оставить на странице пользователя (2) целочисленнную оценку от 1 до 5.</ELEMENT>
+        <ELEMENT>Пользователем (1) на странице пользователя (2) может быть оставлена только одна оценка.</ELEMENT>
+        <ELEMENT>На странице любого пользователя отображается среднее значение всех оценок оставленнх ему.</ELEMENT>
+        <ELEMENT>Оценка может быть оставлена или изменена пользователем который её оставил в любой момент без объяснения причины.</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="post deleting">
+        <ELEMENT>Удаленное объявление нельзя восстановить.</ELEMENT>
+        <ELEMENT>После удаления объявления пользователь теряет к нему доступ и объявление больше не рассматривается при любом способе поиска на сайте.</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="user blocking" note="Теперь это просто удаление пользователя">
+        <ELEMENT>Блокировка пользователя происходит навсегда и без объяснения.</ELEMENT>
+        <ELEMENT>Все ранее размещенные объявления которые находятся в не удаленном состоянии при блокировке пользователя тоже блокируются.</ELEMENT>
+        <ELEMENT>Роль меняется на user_blocked.</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="post blocking">
+        <ELEMENT>Блокировка объявления происходит навсегда и без объяснения.</ELEMENT>
+        <ELEMENT>При блокировке объявление удаляется (post deleting)</ELEMENT>
+      </SUBSECTION>
+      <SUBSECTION name="post closing">
+        <ELEMENT>Закрытое объявление отображается в закрытых объявлениях на странице владельца объявления</ELEMENT>
+      </SUBSECTION>
+    </SECTION>
+  </DESCRIPTION>
+</APPLESAUSE>
