@@ -194,6 +194,7 @@ module.exports.user_post = async (req, res) => {
 module.exports.doStuff = async (req, res) => {
 	//await createUsers();
 	//updateRatings();
+	//makeRatings();
 	//makeUpFavorites();
 	//updateFavorites();
 	res.redirect('/');
@@ -245,7 +246,7 @@ makeRatings = async () => {
 				for (let i = 0; i < _.random(0, 20); i++) {
 					userModel.setRating({
 						sender_id: sender.user_id,
-						reciever_id: _.sample(_.filter( users, (o) => { return o !== user; })).user_id,
+						reciever_id: _.sample(_.filter( users, (o) => { return o !== sender; })).user_id,
 						rating: _.random(1, 5),
 					})
 				}
@@ -256,14 +257,14 @@ makeRatings = async () => {
 
 createUsers = async () => {
 
-	var files = fs.readdirSync('./pictures');
+	var files = fs.readdirSync('../pictures');
 
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < 10; i++) {
 		if (_.random(0, 100) > 40) {
 
 			file = _.sample(files);
 
-			filedir1 = `./pictures/${file}`;
+			filedir1 = `../pictures/${file}`;
 
 			let ext = file.split('.')[file.split('.').length - 1];
 
@@ -276,7 +277,7 @@ createUsers = async () => {
 			userModel.createUser({
 				username: (_.sample(require.main.words)), 
 				displayname: _.startCase(_.sample(require.main.words) + " " + _.sample(require.main.words)), 
-				password: '$2b$10$h7TWh0rJKLNhcWLRnCMGAug1OSCL8S9YGQys8mHslpNTX1tWpXy.G', 
+				password: await userModel.hashPassword("password"), 
 				email: _.sample(require.main.words) + "@gmail.com", 
 				address: _.capitalize(_.sample(require.main.words)) + " City, " + _.capitalize(_.sample(require.main.words)) + " Street, " + _.random(0, 9999).toString(),
 				picture_filename: file,
@@ -285,7 +286,7 @@ createUsers = async () => {
 			userModel.createUser({
 				username: (_.sample(require.main.words)), 
 				displayname: _.startCase(_.sample(require.main.words) + " " + _.sample(require.main.words)), 
-				password: '$2b$10$h7TWh0rJKLNhcWLRnCMGAug1OSCL8S9YGQys8mHslpNTX1tWpXy.G', 
+				password: await userModel.hashPassword("password"), 
 				email: _.sample(require.main.words) + "@gmail.com", 
 				address: _.capitalize(_.sample(require.main.words)) + " City, " + _.capitalize(_.sample(require.main.words)) + " Street, " + _.random(0, 9999).toString(),
 				picture_filename: "",

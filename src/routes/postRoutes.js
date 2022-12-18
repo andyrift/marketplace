@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/', postController.post_post);
 
-router.get('/doStuff', postController.doStuff);
+//router.get('/doStuff', postController.doStuff);
 
 router.get('/create', auth.requireAuth,  postController.createPost_get);
 

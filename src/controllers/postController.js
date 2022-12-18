@@ -422,7 +422,6 @@ module.exports.allCategories_get = (req, res) => {
 module.exports.doStuff = async (req, res) => {
 	//createPosts();
 	//deleteAllPosts();
-	//console.log('done');
 	//closeSomePosts();
 	res.redirect('/');
 }
@@ -448,7 +447,7 @@ var md5 = require('md5');
 createPosts = () => {
 	console.log('creating posts');
 	
-	var files = fs.readdirSync('./pictures');
+	var files = fs.readdirSync('../pictures');
 	
 	userModel.getAllUsers((err, users) => {
 		if (err) {
@@ -459,7 +458,7 @@ createPosts = () => {
 				allUserIds.push({ user_id: user.user_id, username: user.username });
 			});
 
-			for (let i = 0; i < 1000; i++) {
+			for (let i = 0; i < 100; i++) {
 				var myuser = _.sample(allUserIds)
 
 				var w = _.random(0, 7);
@@ -486,7 +485,7 @@ createPosts = () => {
 
 					file = _.sample(files);
 
-					filedir1 = `./pictures/${file}`;
+					filedir1 = `../pictures/${file}`;
 
 					let ext = file.split('.')[file.split('.').length - 1];
 

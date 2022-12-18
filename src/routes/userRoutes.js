@@ -20,6 +20,6 @@ router.post('/user/:username', auth.requireAuth, userController.user_post);
 
 router.post('/user/block/:username', auth.requireAuth, userController.blockUser_post);
 
-router.get('/doStuff', userController.doStuff);
+//router.get('/doStuff', userController.doStuff);
 
 module.exports = router;

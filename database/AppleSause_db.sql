@@ -1,25 +1,13 @@
--- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler version: 1.0.0-beta
--- PostgreSQL version: 15.0
--- Project Site: pgmodeler.io
--- Model Author: ---
-
--- Database creation must be performed outside a multi lined SQL file. 
--- These commands were put in this file only as a convenience.
--- 
--- object: apple_sause_db | type: DATABASE --
 -- DROP DATABASE IF EXISTS apple_sause_db;
-CREATE DATABASE apple_sause_db
-	ENCODING = 'UTF8'
-	LC_COLLATE = 'English_United States.1251'
-	LC_CTYPE = 'English_United States.1251'
-	TABLESPACE = pg_default
-	OWNER = postgres;
+--CREATE DATABASE apple_sause_db
+--	ENCODING = 'UTF8'
+--	TABLESPACE = pg_default
+--	OWNER = postgres;
 -- ddl-end --
 
 
 -- object: public.users | type: TABLE --
--- DROP TABLE IF EXISTS public.users CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE public.users (
 	role_id integer NOT NULL,
 	user_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 START WITH 1 CACHE 1 ),
@@ -55,7 +43,7 @@ ALTER TABLE public.users OWNER TO postgres;
 -- -- ddl-end --
 -- 
 -- object: public.posts | type: TABLE --
--- DROP TABLE IF EXISTS public.posts CASCADE;
+DROP TABLE IF EXISTS public.posts CASCADE;
 CREATE TABLE public.posts (
 	user_id integer NOT NULL,
 	category_id integer NOT NULL,
@@ -92,7 +80,7 @@ ALTER TABLE public.posts OWNER TO postgres;
 -- -- ddl-end --
 -- 
 -- object: public.messages | type: TABLE --
--- DROP TABLE IF EXISTS public.messages CASCADE;
+DROP TABLE IF EXISTS public.messages CASCADE;
 CREATE TABLE public.messages (
 	dialogue_id integer NOT NULL,
 	sender_id integer NOT NULL,
@@ -121,7 +109,7 @@ ALTER TABLE public.messages OWNER TO postgres;
 -- -- ddl-end --
 -- 
 -- object: public.categories | type: TABLE --
--- DROP TABLE IF EXISTS public.categories CASCADE;
+DROP TABLE IF EXISTS public.categories CASCADE;
 CREATE TABLE public.categories (
 	category_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1 ),
 	category_name text,
@@ -147,7 +135,7 @@ ALTER TABLE public.categories OWNER TO postgres;
 -- -- ddl-end --
 -- 
 -- object: public.ratings | type: TABLE --
--- DROP TABLE IF EXISTS public.ratings CASCADE;
+DROP TABLE IF EXISTS public.ratings CASCADE;
 CREATE TABLE public.ratings (
 	reciever_id integer NOT NULL,
 	sender_id integer NOT NULL,
@@ -160,7 +148,7 @@ ALTER TABLE public.ratings OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.roles | type: TABLE --
--- DROP TABLE IF EXISTS public.roles CASCADE;
+DROP TABLE IF EXISTS public.roles CASCADE;
 CREATE TABLE public.roles (
 	role_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 START WITH 1 CACHE 1 ),
 	role_name text,
@@ -186,7 +174,7 @@ ALTER TABLE public.roles OWNER TO postgres;
 -- -- ddl-end --
 -- 
 -- object: public.dialogues | type: TABLE --
--- DROP TABLE IF EXISTS public.dialogues CASCADE;
+DROP TABLE IF EXISTS public.dialogues CASCADE;
 CREATE TABLE public.dialogues (
 	post_id integer NOT NULL,
 	customer_user_id integer NOT NULL,
@@ -214,7 +202,7 @@ ALTER TABLE public.dialogues OWNER TO postgres;
 -- -- ddl-end --
 -- 
 -- object: public.favorites | type: TABLE --
--- DROP TABLE IF EXISTS public.favorites CASCADE;
+DROP TABLE IF EXISTS public.favorites CASCADE;
 CREATE TABLE public.favorites (
 	user_id integer NOT NULL,
 	post_id integer NOT NULL,
@@ -225,7 +213,7 @@ ALTER TABLE public.favorites OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.blacklist | type: TABLE --
--- DROP TABLE IF EXISTS public.blacklist CASCADE;
+DROP TABLE IF EXISTS public.blacklist CASCADE;
 CREATE TABLE public.blacklist (
 	blacklisting_user_id integer NOT NULL,
 	blacklisted_user_id integer NOT NULL,

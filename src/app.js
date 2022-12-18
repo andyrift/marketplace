@@ -41,7 +41,6 @@ require.main.pool.on('error', (err, client) => {
 var types = require('pg').types
 types.setTypeParser(types.builtins.TIMESTAMPTZ, (val) => {return new Date(val)});
 
-
 //components
 const authRoutes = require("./routes/authRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
@@ -52,12 +51,12 @@ const postController = require("./controllers/postController.js");
 
 
 // dictionary for text generator 
-/*
+
 fs.readFile('./static/words_dictionary.json', (err, data) => {
     if (err) throw err;
     require.main.words = Object.keys(JSON.parse(data));
 });
-*/
+
 
 // static files
 
