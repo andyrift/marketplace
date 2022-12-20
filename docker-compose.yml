@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  postgres:
+    build: ./database
+    container_name: applesause_db
+    ports: 
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=apple_sause_db
+      - PGHOST=localhost
+      - PGPORT=5432
+  app: 
+    build: ./src
+    container_name: applesause_app
+    ports: 
+      - 80:80
+    depends_on:
+      - postgres
+    environment:
+      - SECRET=WmumbLi4dQixFBGtjqHujkhTeHD4fUvNE00rhWBfD9U0LEBnY8Z5bYWRo1wJ46gJTNZvKHGhYauJtEiK
+      - PGDATABASE=apple_sause_db
+      - PGUSER=postgres
+      - PGPASSWORD=docker
+      - PGHOST=postgres
+      - PGPORT=5432
+      - NODE_ENV=production
+  

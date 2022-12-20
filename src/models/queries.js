@@ -2,6 +2,7 @@ pool = require.main.pool;
 const Cursor = require('pg-cursor');
 
 module.exports.makeQuery = ({ query, single, callback }) => {
+	console.log("Query: ", query);
 	if(typeof callback !== "undefined") {
 		pool.connect((err, client, done) => {
 			if (err) throw err;
