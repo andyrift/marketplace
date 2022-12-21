@@ -1,17 +1,28 @@
 # AppleSause
 
-##Запуск
+## Запуск
 usernames:
+
 presold (moderator)
+
 raphidoidea (moderator)
+
 elmy (moderator)
+
 whitewood (moderator)
+
 accelerated
+
 harperess
+
 alcarraza
+
 colocynthin
+
 smudder
+
 stalactitical
+
 password: password
 
 
