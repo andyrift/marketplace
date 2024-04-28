@@ -1,29 +1,33 @@
 # AppleSause
 
-## Запуск
-usernames:
+Marketplace-like website
 
-presold (moderator)
+## How it works
 
-raphidoidea (moderator)
+- The application is powered by ___express.js___
 
-elmy (moderator)
+- Server-side rendering is powered by ___ejs___
 
-whitewood (moderator)
+- Dynamic behavior is powered by raw ___JavaScript___
 
-accelerated
+- Database: ___PostgreSQL___
 
-harperess
+## Running the app
 
-alcarraza
+users:
 
-colocynthin
+- `presold` _moderator_
+- `raphidoidea` _moderator_
+- `elmy` _moderator_
+- `whitewood` _moderator_
+- `accelerated`
+- `harperess`
+- `alcarraza`
+- `colocynthin`
+- `smudder`
+- `stalactitical`
 
-smudder
-
-stalactitical
-
-password: password
+password for eash user is: `password`
 
 
 ## Описание
