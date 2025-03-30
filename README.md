@@ -31,4 +31,4 @@ The password for all users is `password`
 # License
 
 Copyright (c) 2022 Андрей Храмцов.
-Licensed under [Apache License 2.0](LICENSE).
+Licensed under the [Apache License 2.0](LICENSE).
