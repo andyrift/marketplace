@@ -2,6 +2,8 @@
 
 Marketplace website analogous to eBay.
 
+Database design: [design.md](design.md).
+
 ## Technologies
 
 - Backend: `express.js`
@@ -11,7 +13,7 @@ Marketplace website analogous to eBay.
 
 ## Included Database Dump Credentials
 
-users:
+Users
 
 - `presold` - moderator
 - `raphidoidea` - moderator
